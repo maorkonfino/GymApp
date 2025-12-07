@@ -103,21 +103,21 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ error: 'אימייל וססמה נדרשים' });
+      return res.status(400).json({ error: 'אימייל וסיסמה נדרשים' });
     }
 
     // Get user by email (includes password field)
     const user = db.getUserByEmail(email);
     
     if (!user || !user.password) {
-      return res.status(401).json({ error: 'אימייל או ססמה שגויים' });
+      return res.status(401).json({ error: 'אימייל או סיסמה שגויים' });
     }
 
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     
     if (!isPasswordValid) {
-      return res.status(401).json({ error: 'אימייל או ססמה שגויים' });
+      return res.status(401).json({ error: 'אימייל או סיסמה שגויים' });
     }
 
     // Don't send password back to client

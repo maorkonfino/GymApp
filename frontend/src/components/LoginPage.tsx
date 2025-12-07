@@ -78,7 +78,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
         }
         
         if (formData.password.length < 6) {
-          setError('הססמה חייבת להיות לפחות 6 תווים')
+          setError('הסיסמה חייבת להיות לפחות 6 תווים')
           setLoading(false)
           return
         }
@@ -88,7 +88,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
         console.log('✅ Registration successful!')
       } else {
         if (!formData.email || !formData.password) {
-          setError('אימייל וססמה נדרשים')
+          setError('אימייל וסיסמה נדרשים')
           setLoading(false)
           return
         }
@@ -315,7 +315,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
 
             <div>
               <label className="block text-white text-sm font-medium mb-2">
-                ססמה
+                סיסמה
               </label>
               <div className="relative">
                 <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -343,7 +343,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
             {mode === 'register' && (
               <div>
                 <label className="block text-white text-sm font-medium mb-2">
-                  אימות ססמה
+                  אימות סיסמה
                 </label>
                 <div className="relative">
                   <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -363,7 +363,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                     minLength={6}
                   />
                 </div>
-                <p className="text-xs text-gray-400 mt-1">הזן את הססמה שוב לאימות</p>
+                <p className="text-xs text-gray-400 mt-1">הזן את הסיסמה שוב לאימות</p>
               </div>
             )}
 
