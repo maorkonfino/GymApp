@@ -242,27 +242,27 @@ const WorkoutPlanUser: React.FC = () => {
 
           {!isCollapsed && (
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-sm">
+            <table className="w-full border-collapse text-xs">
               <thead>
                 <tr className="bg-dark-hover">
-                  <th className="border border-dark-border px-3 py-2 text-gray-300 font-semibold text-right sticky right-0 bg-dark-hover z-10">תרגיל</th>
-                  <th className="border border-dark-border px-2 py-2 text-gray-300 font-semibold text-center w-16">סטים</th>
-                  <th className="border border-dark-border px-2 py-2 text-gray-300 font-semibold text-center w-24">טווח חזרות</th>
-                  <th className="border border-dark-border px-2 py-2 text-gray-300 font-semibold text-center w-24">מנוחה</th>
-                  <th className="border border-dark-border px-2 py-2 text-gray-300 font-semibold text-center w-16">RIR</th>
+                  <th className="border border-dark-border px-1.5 sm:px-2 py-1 sm:py-1.5 text-gray-300 font-semibold text-right sticky right-0 bg-dark-hover z-10 text-[10px] sm:text-xs">תרגיל</th>
+                  <th className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-gray-300 font-semibold text-center text-[10px] sm:text-xs w-12 sm:w-16">סטים</th>
+                  <th className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-gray-300 font-semibold text-center text-[10px] sm:text-xs w-16 sm:w-24">חזרות</th>
+                  <th className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-gray-300 font-semibold text-center text-[10px] sm:text-xs w-16 sm:w-24">מנוחה</th>
+                  <th className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-gray-300 font-semibold text-center text-[10px] sm:text-xs w-12 sm:w-16">RIR</th>
                   {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => (
-                    <th key={week} className="border border-dark-border px-2 py-2 text-cyan-300 font-semibold text-center">
+                    <th key={week} className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-cyan-300 font-semibold text-center text-[10px] sm:text-xs">
                       שבוע {week}
                     </th>
                   ))}
                   {plan.numberOfWeeks === 'flexible' && (
-                    <th className="border border-dark-border px-2 py-2">
+                    <th className="border border-dark-border px-1 py-1">
                       <button
                         onClick={addWeek}
-                        className="w-full px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1"
+                        className="w-full px-2 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded text-[10px] sm:text-xs font-medium transition-all flex items-center justify-center gap-0.5"
                         title="הוסף שבוע"
                       >
-                        <span className="text-xl">+</span> שבוע
+                        <span className="text-sm sm:text-base">+</span> שבוע
                       </button>
                     </th>
                   )}
@@ -273,34 +273,34 @@ const WorkoutPlanUser: React.FC = () => {
                   const numSets = parseInt(exercise.sets) || 3
                   return (
                     <tr key={exerciseIndex} className="hover:bg-dark-hover/50">
-                      <td className="border border-dark-border px-3 py-2 text-white font-medium sticky right-0 bg-dark-card z-10">
+                      <td className="border border-dark-border px-1.5 sm:px-2 py-1 sm:py-1.5 text-white font-medium sticky right-0 bg-dark-card z-10 text-[10px] sm:text-xs">
                         {exercise.name}
                       </td>
-                      <td className="border border-dark-border px-2 py-2 text-center text-gray-300">
+                      <td className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-center text-gray-300 text-[10px] sm:text-xs">
                         {exercise.sets}
                       </td>
-                      <td className="border border-dark-border px-2 py-2 text-center text-gray-300">
+                      <td className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-center text-gray-300 text-[10px] sm:text-xs">
                         {exercise.repsRange}
                       </td>
-                      <td className="border border-dark-border px-2 py-2 text-center text-gray-300">
+                      <td className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-center text-gray-300 text-[10px] sm:text-xs">
                         {exercise.rest}
                       </td>
-                      <td className="border border-dark-border px-2 py-2 text-center text-gray-300">
+                      <td className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-center text-gray-300 text-[10px] sm:text-xs">
                         {exercise.rir}
                       </td>
                       {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => (
-                        <td key={week} className="border border-dark-border px-1 py-1">
-                          <div className="space-y-1">
+                        <td key={week} className="border border-dark-border px-0.5 py-0.5">
+                          <div className="space-y-0.5">
                             {Array.from({ length: numSets }, (_, setIdx) => {
                               const data = getWeeklyData(exercise, week, setIdx)
                               return (
-                                <div key={setIdx} className="flex gap-1">
+                                <div key={setIdx} className="flex gap-0.5">
                                   <input
                                     type="text"
                                     placeholder="R"
                                     value={data.reps}
                                     onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'reps', e.target.value)}
-                                    className="w-10 bg-dark-hover text-white text-xs text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-1 py-0.5 border border-dark-border"
+                                    className="w-8 sm:w-10 bg-dark-hover text-white text-[10px] sm:text-xs text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
                                     maxLength={3}
                                   />
                                   <input
@@ -308,7 +308,7 @@ const WorkoutPlanUser: React.FC = () => {
                                     placeholder="KG"
                                     value={data.weight}
                                     onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'weight', e.target.value)}
-                                    className="w-12 bg-dark-hover text-white text-xs text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-1 py-0.5 border border-dark-border"
+                                    className="w-9 sm:w-12 bg-dark-hover text-white text-[10px] sm:text-xs text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
                                     maxLength={3}
                                   />
                                 </div>
