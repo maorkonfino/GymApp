@@ -71,6 +71,15 @@ export const initDatabase = async () => {
         role TEXT DEFAULT 'kibbutz',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+
+      CREATE TABLE IF NOT EXISTS password_reset_tokens (
+        id SERIAL PRIMARY KEY,
+        email TEXT NOT NULL,
+        token TEXT NOT NULL UNIQUE,
+        expires_at TIMESTAMP NOT NULL,
+        used BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
     `);
 
     console.log('✅ Database tables initialized successfully');
@@ -428,6 +437,36 @@ export const updateUser = async (id: number, updates: Partial<Omit<User, 'id' | 
   values.push(id);
   const query = `UPDATE users SET ${fields.join(', ')} WHERE id = $${paramIndex}`;
   await pool.query(query, values);
+};
+
+// ===== PASSWORD RESET TOKENS =====
+
+export const createPasswordResetToken = async (email: string, token: string, expiresAt: Date): Promise<void> => {
+  // Delete any existing tokens for this email
+  await pool.query('DELETE FROM password_reset_tokens WHERE email = $1', [email]);
+  
+  // Create new token
+  const query = `
+    INSERT INTO password_reset_tokens (email, token, expires_at)
+    VALUES ($1, $2, $3)
+  `;
+  await pool.query(query, [email, token, expiresAt]);
+};
+
+export const getPasswordResetToken = async (token: string): Promise<{ email: string; expires_at: Date; used: boolean } | undefined> => {
+  const query = 'SELECT email, expires_at, used FROM password_reset_tokens WHERE token = $1';
+  const result = await pool.query(query, [token]);
+  return result.rows[0];
+};
+
+export const markTokenAsUsed = async (token: string): Promise<void> => {
+  const query = 'UPDATE password_reset_tokens SET used = TRUE WHERE token = $1';
+  await pool.query(query, [token]);
+};
+
+export const deleteExpiredTokens = async (): Promise<void> => {
+  const query = 'DELETE FROM password_reset_tokens WHERE expires_at < NOW() OR used = TRUE';
+  await pool.query(query);
 };
 
 export default pool;

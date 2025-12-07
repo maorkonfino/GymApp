@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 import * as db from './database-postgres';
 
 // Load environment variables
@@ -153,6 +155,128 @@ app.put('/api/users/:id', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error updating user:', error);
     res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
+// Forgot Password - Send reset email
+app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'אימייל נדרש' });
+    }
+
+    const normalizedEmail = email.toLowerCase();
+    const user = await db.getUserByEmail(normalizedEmail);
+    
+    // Always return success (security: don't reveal if email exists)
+    if (!user) {
+      return res.json({ message: 'אם האימייל קיים במערכת, נשלח אליו קישור לאיפוס סיסמה' });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 3600000); // 1 hour from now
+
+    // Save token to database
+    await db.createPasswordResetToken(normalizedEmail, resetToken, expiresAt);
+
+    // Create reset URL
+    const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const resetURL = `${frontendURL}/reset-password?token=${resetToken}`;
+
+    // Send email
+    const transporter = nodemailer.createTransporter({
+      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.EMAIL_PORT || '587'),
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: normalizedEmail,
+      subject: 'איפוס סיסמה - BEAST Gym',
+      html: `
+        <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h1 style="color: #06b6d4; text-align: center;">🦁 BEAST Gym</h1>
+            <h2 style="color: #333;">איפוס סיסמה</h2>
+            <p style="color: #666; line-height: 1.6;">שלום ${user.name},</p>
+            <p style="color: #666; line-height: 1.6;">קיבלנו בקשה לאיפוס הסיסמה שלך.</p>
+            <p style="color: #666; line-height: 1.6;">לחץ על הכפתור למטה כדי לאפס את הסיסמה:</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${resetURL}" style="background-color: #06b6d4; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">איפוס סיסמה</a>
+            </div>
+            <p style="color: #999; font-size: 12px;">הקישור תקף למשך שעה אחת בלבד.</p>
+            <p style="color: #999; font-size: 12px;">אם לא ביקשת לאפס את הסיסמה, התעלם ממייל זה.</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+            <p style="color: #999; font-size: 11px; text-align: center;">BEAST Gym - מערכת ניהול אימונים</p>
+          </div>
+        </div>
+      `
+    });
+
+    console.log('✅ Password reset email sent to:', normalizedEmail);
+    res.json({ message: 'אם האימייל קיים במערכת, נשלח אליו קישור לאיפוס סיסמה' });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ error: 'שגיאה בשליחת המייל' });
+  }
+});
+
+// Reset Password - Update password with token
+app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({ error: 'טוקן וסיסמה חדשה נדרשים' });
+    }
+
+    // Get token from database
+    const tokenData = await db.getPasswordResetToken(token);
+    
+    if (!tokenData) {
+      return res.status(400).json({ error: 'טוקן לא תקף או שפג תוקפו' });
+    }
+
+    // Check if token is expired
+    if (new Date() > new Date(tokenData.expires_at)) {
+      return res.status(400).json({ error: 'טוקן פג תוקף' });
+    }
+
+    // Check if token was already used
+    if (tokenData.used) {
+      return res.status(400).json({ error: 'טוקן כבר נוצל' });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user password
+    const user = await db.getUserByEmail(tokenData.email);
+    if (!user) {
+      return res.status(404).json({ error: 'משתמש לא נמצא' });
+    }
+
+    await db.updateUser(user.id!, { password: hashedPassword } as any);
+
+    // Mark token as used
+    await db.markTokenAsUsed(token);
+
+    // Clean up expired tokens
+    await db.deleteExpiredTokens();
+
+    console.log('✅ Password reset successfully for:', tokenData.email);
+    res.json({ message: 'הסיסמה אופסה בהצלחה' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: 'שגיאה באיפוס הסיסמה' });
   }
 });
 
