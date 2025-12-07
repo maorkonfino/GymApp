@@ -1,29 +1,21 @@
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 
-// Create email transporter
-const createTransporter = () => {
-  const emailUser = process.env.EMAIL_USER;
-  const emailPass = process.env.EMAIL_PASS;
+// Initialize SendGrid with API key
+const initializeSendGrid = () => {
+  const sendGridApiKey = process.env.SENDGRID_API_KEY;
   
-  console.log('📧 Email config:', {
-    hasUser: !!emailUser,
-    hasPass: !!emailPass,
-    userLength: emailUser?.length || 0,
-    passLength: emailPass?.length || 0
+  console.log('📧 SendGrid config:', {
+    hasApiKey: !!sendGridApiKey,
+    apiKeyLength: sendGridApiKey?.length || 0
   });
   
-  if (!emailUser || !emailPass) {
-    console.error('❌ Missing email credentials! EMAIL_USER or EMAIL_PASS not set');
-    throw new Error('Email credentials not configured');
+  if (!sendGridApiKey) {
+    console.error('❌ Missing SendGrid API key! SENDGRID_API_KEY not set');
+    throw new Error('SendGrid API key not configured');
   }
   
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: emailUser,
-      pass: emailPass,
-    },
-  });
+  sgMail.setApiKey(sendGridApiKey);
+  return true;
 };
 
 // Send password reset email
@@ -35,12 +27,17 @@ export const sendPasswordResetEmail = async (
   console.log('📧 Attempting to send password reset email:', { toEmail, userName });
   
   try {
-    const transporter = createTransporter();
-    console.log('✅ Email transporter created successfully');
+    initializeSendGrid();
+    console.log('✅ SendGrid initialized successfully');
 
-    const mailOptions = {
-      from: `"BEAST Gym" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+    const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'noreply@beast-gym.com';
+    
+    const msg = {
       to: toEmail,
+      from: {
+        email: fromEmail,
+        name: 'BEAST Gym'
+      },
       subject: 'איפוס סיסמה - BEAST Gym',
     html: `
       <!DOCTYPE html>
@@ -188,16 +185,14 @@ export const sendPasswordResetEmail = async (
     `,
   };
 
-    console.log('📤 Sending email...');
-    await transporter.sendMail(mailOptions);
+    console.log('📤 Sending email via SendGrid...');
+    await sgMail.send(msg);
     console.log(`✅ Password reset email sent successfully to ${toEmail}`);
   } catch (error: any) {
     console.error('❌ Error sending password reset email:', {
       message: error.message,
       code: error.code,
-      command: error.command,
-      response: error.response,
-      responseCode: error.responseCode
+      response: error.response?.body
     });
     throw new Error(`Failed to send password reset email: ${error.message}`);
   }
@@ -211,7 +206,7 @@ export const sendWorkoutReminderEmail = async (
   startTime: string,
   endTime: string
 ): Promise<void> => {
-  const transporter = createTransporter();
+  initializeSendGrid();
 
   // Format date in Hebrew
   const dateObj = new Date(workoutDate);
@@ -222,9 +217,14 @@ export const sendWorkoutReminderEmail = async (
     day: 'numeric'
   }).format(dateObj);
 
-  const mailOptions = {
-    from: `"BEAST Gym" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+  const fromEmail = process.env.SENDGRID_FROM_EMAIL || 'noreply@beast-gym.com';
+
+  const msg = {
     to: toEmail,
+    from: {
+      email: fromEmail,
+      name: 'BEAST Gym'
+    },
     subject: `תזכורת לאימון מחר - BEAST Gym`,
     html: `
       <!DOCTYPE html>
@@ -375,14 +375,14 @@ export const sendWorkoutReminderEmail = async (
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await sgMail.send(msg);
     console.log(`✅ Workout reminder email sent to ${toEmail}`);
   } catch (error: any) {
     console.error('❌ Error sending workout reminder email:', {
       toEmail,
       message: error.message,
       code: error.code,
-      command: error.command
+      response: error.response?.body
     });
     throw new Error(`Failed to send workout reminder email: ${error.message}`);
   }

@@ -822,22 +822,19 @@ const sendWorkoutReminders = async () => {
   }
 };
 
-// TEMPORARILY DISABLED: Email reminders (Gmail SMTP connection issues on Render)
 // Run reminder check every hour at minute 0
 // Format: "0 * * * *" means: at minute 0 of every hour
-// cron.schedule('0 * * * *', sendWorkoutReminders, {
-//   timezone: 'Asia/Jerusalem'
-// });
+cron.schedule('0 * * * *', sendWorkoutReminders, {
+  timezone: 'Asia/Jerusalem'
+});
 
-// console.log('⏰ Workout reminders cron job scheduled (runs every hour)');
+console.log('⏰ Workout reminders cron job scheduled (runs every hour) via SendGrid');
 
 // Also run once on startup (after a small delay to ensure DB is ready)
-// setTimeout(() => {
-//   console.log('🚀 Running initial workout reminders check...');
-//   sendWorkoutReminders();
-// }, 5000);
-
-console.log('⚠️  Email reminders temporarily disabled due to SMTP connection issues');
+setTimeout(() => {
+  console.log('🚀 Running initial workout reminders check...');
+  sendWorkoutReminders();
+}, 5000);
 
 // Temporary Admin Password Reset Endpoint (for debugging)
 app.post('/api/admin/reset-user-password', async (req: Request, res: Response) => {
