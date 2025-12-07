@@ -1,39 +1,59 @@
-// Wolf Icon - matching the original design with red eyes
+// Wolf Icon - realistic wolf head design with red eyes
 export const WolfIcon = ({ className = "" }: { className?: string }) => (
   <svg 
-    viewBox="0 0 64 64" 
+    viewBox="0 0 100 120" 
     className={className}
-    fill="none"
+    fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* Wolf head outline */}
-    <path 
-      d="M32 8 L36 4 L38 6 L36 10 L38 14 L42 12 L44 14 L42 18 L44 22 L40 24 L42 28 L38 32 L34 36 L30 38 L26 36 L24 32 L20 28 L18 24 L16 20 L18 16 L20 12 L24 14 L26 10 L28 6 L30 4 Z" 
-      fill="currentColor"
-      stroke="currentColor"
-      strokeWidth="1"
-    />
-    
-    {/* Ears */}
-    <path d="M26 10 L24 4 L28 8 Z" fill="currentColor" />
-    <path d="M38 10 L40 4 L36 8 Z" fill="currentColor" />
-    
-    {/* Face details */}
-    <path d="M32 38 L30 42 L34 42 Z" fill="currentColor" />
-    
-    {/* Eyes - RED colored */}
-    <circle cx="26" cy="22" r="2.5" className="fill-red-500" />
-    <circle cx="38" cy="22" r="2.5" className="fill-red-500" />
-    
-    {/* Inner eye glow */}
-    <circle cx="26" cy="22" r="1" fill="white" opacity="0.8" />
-    <circle cx="38" cy="22" r="1" fill="white" opacity="0.8" />
-    
-    {/* Nose */}
-    <path d="M32 30 L30 32 L34 32 Z" fill="currentColor" />
-    
-    {/* Teeth/fangs */}
-    <path d="M28 34 L28 36 M32 34 L32 37 M36 34 L36 36" stroke="currentColor" strokeWidth="1.5" />
+    {/* Wolf head - front facing */}
+    <g>
+      {/* Head shape */}
+      <path d="M 50 20 Q 35 20 28 30 Q 22 40 22 55 Q 22 70 30 82 L 35 90 L 42 95 L 50 98 L 58 95 L 65 90 L 70 82 Q 78 70 78 55 Q 78 40 72 30 Q 65 20 50 20 Z" 
+        fill="currentColor" 
+        stroke="currentColor" 
+        strokeWidth="1"
+      />
+      
+      {/* Left ear */}
+      <path d="M 28 30 L 22 15 L 30 25 Z" fill="currentColor" />
+      
+      {/* Right ear */}
+      <path d="M 72 30 L 78 15 L 70 25 Z" fill="currentColor" />
+      
+      {/* Snout/muzzle */}
+      <ellipse cx="50" cy="75" rx="18" ry="15" fill="currentColor" />
+      <ellipse cx="50" cy="75" rx="14" ry="11" fill="#1a1a1a" opacity="0.3" />
+      
+      {/* Nose */}
+      <path d="M 50 82 L 46 86 L 50 88 L 54 86 Z" fill="#333" />
+      
+      {/* Eyes - RED with glow */}
+      <g>
+        {/* Left eye */}
+        <ellipse cx="38" cy="50" rx="6" ry="8" fill="#ff0000" />
+        <ellipse cx="38" cy="48" rx="3" ry="4" fill="#ff6666" />
+        <circle cx="37" cy="47" r="1.5" fill="white" opacity="0.8" />
+        
+        {/* Right eye */}
+        <ellipse cx="62" cy="50" rx="6" ry="8" fill="#ff0000" />
+        <ellipse cx="62" cy="48" rx="3" ry="4" fill="#ff6666" />
+        <circle cx="63" cy="47" r="1.5" fill="white" opacity="0.8" />
+      </g>
+      
+      {/* Facial features - cheek fur */}
+      <path d="M 25 60 L 20 65" stroke="currentColor" strokeWidth="2" opacity="0.3" />
+      <path d="M 27 63 L 22 68" stroke="currentColor" strokeWidth="2" opacity="0.3" />
+      <path d="M 75 60 L 80 65" stroke="currentColor" strokeWidth="2" opacity="0.3" />
+      <path d="M 73 63 L 78 68" stroke="currentColor" strokeWidth="2" opacity="0.3" />
+      
+      {/* Mouth/fangs hint */}
+      <path d="M 45 90 L 45 93 M 50 90 L 50 94 M 55 90 L 55 93" 
+        stroke="white" 
+        strokeWidth="1.5" 
+        opacity="0.6"
+      />
+    </g>
   </svg>
 )
 
@@ -92,7 +112,11 @@ export const BeastLogo = ({
     <div className={`flex items-center justify-center ${classes.logo}`}>
       {/* BEAST text with scratches */}
       <div className="flex flex-col items-start">
-        <h1 className={`${classes.text} font-black tracking-tight relative leading-none`} style={{ fontFamily: 'Arial Black, sans-serif' }}>
+        <h1 
+          dir="ltr" 
+          className={`${classes.text} font-black tracking-tight relative leading-none`} 
+          style={{ fontFamily: 'Arial Black, sans-serif' }}
+        >
           {/* B with RED scratches */}
           <span className="text-white relative inline-block">
             B
