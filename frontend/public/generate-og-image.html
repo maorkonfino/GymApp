@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate OG Image</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1e293b;
+            font-family: Arial, sans-serif;
+            direction: rtl;
+        }
+        #canvas {
+            border: 2px solid #06b6d4;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        button {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .info {
+            color: #06b6d4;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align: center;">
+        <h1 style="color: #06b6d4;">יוצר תמונת OG</h1>
+        <canvas id="canvas" width="1200" height="630"></canvas>
+        <div class="controls">
+            <button onclick="generateImage()">צור תמונה</button>
+            <button onclick="downloadImage()">הורד PNG</button>
+        </div>
+        <div class="info">
+            לחץ "צור תמונה" ואז "הורד PNG" ושמור כ-og-image.png
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function generateImage() {
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+            gradient.addColorStop(0, '#0f172a');
+            gradient.addColorStop(0.5, '#1e293b');
+            gradient.addColorStop(1, '#0f172a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1200, 630);
+
+            // Grid pattern
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.05)';
+            for (let x = 0; x < 1200; x += 40) {
+                for (let y = 0; y < 630; y += 40) {
+                    ctx.beginPath();
+                    ctx.arc(x + 20, y + 20, 1, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Top accent bar
+            const topGradient = ctx.createLinearGradient(0, 0, 1200, 0);
+            topGradient.addColorStop(0, '#06b6d4');
+            topGradient.addColorStop(1, '#3b82f6');
+            ctx.fillStyle = topGradient;
+            ctx.fillRect(0, 0, 1200, 8);
+
+            // Wolf circle background
+            const circleGradient = ctx.createRadialGradient(250, 260, 0, 250, 260, 110);
+            circleGradient.addColorStop(0, 'rgba(6, 182, 212, 0.3)');
+            circleGradient.addColorStop(1, 'rgba(6, 182, 212, 0.1)');
+            ctx.fillStyle = circleGradient;
+            ctx.beginPath();
+            ctx.arc(250, 260, 110, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Wolf icon (simplified)
+            ctx.fillStyle = '#06b6d4';
+            ctx.font = 'bold 180px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🐺', 250, 260);
+
+            // BEAST text
+            ctx.font = 'bold 140px Arial';
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('BE', 680, 240);
+            
+            ctx.fillStyle = '#06b6d4';
+            ctx.fillText('A', 770, 240);
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('ST', 920, 240);
+
+            // Scratch marks on A
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.moveTo(725, 160);
+            ctx.lineTo(745, 300);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(745, 160);
+            ctx.lineTo(765, 300);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(765, 160);
+            ctx.lineTo(785, 300);
+            ctx.stroke();
+
+            // Slogan
+            ctx.font = '36px Arial';
+            ctx.fillStyle = '#06b6d4';
+            ctx.textAlign = 'right';
+            ctx.fillText('בית לאימון מבוסס מדע', 920, 300);
+
+            // Description
+            ctx.font = '28px Arial';
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText('מערכת ניהול אימונים אישיים', 920, 370);
+            ctx.fillText('מעקב תזונה והתקדמות מתקדמת', 920, 410);
+
+            // Features badges
+            const badges = [
+                { text: '💪 אימונים אישיים', x: 420, color: '#06b6d4' },
+                { text: '🍎 מעקב תזונה', x: 620, color: '#3b82f6' },
+                { text: '📊 התקדמות', x: 800, color: '#8b5cf6' }
+            ];
+
+            badges.forEach(badge => {
+                // Badge background
+                ctx.fillStyle = badge.color + '33';
+                ctx.beginPath();
+                ctx.roundRect(badge.x, 480, 180, 50, 25);
+                ctx.fill();
+
+                // Badge text
+                ctx.font = '20px Arial';
+                ctx.fillStyle = badge.color;
+                ctx.textAlign = 'center';
+                ctx.fillText(badge.text, badge.x + 90, 510);
+            });
+
+            // Bottom accent bar
+            ctx.fillStyle = topGradient;
+            ctx.fillRect(0, 622, 1200, 8);
+
+            console.log('✅ תמונה נוצרה בהצלחה!');
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'og-image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            console.log('✅ תמונה הורדה!');
+        }
+
+        // Generate on load
+        window.onload = generateImage;
+    </script>
+</body>
+</html>
+
