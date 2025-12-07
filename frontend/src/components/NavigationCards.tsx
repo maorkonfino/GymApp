@@ -46,8 +46,17 @@ const NavigationCards: React.FC = () => {
   const cards = allCards.filter(card => {
     if (!user) return card.path === '/'; // Guest can see registration only
     if (isAdmin) return true; // Admin sees all
+    
+    // Online users cannot see registration page
+    if (user.role === 'online' && card.path === '/') {
+      return false;
+    }
+    
     if (user.role === 'vip') return true; // VIP sees all
     if (user.role === 'kibbutz') return true; // Kibbutz sees all buttons (access controlled within pages)
+    if (user.role === 'teenbeast') return true; // TeenBEAST sees all
+    if (user.role === 'online') return true; // Online sees workout and nutrition (filtered above)
+    
     return true;
   })
 

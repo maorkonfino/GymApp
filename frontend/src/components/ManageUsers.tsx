@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { X, Users, Edit2, Dumbbell, Apple } from 'lucide-react'
+import { X, Users, Edit2, Dumbbell, Apple, Search } from 'lucide-react'
 import { User } from '../types'
 import api from '../api'
 import AdminWorkoutEditor from './AdminWorkoutEditor'
@@ -15,7 +15,8 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [editMode, setEditMode] = useState<'role' | 'workout' | 'nutrition' | null>(null)
-  const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz' | 'teenbeast'>('kibbutz')
+  const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz' | 'teenbeast' | 'online'>('kibbutz')
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     if (isOpen) {
@@ -89,6 +90,20 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
 
         {/* Content */}
         <div className="flex-1 overflow-auto p-6">
+          {/* Search Bar */}
+          <div className="mb-4">
+            <div className="relative">
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="חיפוש לפי שם..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pr-10 pl-4 py-2 bg-dark-hover border border-dark-border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              />
+            </div>
+          </div>
+
           {loading ? (
             <div className="text-center py-12">
               <div className="w-12 h-12 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin mx-auto mb-4"></div>
@@ -96,7 +111,9 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
             </div>
           ) : (
             <div className="space-y-3">
-              {users.map((user) => (
+              {users
+                .filter(user => user.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((user) => (
                 <div
                   key={user.id}
                   className="bg-dark-hover border border-dark-border rounded-xl p-4 hover:border-cyan-500/30 transition-all"
@@ -113,9 +130,15 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                             ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
                             : user.role === 'teenbeast'
                             ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
+                            : user.role === 'online'
+                            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
                             : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                         }`}>
-                          {user.role === 'admin' ? 'מנהל' : user.role === 'vip' ? 'BEAST' : user.role === 'teenbeast' ? 'TeenBEAST' : 'קיבוץ'}
+                          {user.role === 'admin' ? 'מנהל' 
+                            : user.role === 'vip' ? 'BEAST' 
+                            : user.role === 'teenbeast' ? 'TeenBEAST' 
+                            : user.role === 'online' ? 'OnlineBEAST'
+                            : 'קיבוץ'}
                         </span>
                       </div>
                       <div className="text-sm text-gray-400 space-y-1">
@@ -186,6 +209,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                   { value: 'kibbutz', label: 'קיבוץ', desc: 'גישה לכל הכפתורים (לפי תוכנית)', gradient: 'from-green-500 to-emerald-600' },
                   { value: 'vip', label: 'BEAST', desc: 'גישה לכל הכפתורים (לפי תוכנית)', gradient: 'from-cyan-500 to-blue-600' },
                   { value: 'teenbeast', label: 'TeenBEAST', desc: 'גישה מוגבלת לשעות נוער בלבד', gradient: 'from-orange-500 to-red-600' },
+                  { value: 'online', label: 'OnlineBEAST', desc: 'גישה מקוונת בלבד (ללא הרשמה לתורים)', gradient: 'from-indigo-500 to-purple-600' },
                   { value: 'admin', label: 'מנהל', desc: 'גישת ניהול מלאה', gradient: 'from-purple-500 to-pink-600' }
                 ].map((role) => (
                   <button

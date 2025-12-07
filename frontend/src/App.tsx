@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Header from './components/Header'
 import NavigationCards from './components/NavigationCards'
@@ -17,6 +17,7 @@ import ForgotPasswordModal from './components/ForgotPasswordModal'
 function AppContent() {
   const { user, login, register } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [selectedTime, setSelectedTime] = useState({ startTime: '06:00', endTime: '07:00' })
   const [showRegistrationForm, setShowRegistrationForm] = useState(false)
@@ -35,6 +36,13 @@ function AppContent() {
       setWeekOffset(0)
     }
   }, [location.pathname])
+  
+  // Redirect online users from registration page to workout plan
+  useEffect(() => {
+    if (user?.role === 'online' && location.pathname === '/') {
+      navigate('/workout-plan', { replace: true })
+    }
+  }, [user, location.pathname, navigate])
 
   const handleWeekChange = (direction: 'prev' | 'next') => {
     setWeekOffset(prev => direction === 'next' ? prev + 1 : prev - 1)
