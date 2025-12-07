@@ -1,156 +1,179 @@
 import nodemailer from 'nodemailer';
-import { Registration } from '../database';
 
 // Create email transporter
-// בפרודקשן תצטרך להגדיר את המשתנים האלה ב-.env
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.EMAIL_PORT || '587'),
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER || 'your-email@gmail.com',
-    pass: process.env.EMAIL_PASSWORD || 'your-password'
-  }
-});
-
-// Format date and time in Hebrew
-const formatDateTime = (date: string, time: string): string => {
-  const dateObj = new Date(`${date}T${time}`);
-  return dateObj.toLocaleString('he-IL', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+const createTransporter = () => {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
   });
 };
 
-// Send 24-hour reminder
-export const send24HourReminder = async (registration: Registration): Promise<boolean> => {
-  try {
-    const mailOptions = {
-      from: `"חדר כושר BEAST" <${process.env.EMAIL_USER}>`,
-      to: registration.email,
-      subject: '⏰ תזכורת: האימון שלך מחר!',
-      html: `
-        <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
-          <div style="background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">🏋️ חדר כושר BEAST</h1>
+// Send password reset email
+export const sendPasswordResetEmail = async (
+  toEmail: string,
+  userName: string,
+  resetUrl: string
+): Promise<void> => {
+  const transporter = createTransporter();
+
+  const mailOptions = {
+    from: `"BEAST Gym" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: 'איפוס סיסמה - BEAST Gym',
+    html: `
+      <!DOCTYPE html>
+      <html dir="rtl" lang="he">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 16px;
+            border: 1px solid #334155;
+            overflow: hidden;
+          }
+          .header {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            padding: 30px;
+            text-align: center;
+          }
+          .logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+          }
+          .content {
+            padding: 40px 30px;
+          }
+          .greeting {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #06b6d4;
+          }
+          .message {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+          }
+          .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            color: white;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(6, 182, 212, 0.3);
+            transition: transform 0.2s;
+          }
+          .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(6, 182, 212, 0.4);
+          }
+          .button-container {
+            text-align: center;
+            margin: 30px 0;
+          }
+          .link {
+            color: #06b6d4;
+            word-break: break-all;
+            font-size: 14px;
+          }
+          .footer {
+            padding: 20px 30px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            border-top: 1px solid #334155;
+          }
+          .warning {
+            background-color: #fef3c7;
+            border-right: 4px solid #f59e0b;
+            color: #78350f;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="logo">BEAST</div>
+            <p style="margin: 10px 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">
+              בית לאימון מבוסס מדע
+            </p>
           </div>
           
-          <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px;">
-            <h2 style="color: #0ea5e9; margin-top: 0;">שלום ${registration.full_name}! 👋</h2>
+          <div class="content">
+            <div class="greeting">שלום ${userName},</div>
             
-            <p style="font-size: 18px; color: #333; line-height: 1.6;">
-              זוהי תזכורת ידידותית שיש לך <strong>אימון מחר</strong>!
-            </p>
-            
-            <div style="background: #f0f9ff; border-right: 4px solid #0ea5e9; padding: 20px; margin: 20px 0; border-radius: 5px;">
-              <h3 style="margin-top: 0; color: #0284c7;">📅 פרטי האימון:</h3>
-              <p style="margin: 10px 0; font-size: 16px;">
-                <strong>תאריך:</strong> ${formatDateTime(registration.date, registration.start_time)}
-              </p>
-              <p style="margin: 10px 0; font-size: 16px;">
-                <strong>שעות:</strong> ${registration.start_time} - ${registration.end_time}
-              </p>
+            <div class="message">
+              קיבלנו בקשה לאיפוס הסיסמה שלך במערכת BEAST Gym.
             </div>
             
-            <div style="background: #fef3c7; border-right: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 5px;">
-              <p style="margin: 0; color: #92400e;">
-                💡 <strong>טיפ:</strong> הקפד להגיע 5 דקות לפני כדי להתחמם!
-              </p>
+            <div class="message">
+              לחץ על הכפתור למטה כדי לאפס את הסיסמה שלך:
             </div>
             
-            <p style="color: #666; font-size: 14px; margin-top: 30px;">
-              תקבל תזכורת נוספת 4 שעות לפני האימון.
-            </p>
+            <div class="button-container">
+              <a href="${resetUrl}" class="button">
+                🔑 אפס סיסמה
+              </a>
+            </div>
             
-            <p style="color: #666; font-size: 14px; border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 30px;">
-              בהצלחה באימון! 💪<br>
-              צוות BEAST
+            <div class="warning">
+              ⚠️ <strong>לתשומת ליבך:</strong> הקישור תקף ל-1 שעה בלבד.
+            </div>
+            
+            <div class="message">
+              אם אינך יכול ללחוץ על הכפתור, העתק והדבק את הקישור הבא בדפדפן:
+            </div>
+            
+            <div class="link">
+              ${resetUrl}
+            </div>
+            
+            <div class="message" style="margin-top: 30px;">
+              <strong>לא ביקשת איפוס סיסמה?</strong><br>
+              אין צורך לעשות דבר - הסיסמה שלך נשארת מאובטחת ולא שונתה.
+            </div>
+          </div>
+          
+          <div class="footer">
+            <p>
+              מייל זה נשלח אוטומטית ממערכת ניהול האימונים של BEAST Gym<br>
+              אין להשיב לכתובת זו
             </p>
           </div>
         </div>
-      `
-    };
+      </body>
+      </html>
+    `,
+  };
 
-    await transporter.sendMail(mailOptions);
-    console.log(`✅ 24h reminder email sent to ${registration.email}`);
-    return true;
-  } catch (error) {
-    console.error(`❌ Failed to send 24h reminder email to ${registration.email}:`, error);
-    return false;
-  }
-};
-
-// Send 4-hour reminder
-export const send4HourReminder = async (registration: Registration): Promise<boolean> => {
   try {
-    const mailOptions = {
-      from: `"חדר כושר BEAST" <${process.env.EMAIL_USER}>`,
-      to: registration.email,
-      subject: '🔔 תזכורת: האימון שלך בעוד 4 שעות!',
-      html: `
-        <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
-          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">🏋️ חדר כושר BEAST</h1>
-          </div>
-          
-          <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px;">
-            <h2 style="color: #10b981; margin-top: 0;">היי ${registration.full_name}! 🔥</h2>
-            
-            <p style="font-size: 20px; color: #333; line-height: 1.6; font-weight: bold;">
-              האימון שלך מתקרב - בעוד 4 שעות!
-            </p>
-            
-            <div style="background: #ecfdf5; border-right: 4px solid #10b981; padding: 20px; margin: 20px 0; border-radius: 5px;">
-              <h3 style="margin-top: 0; color: #059669;">⏰ זמן האימון:</h3>
-              <p style="margin: 10px 0; font-size: 18px;">
-                <strong>${registration.start_time} - ${registration.end_time}</strong>
-              </p>
-              <p style="margin: 10px 0; font-size: 16px; color: #666;">
-                ${formatDateTime(registration.date, registration.start_time)}
-              </p>
-            </div>
-            
-            <div style="background: #dbeafe; border-right: 4px solid #3b82f6; padding: 15px; margin: 20px 0; border-radius: 5px;">
-              <p style="margin: 0; color: #1e40af;">
-                ✅ <strong>רשימת בדיקה:</strong><br>
-                • בקבוק מים מלא 💧<br>
-                • ביגוד ונעלי אימון נוחים 👟<br>
-                • מגבת 🧖<br>
-                • מוטיבציה גבוהה! 💪
-              </p>
-            </div>
-            
-            <p style="color: #666; font-size: 14px; border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 30px;">
-              מחכים לראות אותך!<br>
-              צוות BEAST
-            </p>
-          </div>
-        </div>
-      `
-    };
-
     await transporter.sendMail(mailOptions);
-    console.log(`✅ 4h reminder email sent to ${registration.email}`);
-    return true;
+    console.log(`✅ Password reset email sent to ${toEmail}`);
   } catch (error) {
-    console.error(`❌ Failed to send 4h reminder email to ${registration.email}:`, error);
-    return false;
+    console.error('❌ Error sending email:', error);
+    throw new Error('Failed to send password reset email');
   }
 };
-
-// Test email configuration
-export const testEmailConnection = async (): Promise<boolean> => {
-  try {
-    await transporter.verify();
-    console.log('✅ Email server is ready to send messages');
-    return true;
-  } catch (error) {
-    console.error('❌ Email server connection failed:', error);
-    return false;
-  }
-};
-
