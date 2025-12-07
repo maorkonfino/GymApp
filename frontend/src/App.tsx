@@ -148,18 +148,14 @@ function AppContent() {
           {/* Workout Plan page */}
           <Route path="/workout-plan" element={
             <div className="h-full overflow-auto px-4 sm:px-6 lg:px-8 pb-4">
-              <div className="max-w-7xl mx-auto">
-                <WorkoutPlanUser />
-              </div>
+              <WorkoutPlanUser />
             </div>
           } />
 
           {/* Nutrition Tracking page */}
           <Route path="/nutrition-tracking" element={
             <div className="h-full overflow-auto px-4 sm:px-6 lg:px-8 pb-4">
-              <div className="max-w-7xl mx-auto">
-                <NutritionTracking />
-              </div>
+              <NutritionTracking />
             </div>
           } />
 
