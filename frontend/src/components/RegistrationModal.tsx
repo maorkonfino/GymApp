@@ -119,7 +119,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
       }
 
       // Check time restrictions
-      const timeCheck = canRegisterAtTime(selectedDate, startTime, endTime)
+      const timeCheck = canRegisterAtTime(selectedDate, startTime, endTime, user.role)
       if (!timeCheck.allowed) {
         setError(timeCheck.message || 'שעה זו אינה זמינה להרשמה')
         setLoading(false)

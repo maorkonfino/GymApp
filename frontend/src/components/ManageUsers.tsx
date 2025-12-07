@@ -15,7 +15,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [editMode, setEditMode] = useState<'role' | 'workout' | 'nutrition' | null>(null)
-  const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz'>('kibbutz')
+  const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz' | 'teenbeast'>('kibbutz')
 
   useEffect(() => {
     if (isOpen) {
@@ -108,12 +108,14 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                         <h3 className="text-white font-semibold text-lg">{user.name}</h3>
                         <span className={`text-xs px-2 py-1 rounded font-semibold ${
                           user.role === 'admin' 
-                            ? 'bg-purple-500/20 text-purple-300'
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white'
                             : user.role === 'vip'
                             ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
-                            : 'bg-white/10 text-white'
+                            : user.role === 'teenbeast'
+                            ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
+                            : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                         }`}>
-                          {user.role === 'admin' ? 'מנהל' : user.role === 'vip' ? 'BEAST' : 'קיבוץ'}
+                          {user.role === 'admin' ? 'מנהל' : user.role === 'vip' ? 'BEAST' : user.role === 'teenbeast' ? 'TeenBEAST' : 'קיבוץ'}
                         </span>
                       </div>
                       <div className="text-sm text-gray-400 space-y-1">
@@ -181,16 +183,17 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
               
               <div className="space-y-3 mb-6">
                 {[
-                  { value: 'kibbutz', label: 'קיבוץ', desc: 'גישה לכל הכפתורים (לפי תוכנית)' },
-                  { value: 'vip', label: 'BEAST', desc: 'גישה לכל הכפתורים (לפי תוכנית)' },
-                  { value: 'admin', label: 'מנהל', desc: 'גישת ניהול מלאה' }
+                  { value: 'kibbutz', label: 'קיבוץ', desc: 'גישה לכל הכפתורים (לפי תוכנית)', gradient: 'from-green-500 to-emerald-600' },
+                  { value: 'vip', label: 'BEAST', desc: 'גישה לכל הכפתורים (לפי תוכנית)', gradient: 'from-cyan-500 to-blue-600' },
+                  { value: 'teenbeast', label: 'TeenBEAST', desc: 'גישה מוגבלת לשעות נוער בלבד', gradient: 'from-orange-500 to-red-600' },
+                  { value: 'admin', label: 'מנהל', desc: 'גישת ניהול מלאה', gradient: 'from-purple-500 to-pink-600' }
                 ].map((role) => (
                   <button
                     key={role.value}
                     onClick={() => setSelectedRole(role.value as any)}
                     className={`w-full p-4 rounded-lg text-right transition-all ${
                       selectedRole === role.value
-                        ? 'bg-cyan-500 text-white border-2 border-cyan-400'
+                        ? `bg-gradient-to-r ${role.gradient} text-white border-2 border-white/50 shadow-lg`
                         : 'bg-dark-hover text-gray-300 border-2 border-dark-border hover:border-cyan-500/50'
                     }`}
                   >

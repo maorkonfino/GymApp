@@ -61,15 +61,19 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                   <p className="text-white font-medium text-xs sm:text-base flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1 flex-wrap">
                     <span className="truncate">שלום, {user.name}</span>
                     {isAdmin ? (
-                      <span className="text-[10px] sm:text-xs bg-purple-500/20 text-purple-300 px-1.5 sm:px-2 py-0.5 rounded flex-shrink-0">
+                      <span className="text-[10px] sm:text-xs bg-gradient-to-r from-purple-500 to-pink-600 text-white px-1.5 sm:px-2 py-0.5 rounded font-bold flex-shrink-0">
                         מנהל
                       </span>
                     ) : user.role === 'vip' ? (
                       <span className="text-[10px] sm:text-xs bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-1.5 sm:px-2 py-0.5 rounded font-bold flex-shrink-0">
                         BEAST
                       </span>
+                    ) : user.role === 'teenbeast' ? (
+                      <span className="text-[10px] sm:text-xs bg-gradient-to-r from-orange-500 to-red-600 text-white px-1.5 sm:px-2 py-0.5 rounded font-bold flex-shrink-0">
+                        TeenBEAST
+                      </span>
                     ) : user.role === 'kibbutz' ? (
-                      <span className="text-[10px] sm:text-xs bg-white/10 text-white px-1.5 sm:px-2 py-0.5 rounded flex-shrink-0">
+                      <span className="text-[10px] sm:text-xs bg-gradient-to-r from-green-500 to-emerald-600 text-white px-1.5 sm:px-2 py-0.5 rounded font-bold flex-shrink-0">
                         קיבוץ
                       </span>
                     ) : null}
