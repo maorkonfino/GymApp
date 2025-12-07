@@ -594,11 +594,11 @@ const NutritionTracking: React.FC = () => {
               </div>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-auto max-h-[600px]">
               <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-dark-border">
-                    <th className="text-right p-2 text-gray-400 font-medium sticky right-0 bg-dark-card">תאריך</th>
+                <thead className="sticky top-0 z-20">
+                  <tr className="border-b border-dark-border bg-dark-card">
+                    <th className="text-right p-2 text-gray-400 font-medium sticky right-0 bg-dark-card z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">תאריך</th>
                     <th className="text-center p-2 text-gray-400 font-medium">משקל בוקר</th>
                     <th className="text-center p-2 text-gray-400 font-medium">סה"כ קלוריות</th>
                     <th className="text-center p-2 text-gray-400 font-medium">חלבון</th>
@@ -623,7 +623,7 @@ const NutritionTracking: React.FC = () => {
                             : 'hover:bg-dark-hover/30'
                         }`}
                       >
-                        <td className={`p-2 sticky right-0 ${isAverage ? 'bg-cyan-500/10' : 'bg-dark-card'}`}>
+                        <td className={`p-2 sticky right-0 shadow-[2px_0_5px_rgba(0,0,0,0.3)] ${isAverage ? 'bg-cyan-500/10' : 'bg-dark-card'}`}>
                           {isAverage ? (
                             <div className="text-cyan-300 text-xs px-2 py-1 font-semibold">
                               {entry.notes}

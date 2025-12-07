@@ -241,11 +241,11 @@ const WorkoutPlanUser: React.FC = () => {
           </div>
 
           {!isCollapsed && (
-          <div className="overflow-x-auto">
+          <div className="overflow-auto max-h-[600px]">
             <table className="w-full border-collapse text-xs">
-              <thead>
+              <thead className="sticky top-0 z-20">
                 <tr className="bg-dark-hover">
-                  <th className="border border-dark-border px-1.5 sm:px-2 py-1 sm:py-1.5 text-gray-300 font-semibold text-right sticky right-0 bg-dark-hover z-10 text-[10px] sm:text-xs">תרגיל</th>
+                  <th className="border border-dark-border px-1.5 sm:px-2 py-1 sm:py-1.5 text-gray-300 font-semibold text-right sticky right-0 bg-dark-hover z-30 text-[10px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)]">תרגיל</th>
                   <th className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-gray-300 font-semibold text-center text-[10px] sm:text-xs w-12 sm:w-16">סטים</th>
                   <th className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-gray-300 font-semibold text-center text-[10px] sm:text-xs w-16 sm:w-24">חזרות</th>
                   <th className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-gray-300 font-semibold text-center text-[10px] sm:text-xs w-16 sm:w-24">מנוחה</th>
@@ -273,7 +273,7 @@ const WorkoutPlanUser: React.FC = () => {
                   const numSets = parseInt(exercise.sets) || 3
                   return (
                     <tr key={exerciseIndex} className="hover:bg-dark-hover/50">
-                      <td className="border border-dark-border px-1.5 sm:px-2 py-1 sm:py-1.5 text-white font-medium sticky right-0 bg-dark-card z-10 text-[10px] sm:text-xs">
+                      <td className="border border-dark-border px-1.5 sm:px-2 py-1 sm:py-1.5 text-white font-medium sticky right-0 bg-dark-card z-10 text-[10px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.name}
                       </td>
                       <td className="border border-dark-border px-1 sm:px-1.5 py-1 sm:py-1.5 text-center text-gray-300 text-[10px] sm:text-xs">
