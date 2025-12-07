@@ -20,8 +20,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    // Check if user is logged in (from localStorage)
-    const savedUser = localStorage.getItem('gym_user')
+    // Check if user is logged in (from localStorage or sessionStorage)
+    const savedUser = localStorage.getItem('gym_user') || sessionStorage.getItem('gym_user')
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser)
       setUser(parsedUser)
@@ -36,20 +36,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await api.post('/auth/login-refresh', { email })
       const userData = response.data
       setUser(userData)
-      localStorage.setItem('gym_user', JSON.stringify(userData))
+      
+      // Update in the same storage where it was saved
+      if (localStorage.getItem('gym_user')) {
+        localStorage.setItem('gym_user', JSON.stringify(userData))
+      } else if (sessionStorage.getItem('gym_user')) {
+        sessionStorage.setItem('gym_user', JSON.stringify(userData))
+      }
     } catch (error) {
       console.error('Error refreshing user data:', error)
       // Keep existing user data if refresh fails
     }
   }
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, rememberMe: boolean = false) => {
     try {
       const response = await api.post('/auth/login', { email, password })
       const userData = response.data
       
       setUser(userData)
-      localStorage.setItem('gym_user', JSON.stringify(userData))
+      
+      // Save to localStorage if "Remember Me" is checked, otherwise sessionStorage
+      if (rememberMe) {
+        localStorage.setItem('gym_user', JSON.stringify(userData))
+        sessionStorage.removeItem('gym_user') // Clear session storage
+      } else {
+        sessionStorage.setItem('gym_user', JSON.stringify(userData))
+        localStorage.removeItem('gym_user') // Clear local storage
+      }
     } catch (error: any) {
       console.error('Login error:', error)
       throw new Error(error.response?.data?.error || 'נכשל ההתחברות')
@@ -72,6 +86,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     setUser(null)
     localStorage.removeItem('gym_user')
+    sessionStorage.removeItem('gym_user')
   }
 
   const updateProfile = async (name: string, email: string, phone: string) => {
@@ -80,7 +95,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         await api.put(`/users/${user.id}`, { name, email, phone })
         const updatedUser = { ...user, name, email, phone }
         setUser(updatedUser)
-        localStorage.setItem('gym_user', JSON.stringify(updatedUser))
+        
+        // Update in the same storage where it was saved
+        if (localStorage.getItem('gym_user')) {
+          localStorage.setItem('gym_user', JSON.stringify(updatedUser))
+        } else if (sessionStorage.getItem('gym_user')) {
+          sessionStorage.setItem('gym_user', JSON.stringify(updatedUser))
+        }
       } catch (error) {
         console.error('Update profile error:', error)
         throw new Error('נכשל עדכון הפרופיל')

@@ -11,6 +11,7 @@ import FullWeekView from './components/FullWeekView'
 import MyWorkouts from './components/MyWorkouts'
 import LoginPage from './components/LoginPage'
 import ManageUsers from './components/ManageUsers'
+import ForgotPasswordModal from './components/ForgotPasswordModal'
 
 type ViewMode = 'day' | 'week' | 'workout' | 'tracking' | 'myworkouts'
 
@@ -22,6 +23,7 @@ function AppContent() {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showProfileModal, setShowProfileModal] = useState(false)
   const [showManageUsers, setShowManageUsers] = useState(false)
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('day')
   const [weekOffset, setWeekOffset] = useState(0)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
@@ -74,7 +76,19 @@ function AppContent() {
 
   // Show login page if user is not authenticated
   if (!user) {
-    return <LoginPage onLogin={login} onRegister={register} />
+    return (
+      <>
+        <LoginPage 
+          onLogin={login} 
+          onRegister={register} 
+          onForgotPassword={() => setShowForgotPassword(true)}
+        />
+        <ForgotPasswordModal
+          isOpen={showForgotPassword}
+          onClose={() => setShowForgotPassword(false)}
+        />
+      </>
+    )
   }
 
   return (

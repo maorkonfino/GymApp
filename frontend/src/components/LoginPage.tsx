@@ -39,11 +39,12 @@ const WolfIcon = ({ className }: { className?: string }) => (
 )
 
 interface LoginPageProps {
-  onLogin: (email: string, password: string) => Promise<void>
+  onLogin: (email: string, password: string, rememberMe?: boolean) => Promise<void>
   onRegister: (name: string, lastName: string, phone: string, email: string, password: string) => Promise<void>
+  onForgotPassword?: () => void
 }
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister }) => {
+const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPassword }) => {
   const [mode, setMode] = useState<'welcome' | 'login' | 'register'>('welcome')
   const [formData, setFormData] = useState({
     name: '',
@@ -53,6 +54,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister }) => {
     password: '',
     confirmPassword: ''
   })
+  const [rememberMe, setRememberMe] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -90,8 +92,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister }) => {
           setLoading(false)
           return
         }
-        console.log('🔑 Logging in user:', formData.email)
-        await onLogin(formData.email, formData.password)
+        console.log('🔑 Logging in user:', formData.email, 'Remember Me:', rememberMe)
+        await onLogin(formData.email, formData.password, rememberMe)
         console.log('✅ Login successful!')
       }
     } catch (err: any) {
@@ -362,6 +364,28 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister }) => {
                   />
                 </div>
                 <p className="text-xs text-gray-400 mt-1">הזן את הססמה שוב לאימות</p>
+              </div>
+            )}
+
+            {/* Remember Me & Forgot Password - Only on login */}
+            {mode === 'login' && (
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 text-cyan-500 bg-dark-hover border-dark-border rounded focus:ring-2 focus:ring-cyan-500"
+                  />
+                  <span className="text-sm text-gray-300">זכור אותי</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={onForgotPassword}
+                  className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  שכחתי סיסמה
+                </button>
               </div>
             )}
 

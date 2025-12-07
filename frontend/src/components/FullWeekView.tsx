@@ -215,13 +215,13 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
           <table className="w-full text-sm border-collapse">
             <thead className="sticky top-0 bg-dark-card z-20 shadow-lg">
                   <tr>
-                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[10px] sm:text-sm min-w-[65px] sm:min-w-auto">
+                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[10px] sm:text-sm w-[50px] sm:w-auto">
                       שעות
                     </th>
                     {weekDates.map((date, idx) => (
-                      <th key={idx} className="p-1 sm:p-2 text-center border border-dark-border bg-dark-hover text-gray-400 font-medium min-w-[85px] sm:min-w-[150px]">
-                        <div className="text-[10px] sm:text-sm leading-tight">{format(date, 'EEEE', { locale: he })}</div>
-                        <div className="text-[9px] sm:text-xs text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
+                      <th key={idx} className="p-0.5 sm:p-2 text-center border border-dark-border bg-dark-hover text-gray-400 font-medium w-[13%] sm:w-auto">
+                        <div className="text-[9px] sm:text-sm leading-tight whitespace-nowrap">{format(date, 'EEE', { locale: he })}</div>
+                        <div className="text-[8px] sm:text-xs text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
                       </th>
                     ))}
                   </tr>
@@ -332,10 +332,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                             <X className="w-2.5 h-2.5" />
                                           </button>
                                         )}
-                                        <div className="text-[8px] sm:text-[9px] font-medium leading-tight">
+                                        <div className="text-[7px] sm:text-[9px] font-medium leading-tight">
                                           {getFirstName(reg.name)}
                                         </div>
-                                        <div className="text-[7px] sm:text-[7px] opacity-60 mt-0.5 leading-tight">
+                                        <div className="text-[6px] sm:text-[7px] opacity-60 mt-0.5 leading-tight">
                                           {reg.startTime}-{reg.endTime}
                                         </div>
                                       </div>
