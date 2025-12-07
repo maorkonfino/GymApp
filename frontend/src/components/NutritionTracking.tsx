@@ -650,7 +650,7 @@ const NutritionTracking: React.FC = () => {
                     <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">שומן</th>
                     <th className="text-center p-0.5 text-gray-400 font-medium w-12 sm:w-16">פחמימות</th>
                     <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">צעדים</th>
-                    <th className="text-right p-0.5 text-gray-400 font-medium w-16 sm:w-24">הערות</th>
+                    <th className="text-right p-0.5 text-gray-400 font-medium w-10 sm:w-12">הערות</th>
                     <th className="w-6 sm:w-8"></th>
                   </tr>
                 </thead>
@@ -725,10 +725,10 @@ const NutritionTracking: React.FC = () => {
                           ) : actualIndex >= 0 ? (
                             <button
                               onClick={() => openNotesModal(actualIndex)}
-                              className="w-full bg-dark-hover hover:bg-dark-border border border-dark-border rounded px-0.5 py-0.5 text-white text-[7px] sm:text-[9px] text-right transition-colors focus:outline-none focus:ring-1 focus:ring-green-500"
-                              title="לחץ לעריכת הערות"
+                              className="w-9 sm:w-11 bg-dark-hover hover:bg-dark-border border border-dark-border rounded px-0.5 py-0.5 text-white text-[7px] sm:text-[9px] text-center transition-colors focus:outline-none focus:ring-1 focus:ring-green-500 truncate"
+                              title={entry.notes || 'לחץ לעריכת הערות'}
                             >
-                              {entry.notes || 'הוסף הערות...'}
+                              {entry.notes ? '📝' : '+'}
                             </button>
                           ) : (
                             <div className="text-gray-600 text-[7px]">-</div>
