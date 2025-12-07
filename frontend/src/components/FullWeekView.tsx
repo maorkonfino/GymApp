@@ -47,27 +47,40 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const timeSlotRanges = generateTimeSlotRanges()
 
   // Swipe gesture support for mobile
-  const [touchStart, setTouchStart] = useState<number | null>(null)
-  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null)
+  const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null)
 
   // Minimum swipe distance (in px) to trigger week change
   const minSwipeDistance = 50
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null) // Reset touch end
-    setTouchStart(e.targetTouches[0].clientX)
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    })
   }
 
   const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
+    setTouchEnd({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY
+    })
   }
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return
     
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > minSwipeDistance
-    const isRightSwipe = distance < -minSwipeDistance
+    const distanceX = touchStart.x - touchEnd.x
+    const distanceY = touchStart.y - touchEnd.y
+    
+    // Check if it's a horizontal swipe (not vertical scroll)
+    const isHorizontalSwipe = Math.abs(distanceX) > Math.abs(distanceY)
+    
+    if (!isHorizontalSwipe) return // Ignore vertical scrolls
+    
+    const isLeftSwipe = distanceX > minSwipeDistance
+    const isRightSwipe = distanceX < -minSwipeDistance
 
     // Reversed for RTL (Hebrew): left swipe = previous, right swipe = next
     if (isLeftSwipe) {
@@ -190,19 +203,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      {/* Title - Only in embedded mode */}
-      {embedded && (
-        <div className="mb-2 sm:mb-4">
-          <h2 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
-            <span className="text-cyan-400 text-base sm:text-2xl">📅</span>
-            הרשמה לאימון
-          </h2>
-        </div>
-      )}
-      
-      {/* Week Navigation - Sticky */}
-      <div className="sticky top-0 z-30 bg-dark-card pb-2 sm:pb-4 -mx-2 sm:-mx-4 px-2 sm:px-4">
-        <div className="flex items-center justify-between bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
+      {/* Week Navigation - Fixed at top of viewport */}
+      <div className="fixed top-[64px] sm:top-[80px] left-0 right-0 z-40 bg-dark-bg px-4 sm:px-6 lg:px-8 py-2 sm:py-3 shadow-lg border-b border-dark-border">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between bg-dark-hover rounded-lg p-2 sm:p-3">
             <button
               onClick={() => onWeekChange('prev')}
               className="p-1.5 sm:p-2 hover:bg-dark-card rounded-lg transition-colors flex items-center gap-1 sm:gap-2 text-cyan-400"
@@ -239,6 +243,17 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
             </button>
           </div>
         </div>
+      </div>
+      
+      {/* Title and spacing for fixed navigation */}
+      {embedded && (
+        <div className="pt-[76px] sm:pt-[88px] mb-2 sm:mb-4">
+          <h2 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+            <span className="text-cyan-400 text-base sm:text-2xl">📅</span>
+            הרשמה לאימון
+          </h2>
+        </div>
+      )}
         
         {loading ? (
           <div className="text-center py-12">
@@ -247,7 +262,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
           </div>
         ) : (
         <table className="w-full text-sm border-collapse table-fixed">
-          <thead className="sticky top-[56px] sm:top-[64px] bg-dark-card z-20 shadow-lg">
+          <thead className="sticky top-[140px] sm:top-[164px] bg-dark-card z-30 shadow-lg">
                   <tr>
                     <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[45px] sm:w-[80px]">
                       שעות
