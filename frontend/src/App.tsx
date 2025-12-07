@@ -124,7 +124,7 @@ function AppContent() {
                 onDataChange={handleDataChange}
               />
               {/* Spacing below table */}
-              <div className="h-20 sm:h-24"></div>
+              <div className="h-12 sm:h-16"></div>
             </div>
           } />
 
