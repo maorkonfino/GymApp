@@ -302,7 +302,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   rowSpan={rowSpan}
                                   className={`p-0 border border-dark-border relative ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
-                                  } ${isTeenHours ? 'bg-gradient-to-br from-cyan-500/10 to-blue-500/10' : ''}`}
+                                  } ${
+                                    isTeenHours 
+                                      ? 'bg-gradient-to-br from-cyan-500/10 to-blue-500/10' 
+                                      : 'bg-blue-500/15'
+                                  }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
                                 >
                                   {/* "More" button - top right corner */}
@@ -376,11 +380,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                               )
                             }
                             
-                            // Empty cell - clickable for registration
+                            // Empty cell - clickable for registration (dark background)
                             return (
                               <td 
                                 key={dateIdx} 
-                                className={`p-0.5 border border-dark-border align-top ${
+                                className={`p-0.5 border border-dark-border align-top bg-dark-bg ${
                                   onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
                                 }`}
                                 onClick={() => onCellClick && onCellClick(date, timeRange)}
