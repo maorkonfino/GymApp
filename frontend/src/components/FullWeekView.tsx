@@ -370,14 +370,16 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 <td 
                                   key={dateIdx} 
                                   rowSpan={teenRowSpan}
-                                  className={`p-2 border border-dark-border align-middle bg-gradient-to-br from-cyan-500/10 to-blue-500/10 ${
+                                  className={`p-0 border border-dark-border relative bg-gradient-to-br from-cyan-500/10 to-blue-500/10 ${
                                     onCellClick ? 'cursor-pointer hover:bg-cyan-500/15 transition-colors' : ''
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
                                 >
-                                  <div className="flex items-center justify-center h-full">
-                                    <div className="inline-block px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg text-sm sm:text-base font-bold shadow-lg">
-                                      שלומי
+                                  <div className="grid grid-cols-1 gap-0.5 h-full p-0.5">
+                                    <div className="relative px-0.5 py-0.5 sm:px-1.5 sm:py-1 rounded flex flex-col justify-center text-center bg-gradient-to-r from-cyan-500/30 to-blue-600/30 text-cyan-300 border border-cyan-500/40">
+                                      <div className="text-[6px] sm:text-[9px] font-medium leading-tight">
+                                        שלומי
+                                      </div>
                                     </div>
                                   </div>
                                 </td>
