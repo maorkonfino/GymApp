@@ -69,12 +69,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const isLeftSwipe = distance > minSwipeDistance
     const isRightSwipe = distance < -minSwipeDistance
 
+    // Reversed for RTL (Hebrew): left swipe = previous, right swipe = next
     if (isLeftSwipe) {
-      // Swipe left = next week (forward)
-      onWeekChange('next')
-    } else if (isRightSwipe) {
-      // Swipe right = previous week (back)
       onWeekChange('prev')
+    } else if (isRightSwipe) {
+      onWeekChange('next')
     }
   }
 
@@ -145,43 +144,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   // Get first name only
   const getFirstName = (fullName: string): string => {
     return fullName.split(' ')[0]
-  }
-
-  // Calculate rowSpan for TeenBEAST hours
-  const getTeenHoursRowSpan = (date: Date, startTime: string): number => {
-    const dayOfWeek = date.getDay()
-    const teenTimes: { [key: number]: { start: string; end: string } } = {
-      0: { start: '15:30', end: '18:30' }, // Sunday
-      1: { start: '15:30', end: '18:30' }, // Monday
-      2: { start: '15:30', end: '17:30' }, // Tuesday
-      3: { start: '15:30', end: '18:30' }, // Wednesday
-      4: { start: '15:30', end: '18:30' }, // Thursday
-      5: { start: '12:00', end: '14:00' }, // Friday
-    }
-    
-    const times = teenTimes[dayOfWeek]
-    if (!times || startTime !== times.start) return 0
-    
-    // Calculate duration in 30-minute slots
-    const [startHour, startMin] = times.start.split(':').map(Number)
-    const [endHour, endMin] = times.end.split(':').map(Number)
-    const startMinutes = startHour * 60 + startMin
-    const endMinutes = endHour * 60 + endMin
-    const durationMinutes = endMinutes - startMinutes
-    
-    return durationMinutes / 30 // Each slot is 30 minutes
-  }
-
-  // Check if this is the start of TeenBEAST hours
-  const isTeenHoursStart = (date: Date, timeSlot: string): boolean => {
-    const dayOfWeek = date.getDay()
-    const [slotStart] = timeSlot.split('-')
-    
-    const teenStartTimes: { [key: number]: string } = {
-      0: '15:30', 1: '15:30', 2: '15:30', 3: '15:30', 4: '15:30', 5: '12:00'
-    }
-    
-    return teenStartTimes[dayOfWeek] === slotStart
   }
 
   // Handle "Show All" modal
@@ -349,34 +311,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   </td>
                                 )
                               }
-                            }
-                            
-                            // Check if this is the start of TeenBEAST hours (show trainer as merged cell)
-                            const isTeenStart = isTeenHoursStart(date, timeRange)
-                            
-                            // Handle TeenBEAST hours - merged cell for entire duration
-                            if (isTeenStart) {
-                              const teenRowSpan = getTeenHoursRowSpan(date, rangeStart)
-                              
-                              // Mark future cells as rendered
-                              for (let i = 1; i < teenRowSpan; i++) {
-                                const futureTimeRange = timeSlotRanges[timeIdx + i]
-                                if (futureTimeRange) {
-                                  skipCells.add(`${dateStr}-${futureTimeRange}`)
-                                }
-                              }
-                              
-                              return (
-                                <td 
-                                  key={dateIdx} 
-                                  rowSpan={teenRowSpan}
-                                  className="p-0.5 sm:p-2 border border-dark-border align-middle bg-cyan-500/10"
-                                >
-                                  <div className="text-center py-1 sm:py-4 text-cyan-400 font-medium text-[8px] sm:text-sm leading-tight">
-                                    שלומי
-                                  </div>
-                                </td>
-                              )
                             }
                             
                             // Get registrations that START in this time slot
