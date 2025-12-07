@@ -13,6 +13,7 @@ import MyWorkouts from './components/MyWorkouts'
 import LoginPage from './components/LoginPage'
 import ManageUsers from './components/ManageUsers'
 import ForgotPasswordModal from './components/ForgotPasswordModal'
+import ResetPassword from './components/ResetPassword'
 
 function AppContent() {
   const { user, login, register } = useAuth()
@@ -76,8 +77,11 @@ function AppContent() {
     setEditingRegistration(null)
   }
 
-  // Show login page if user is not authenticated
-  if (!user) {
+  // Check if we're on the reset password page
+  const isResetPasswordPage = location.pathname === '/reset-password'
+
+  // Show login page if user is not authenticated (unless on reset password page)
+  if (!user && !isResetPasswordPage) {
     return (
       <>
         <LoginPage 
@@ -98,6 +102,11 @@ function AppContent() {
         />
       </>
     )
+  }
+
+  // Reset password page (accessible without login)
+  if (isResetPasswordPage) {
+    return <ResetPassword />
   }
 
   return (
