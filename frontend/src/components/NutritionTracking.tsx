@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Apple, Plus, Trash2, LineChart } from 'lucide-react'
+import { Apple, Plus, Trash2, LineChart, ChevronDown, ChevronUp } from 'lucide-react'
 import { format } from 'date-fns'
 import WeightGraph from './WeightGraph'
 import BeastLogo from './BeastLogo'
@@ -129,6 +129,7 @@ const NutritionTracking: React.FC = () => {
   const [entries, setEntries] = useState<DailyEntry[]>([])
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [collapsedWeeks, setCollapsedWeeks] = useState<Set<string>>(new Set()) // Track collapsed weeks
 
   // Load daily tracking entries from server
   useEffect(() => {
@@ -278,6 +279,18 @@ const NutritionTracking: React.FC = () => {
     }
   }
 
+  const toggleWeekCollapse = (weekKey: string) => {
+    setCollapsedWeeks(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(weekKey)) {
+        newSet.delete(weekKey)
+      } else {
+        newSet.add(weekKey)
+      }
+      return newSet
+    })
+  }
+
   // Group entries by week and calculate weekly averages
   const getEntriesWithAverages = () => {
     if (!entries || entries.length === 0) return []
@@ -295,7 +308,7 @@ const NutritionTracking: React.FC = () => {
       })
 
       // Create result array with entries and weekly averages
-      const result: (DailyEntry & { isAverage?: boolean })[] = []
+      const result: (DailyEntry & { isAverage?: boolean; weekKey?: string })[] = []
       
       Object.keys(weeks).sort((a, b) => new Date(b).getTime() - new Date(a).getTime()).forEach(weekKey => {
         const weekEntries = weeks[weekKey].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -309,6 +322,8 @@ const NutritionTracking: React.FC = () => {
           ? (validWeights.reduce((a, b) => a + b, 0) / validWeights.length).toFixed(1)
           : ''
 
+        const isCollapsed = collapsedWeeks.has(weekKey)
+
         // Add average row at the top of the week
         result.push({
           date: weekKey,
@@ -319,11 +334,14 @@ const NutritionTracking: React.FC = () => {
           carbs: '',
           steps: '',
           notes: `ממוצע שבועי ${format(new Date(weekKey), 'dd/MM')} - ${format(new Date(new Date(weekKey).getTime() + 6 * 24 * 60 * 60 * 1000), 'dd/MM')}`,
-          isAverage: true
+          isAverage: true,
+          weekKey: weekKey
         })
 
-        // Add week entries
-        result.push(...weekEntries)
+        // Add week entries only if not collapsed
+        if (!isCollapsed) {
+          result.push(...weekEntries)
+        }
       })
 
       return result
@@ -657,7 +675,19 @@ const NutritionTracking: React.FC = () => {
                           )}
                         </td>
                         <td className="p-2 text-center">
-                          {!isAverage && actualIndex >= 0 && (
+                          {isAverage && 'weekKey' in entry ? (
+                            <button
+                              onClick={() => toggleWeekCollapse(entry.weekKey!)}
+                              className="p-1.5 hover:bg-cyan-500/20 rounded-lg transition-colors text-cyan-400"
+                              title={collapsedWeeks.has(entry.weekKey!) ? "פתח שבוע" : "סגור שבוע"}
+                            >
+                              {collapsedWeeks.has(entry.weekKey!) ? (
+                                <ChevronDown className="w-4 h-4" />
+                              ) : (
+                                <ChevronUp className="w-4 h-4" />
+                              )}
+                            </button>
+                          ) : !isAverage && actualIndex >= 0 && (
                             <button
                               onClick={() => removeRow(actualIndex)}
                               className="text-red-400 hover:text-red-300 transition-colors p-1"
