@@ -200,9 +200,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         </div>
       )}
       
-      {/* Week Navigation */}
-      <div className="pb-2 sm:pb-4">
-        <div className="flex items-center justify-between bg-dark-hover rounded-lg p-2 sm:p-3">
+      {/* Week Navigation - Sticky */}
+      <div className="sticky top-0 z-30 bg-dark-card pb-2 sm:pb-4">
+        <div className="flex items-center justify-between bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
           <button
             onClick={() => onWeekChange('prev')}
             className="p-1.5 sm:p-2 hover:bg-dark-card rounded-lg transition-colors flex items-center gap-1 sm:gap-2 text-cyan-400"
@@ -249,7 +249,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
           </div>
         ) : (
           <table className="w-full text-sm border-collapse table-fixed">
-            <thead className="sticky top-0 bg-dark-card z-20 shadow-lg">
+            <thead className="sticky top-[60px] sm:top-[72px] bg-dark-card z-20 shadow-lg">
                   <tr>
                     <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[45px] sm:w-[80px]">
                       שעות
