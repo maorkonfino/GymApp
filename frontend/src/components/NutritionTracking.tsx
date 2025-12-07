@@ -335,7 +335,7 @@ const NutritionTracking: React.FC = () => {
           fat: '',
           carbs: '',
           steps: '',
-          notes: `ממוצע שבועי ${format(new Date(weekKey), 'dd/MM')} - ${format(new Date(new Date(weekKey).getTime() + 6 * 24 * 60 * 60 * 1000), 'dd/MM')}`,
+          notes: `ממוצע שבועי`,
           isAverage: true,
           weekKey: weekKey
         })
@@ -653,7 +653,7 @@ const NutritionTracking: React.FC = () => {
                                 step="0.1"
                                 value={entry[field]}
                                 onChange={(e) => updateEntry(actualIndex, field, e.target.value)}
-                                className="w-20 bg-dark-hover border border-dark-border rounded px-2 py-1 text-white text-center text-xs focus:outline-none focus:ring-1 focus:ring-green-500"
+                                className="w-20 bg-dark-hover border border-dark-border rounded px-2 py-1 text-white text-center text-xs font-bold focus:outline-none focus:ring-1 focus:ring-green-500"
                                 placeholder="0"
                               />
                             ) : (
