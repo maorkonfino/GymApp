@@ -278,10 +278,10 @@ const WorkoutPlanUser: React.FC = () => {
               <thead className="sticky top-0 z-20">
                 <tr className="bg-dark-hover">
                   <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-right sticky right-0 bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-[50px] sm:w-[70px]">תרגיל</th>
-                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">סטים</th>
-                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">חזרות</th>
-                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">מנוחה</th>
-                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">RIR</th>
+                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center sticky right-[50px] sm:right-[70px] bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-6 sm:w-8">סטים</th>
+                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center sticky right-[74px] sm:right-[102px] bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-8 sm:w-12">חזרות</th>
+                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center sticky right-[106px] sm:right-[150px] bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-8 sm:w-12">מנוחה</th>
+                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center sticky right-[138px] sm:right-[198px] bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-6 sm:w-8">RIR</th>
                   {(() => {
                     // Sort weeks: open weeks first (by number), then collapsed weeks (by number)
                     const allWeeks = Array.from({ length: getActualWeeks() }, (_, i) => i + 1)
@@ -335,16 +335,16 @@ const WorkoutPlanUser: React.FC = () => {
                       <td className="border border-dark-border px-0.5 py-0.5 text-white font-medium sticky right-0 bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.name}
                       </td>
-                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300">
+                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300 sticky right-[50px] sm:right-[70px] bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.sets}
                       </td>
-                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300">
+                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300 sticky right-[74px] sm:right-[102px] bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.repsRange}
                       </td>
-                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300">
+                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300 sticky right-[106px] sm:right-[150px] bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.rest}
                       </td>
-                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300">
+                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300 sticky right-[138px] sm:right-[198px] bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.rir}
                       </td>
                       {(() => {
