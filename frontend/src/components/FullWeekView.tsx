@@ -260,7 +260,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
           </div>
         ) : (
         <table className="w-full text-sm border-collapse table-fixed">
-          <thead className="bg-dark-card shadow-lg">
+          <thead className="bg-dark-card shadow-lg sticky top-0 z-20">
                   <tr>
                     <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[70px] sm:w-[100px]">
                       שעות
