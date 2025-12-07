@@ -212,16 +212,16 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
             <p className="text-gray-400">טוען...</p>
           </div>
         ) : (
-          <table className="w-full text-sm border-collapse">
+          <table className="w-full text-sm border-collapse table-fixed">
             <thead className="sticky top-0 bg-dark-card z-20 shadow-lg">
                   <tr>
-                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[10px] sm:text-sm w-[50px] sm:w-auto">
+                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[45px] sm:w-[80px]">
                       שעות
                     </th>
                     {weekDates.map((date, idx) => (
-                      <th key={idx} className="p-0.5 sm:p-2 text-center border border-dark-border bg-dark-hover text-gray-400 font-medium w-[13%] sm:w-auto">
-                        <div className="text-[9px] sm:text-sm leading-tight whitespace-nowrap">{format(date, 'EEE', { locale: he })}</div>
-                        <div className="text-[8px] sm:text-xs text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
+                      <th key={idx} className="p-0.5 sm:p-2 text-center border border-dark-border bg-dark-hover text-gray-400 font-medium">
+                        <div className="text-[8px] sm:text-sm leading-tight">{format(date, 'EEE', { locale: he })}</div>
+                        <div className="text-[7px] sm:text-xs text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
                       </th>
                     ))}
                   </tr>
@@ -237,7 +237,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       return (
                         <tr key={timeIdx} className="hover:bg-dark-hover/30">
                           {/* Time Range Cell */}
-                          <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[9px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight">
+                          <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight">
                             {timeRange}
                           </td>
                           
@@ -266,11 +266,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   <td 
                                     key={dateIdx} 
                                     rowSpan={2}
-                                    className="p-1 sm:p-2 border border-dark-border align-middle bg-yellow-500/10"
+                                    className="p-0.5 sm:p-2 border border-dark-border align-middle bg-yellow-500/10"
                                   >
-                                    <div className="text-center py-2 sm:py-4 text-yellow-400 font-medium text-[9px] sm:text-sm leading-tight">
-                                      🔒 סגור לגיל השלישי<br/>
-                                      <span className="text-[8px] sm:text-xs">09:00-10:00</span>
+                                    <div className="text-center py-1 sm:py-4 text-yellow-400 font-medium text-[8px] sm:text-sm leading-tight">
+                                      🔒 סגור<br/>
+                                      <span className="text-[7px] sm:text-xs">09:00-10:00</span>
                                     </div>
                                   </td>
                                 )
@@ -313,11 +313,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     </button>
                                   )}
                                   
-                                  <div className={`grid ${regsStartingHere.length <= 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5 sm:p-1`}>
+                                  <div className={`grid ${regsStartingHere.length <= 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
                                     {regsStartingHere.slice(0, 4).map((reg) => (
                                       <div
                                         key={reg.id}
-                                        className={`relative px-1 py-0.5 sm:px-1.5 sm:py-1 rounded flex flex-col justify-center text-center group ${
+                                        className={`relative px-0.5 py-0.5 sm:px-1.5 sm:py-1 rounded flex flex-col justify-center text-center group ${
                                           user?.email === reg.email
                                             ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                                             : 'bg-blue-500/20 text-blue-300'
@@ -332,10 +332,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                             <X className="w-2.5 h-2.5" />
                                           </button>
                                         )}
-                                        <div className="text-[7px] sm:text-[9px] font-medium leading-tight">
+                                        <div className="text-[6px] sm:text-[9px] font-medium leading-tight">
                                           {getFirstName(reg.name)}
                                         </div>
-                                        <div className="text-[6px] sm:text-[7px] opacity-60 mt-0.5 leading-tight">
+                                        <div className="text-[5px] sm:text-[7px] opacity-60 mt-0.5 leading-tight">
                                           {reg.startTime}-{reg.endTime}
                                         </div>
                                       </div>
@@ -349,12 +349,12 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                             return (
                               <td 
                                 key={dateIdx} 
-                                className={`p-0.5 sm:p-2 border border-dark-border align-top ${
+                                className={`p-0.5 border border-dark-border align-top ${
                                   onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
                                 }`}
                                 onClick={() => onCellClick && onCellClick(date, timeRange)}
                               >
-                                <div className="text-center text-gray-600 text-[10px] sm:text-xs py-1 sm:py-2">
+                                <div className="text-center text-gray-600 text-[9px] sm:text-xs py-0.5 sm:py-2">
                                   {onCellClick ? '+' : '-'}
                                 </div>
                               </td>
