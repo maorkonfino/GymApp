@@ -1,0 +1,45 @@
+{
+  "name": "BEAST Gym - מערכת ניהול אימונים",
+  "short_name": "BEAST Gym",
+  "description": "מערכת ניהול אימונים ומעקב תזונה",
+  "theme_color": "#06b6d4",
+  "background_color": "#0f172a",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "dir": "rtl",
+  "lang": "he",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-1.png",
+      "sizes": "1280x720",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["health", "fitness", "sports"],
+  "shortcuts": [
+    {
+      "name": "רישום לאימון",
+      "short_name": "אימון",
+      "description": "רישום מהיר לאימון",
+      "url": "/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
+

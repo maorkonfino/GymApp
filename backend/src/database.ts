@@ -1,0 +1,396 @@
+import Database from 'better-sqlite3';
+import path from 'path';
+
+const db = new Database(path.join(__dirname, '../gym.db'));
+
+// Create tables
+db.exec(`
+  CREATE TABLE IF NOT EXISTS registrations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    email TEXT NOT NULL,
+    date TEXT NOT NULL,
+    start_time TEXT NOT NULL,
+    end_time TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    reminder_24h_sent INTEGER DEFAULT 0,
+    reminder_4h_sent INTEGER DEFAULT 0
+  );
+
+  CREATE TABLE IF NOT EXISTS workout_plans (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT NOT NULL,
+    plan_content TEXT NOT NULL,
+    created_by TEXT NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS nutrition_goals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT NOT NULL UNIQUE,
+    regular_day_protein REAL DEFAULT 0,
+    regular_day_fat REAL DEFAULT 0,
+    regular_day_carbs REAL DEFAULT 0,
+    loading_day_protein REAL DEFAULT 0,
+    loading_day_fat REAL DEFAULT 0,
+    loading_day_carbs REAL DEFAULT 0,
+    updated_by TEXT NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS daily_tracking (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT NOT NULL,
+    date TEXT NOT NULL,
+    morning_weight REAL,
+    total_calories REAL,
+    protein REAL,
+    fat REAL,
+    carbs REAL,
+    steps INTEGER,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_email, date)
+  );
+
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    password TEXT NOT NULL,
+    role TEXT DEFAULT 'kibbutz',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+`);
+
+// Add password column to existing users table if it doesn't exist
+try {
+  db.exec('ALTER TABLE users ADD COLUMN password TEXT');
+} catch (e) {
+  // Column already exists, ignore
+}
+
+export interface Registration {
+  id?: number;
+  full_name: string;
+  phone: string;
+  email: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  created_at?: string;
+  reminder_24h_sent?: number;
+  reminder_4h_sent?: number;
+}
+
+export const createRegistration = (registration: Omit<Registration, 'id' | 'created_at'>) => {
+  const stmt = db.prepare(`
+    INSERT INTO registrations (full_name, phone, email, date, start_time, end_time)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+  
+  const result = stmt.run(
+    registration.full_name,
+    registration.phone,
+    registration.email,
+    registration.date,
+    registration.start_time,
+    registration.end_time
+  );
+  
+  return result.lastInsertRowid;
+};
+
+export const getRegistrationsByDate = (date: string): Registration[] => {
+  const stmt = db.prepare(`
+    SELECT * FROM registrations 
+    WHERE date = ?
+    ORDER BY start_time
+  `);
+  
+  return stmt.all(date) as Registration[];
+};
+
+export const getRegistrationsByDateRange = (startDate: string, endDate: string): Registration[] => {
+  const stmt = db.prepare(`
+    SELECT * FROM registrations 
+    WHERE date >= ? AND date <= ?
+    ORDER BY date, start_time
+  `);
+  
+  return stmt.all(startDate, endDate) as Registration[];
+};
+
+export const getRegistrationCountByDateTime = (date: string, time: string): number => {
+  const stmt = db.prepare(`
+    SELECT COUNT(*) as count FROM registrations 
+    WHERE date = ? AND start_time <= ? AND end_time > ?
+  `);
+  
+  const result = stmt.get(date, time, time) as { count: number };
+  return result.count;
+};
+
+export const getAllRegistrations = (): Registration[] => {
+  const stmt = db.prepare(`
+    SELECT * FROM registrations 
+    ORDER BY date, start_time
+  `);
+  
+  return stmt.all() as Registration[];
+};
+
+export const deleteRegistration = (id: number) => {
+  const stmt = db.prepare('DELETE FROM registrations WHERE id = ?');
+  return stmt.run(id);
+};
+
+export const getRegistrationsByUser = (email: string): Registration[] => {
+  const stmt = db.prepare(`
+    SELECT * FROM registrations 
+    WHERE email = ?
+    ORDER BY date, start_time
+  `);
+  
+  return stmt.all(email) as Registration[];
+};
+
+// Get registrations that need reminders
+export const getRegistrationsForReminders = (hoursBeforeMin: number, hoursBeforeMax: number, reminderType: '24h' | '4h'): Registration[] => {
+  const reminderField = reminderType === '24h' ? 'reminder_24h_sent' : 'reminder_4h_sent';
+  
+  const stmt = db.prepare(`
+    SELECT * FROM registrations 
+    WHERE ${reminderField} = 0
+    AND datetime(date || ' ' || start_time) 
+    BETWEEN datetime('now', 'localtime', '+' || ? || ' hours') 
+    AND datetime('now', 'localtime', '+' || ? || ' hours')
+    ORDER BY date, start_time
+  `);
+  
+  return stmt.all(hoursBeforeMin, hoursBeforeMax) as Registration[];
+};
+
+// Mark reminder as sent
+export const markReminderSent = (id: number, reminderType: '24h' | '4h') => {
+  const reminderField = reminderType === '24h' ? 'reminder_24h_sent' : 'reminder_4h_sent';
+  const stmt = db.prepare(`UPDATE registrations SET ${reminderField} = 1 WHERE id = ?`);
+  return stmt.run(id);
+};
+
+// Workout Plans
+export interface WorkoutPlan {
+  id?: number;
+  user_email: string;
+  plan_content: string;
+  created_by: string;
+  updated_at?: string;
+}
+
+export const getWorkoutPlan = (userEmail: string): WorkoutPlan | undefined => {
+  const stmt = db.prepare('SELECT * FROM workout_plans WHERE user_email = ?');
+  return stmt.get(userEmail) as WorkoutPlan | undefined;
+};
+
+export const saveWorkoutPlan = (plan: Omit<WorkoutPlan, 'id' | 'updated_at'>) => {
+  const existing = getWorkoutPlan(plan.user_email);
+  
+  if (existing) {
+    const stmt = db.prepare(`
+      UPDATE workout_plans 
+      SET plan_content = ?, created_by = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE user_email = ?
+    `);
+    return stmt.run(plan.plan_content, plan.created_by, plan.user_email);
+  } else {
+    const stmt = db.prepare(`
+      INSERT INTO workout_plans (user_email, plan_content, created_by)
+      VALUES (?, ?, ?)
+    `);
+    return stmt.run(plan.user_email, plan.plan_content, plan.created_by);
+  }
+};
+
+// Nutrition Goals
+export interface NutritionGoals {
+  id?: number;
+  user_email: string;
+  regular_day_protein: number;
+  regular_day_fat: number;
+  regular_day_carbs: number;
+  loading_day_protein: number;
+  loading_day_fat: number;
+  loading_day_carbs: number;
+  updated_by: string;
+  updated_at?: string;
+}
+
+export const getNutritionGoals = (userEmail: string): NutritionGoals | undefined => {
+  const stmt = db.prepare('SELECT * FROM nutrition_goals WHERE user_email = ?');
+  return stmt.get(userEmail) as NutritionGoals | undefined;
+};
+
+export const saveNutritionGoals = (goals: Omit<NutritionGoals, 'id' | 'updated_at'>) => {
+  const existing = getNutritionGoals(goals.user_email);
+  
+  if (existing) {
+    const stmt = db.prepare(`
+      UPDATE nutrition_goals 
+      SET regular_day_protein = ?, regular_day_fat = ?, regular_day_carbs = ?,
+          loading_day_protein = ?, loading_day_fat = ?, loading_day_carbs = ?,
+          updated_by = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE user_email = ?
+    `);
+    return stmt.run(
+      goals.regular_day_protein, goals.regular_day_fat, goals.regular_day_carbs,
+      goals.loading_day_protein, goals.loading_day_fat, goals.loading_day_carbs,
+      goals.updated_by, goals.user_email
+    );
+  } else {
+    const stmt = db.prepare(`
+      INSERT INTO nutrition_goals (user_email, regular_day_protein, regular_day_fat, regular_day_carbs,
+                                   loading_day_protein, loading_day_fat, loading_day_carbs, updated_by)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    return stmt.run(
+      goals.user_email, goals.regular_day_protein, goals.regular_day_fat, goals.regular_day_carbs,
+      goals.loading_day_protein, goals.loading_day_fat, goals.loading_day_carbs, goals.updated_by
+    );
+  }
+};
+
+// Daily Tracking
+export interface DailyTracking {
+  id?: number;
+  user_email: string;
+  date: string;
+  morning_weight?: number;
+  total_calories?: number;
+  protein?: number;
+  fat?: number;
+  carbs?: number;
+  steps?: number;
+  notes?: string;
+  created_at?: string;
+}
+
+export const getDailyTracking = (userEmail: string, startDate: string, endDate: string): DailyTracking[] => {
+  const stmt = db.prepare(`
+    SELECT * FROM daily_tracking 
+    WHERE user_email = ? AND date >= ? AND date <= ?
+    ORDER BY date DESC
+  `);
+  return stmt.all(userEmail, startDate, endDate) as DailyTracking[];
+};
+
+export const getAllDailyTracking = (userEmail: string): DailyTracking[] => {
+  const stmt = db.prepare('SELECT * FROM daily_tracking WHERE user_email = ? ORDER BY date DESC');
+  return stmt.all(userEmail) as DailyTracking[];
+};
+
+export const getDailyTrackingByDate = (userEmail: string, date: string): DailyTracking | undefined => {
+  const stmt = db.prepare('SELECT * FROM daily_tracking WHERE user_email = ? AND date = ?');
+  return stmt.get(userEmail, date) as DailyTracking | undefined;
+};
+
+export const saveDailyTracking = (tracking: Omit<DailyTracking, 'id' | 'created_at'>) => {
+  const existing = getDailyTrackingByDate(tracking.user_email, tracking.date);
+  
+  if (existing) {
+    const stmt = db.prepare(`
+      UPDATE daily_tracking 
+      SET morning_weight = ?, total_calories = ?, protein = ?, fat = ?, carbs = ?, steps = ?, notes = ?
+      WHERE user_email = ? AND date = ?
+    `);
+    return stmt.run(
+      tracking.morning_weight, tracking.total_calories, tracking.protein, 
+      tracking.fat, tracking.carbs, tracking.steps, tracking.notes,
+      tracking.user_email, tracking.date
+    );
+  } else {
+    const stmt = db.prepare(`
+      INSERT INTO daily_tracking (user_email, date, morning_weight, total_calories, protein, fat, carbs, steps, notes)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    return stmt.run(
+      tracking.user_email, tracking.date, tracking.morning_weight, tracking.total_calories,
+      tracking.protein, tracking.fat, tracking.carbs, tracking.steps, tracking.notes
+    );
+  }
+};
+
+export const deleteDailyTracking = (userEmail: string, date: string) => {
+  const stmt = db.prepare('DELETE FROM daily_tracking WHERE user_email = ? AND date = ?');
+  return stmt.run(userEmail, date);
+};
+
+// ===== USER MANAGEMENT =====
+
+export interface User {
+  id?: number;
+  email: string;
+  name: string;
+  phone: string;
+  password?: string; // Optional - we don't want to expose it in responses
+  role: 'admin' | 'vip' | 'kibbutz';
+  created_at?: string;
+}
+
+export const createUser = (user: Omit<User, 'id' | 'created_at'>) => {
+  const stmt = db.prepare(`
+    INSERT INTO users (email, name, phone, password, role)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+  
+  const result = stmt.run(user.email, user.name, user.phone, user.password || '', user.role);
+  return result.lastInsertRowid;
+};
+
+export const getUserByEmail = (email: string): User | undefined => {
+  const stmt = db.prepare('SELECT * FROM users WHERE email = ?');
+  return stmt.get(email) as User | undefined;
+};
+
+export const getUserById = (id: number | bigint): User | undefined => {
+  const stmt = db.prepare('SELECT * FROM users WHERE id = ?');
+  return stmt.get(id) as User | undefined;
+};
+
+export const getAllUsers = (): User[] => {
+  const stmt = db.prepare('SELECT * FROM users ORDER BY created_at DESC');
+  return stmt.all() as User[];
+};
+
+export const updateUser = (id: number, updates: Partial<Omit<User, 'id' | 'created_at'>>) => {
+  const fields = [];
+  const values = [];
+  
+  if (updates.name) {
+    fields.push('name = ?');
+    values.push(updates.name);
+  }
+  if (updates.email) {
+    fields.push('email = ?');
+    values.push(updates.email);
+  }
+  if (updates.phone) {
+    fields.push('phone = ?');
+    values.push(updates.phone);
+  }
+  if (updates.role) {
+    fields.push('role = ?');
+    values.push(updates.role);
+  }
+  
+  if (fields.length === 0) return;
+  
+  values.push(id);
+  const stmt = db.prepare(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`);
+  return stmt.run(...values);
+};
+
+export default db;
+
+

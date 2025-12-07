@@ -1,0 +1,429 @@
+import React, { useState, useEffect } from 'react'
+import { X, Clock, Calendar } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+import { registrationAPI } from '../api'
+import { canRegisterAtTime } from '../utils/timeRestrictions'
+import { format } from 'date-fns'
+import { he } from 'date-fns/locale'
+
+interface RegistrationModalProps {
+  isOpen: boolean
+  onClose: () => void
+  selectedDate: Date
+  initialStartTime?: string
+  initialEndTime?: string
+  onSuccess: () => void
+  editingRegistration?: any
+}
+
+const RegistrationModal: React.FC<RegistrationModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  selectedDate: initialDate,
+  initialStartTime = '06:00',
+  initialEndTime = '07:00',
+  onSuccess,
+  editingRegistration
+}) => {
+  const { user, isAdmin } = useAuth()
+  const [selectedDate, setSelectedDate] = useState(initialDate)
+  const [startTime, setStartTime] = useState(initialStartTime)
+  const [endTime, setEndTime] = useState(initialEndTime)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [registerForOther, setRegisterForOther] = useState(false)
+  const [otherUserFirstName, setOtherUserFirstName] = useState('')
+  const [otherUserLastName, setOtherUserLastName] = useState('')
+  const isEditing = !!editingRegistration
+
+  // Parse time into hours and minutes
+  const [startHour, startMinute] = startTime.split(':')
+  const [endHour, endMinute] = endTime.split(':')
+
+  const hours = Array.from({ length: 18 }, (_, i) => String(i + 6).padStart(2, '0')) // 6-23
+  const minutes = ['00', '15', '30', '45']
+
+  const handleStartTimeChange = (hour: string, minute: string) => {
+    setStartTime(`${hour}:${minute}`)
+  }
+
+  const handleEndTimeChange = (hour: string, minute: string) => {
+    setEndTime(`${hour}:${minute}`)
+  }
+
+  // Update date and times when props change
+  useEffect(() => {
+    setSelectedDate(initialDate)
+    if (!editingRegistration) {
+      setStartTime(initialStartTime)
+      setEndTime(initialEndTime)
+    }
+  }, [initialDate, initialStartTime, initialEndTime, isOpen, editingRegistration])
+
+  // Load editing data
+  useEffect(() => {
+    if (editingRegistration && isOpen) {
+      setSelectedDate(new Date(editingRegistration.date))
+      setStartTime(editingRegistration.startTime)
+      setEndTime(editingRegistration.endTime)
+    } else if (!isOpen) {
+      // Reset on close
+      setError('')
+      setRegisterForOther(false)
+      setOtherUserFirstName('')
+      setOtherUserLastName('')
+    }
+  }, [editingRegistration, isOpen])
+
+  // Auto-update end time when start time changes (+1 hour)
+  useEffect(() => {
+    if (editingRegistration) return // Don't auto-update when editing
+    
+    const [hours, minutes] = startTime.split(':').map(Number)
+    const newEndHour = hours + 1
+    if (newEndHour <= 23) {
+      setEndTime(`${String(newEndHour).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`)
+    }
+  }, [startTime, editingRegistration])
+
+  if (!isOpen) return null
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    if (!user) {
+      setError('יש להתחבר כדי להירשם לאימון')
+      setLoading(false)
+      return
+    }
+
+    // Validate if registering for other user
+    if (registerForOther && isAdmin) {
+      if (!otherUserFirstName || !otherUserLastName) {
+        setError('יש למלא שם פרטי ושם משפחה')
+        setLoading(false)
+        return
+      }
+    }
+
+    try {
+      const dateString = format(selectedDate, 'yyyy-MM-dd')
+      
+      // Validate times
+      if (startTime >= endTime) {
+        setError('שעת הסיום חייבת להיות אחרי שעת ההתחלה')
+        setLoading(false)
+        return
+      }
+
+      // Check time restrictions
+      const timeCheck = canRegisterAtTime(selectedDate, startTime, endTime)
+      if (!timeCheck.allowed) {
+        setError(timeCheck.message || 'שעה זו אינה זמינה להרשמה')
+        setLoading(false)
+        return
+      }
+
+      // Determine registration data
+      let registrationData
+      if (registerForOther && isAdmin) {
+        // For quick registration by admin
+        const fullName = `${otherUserFirstName} ${otherUserLastName}`
+        const tempEmail = `guest_${Date.now()}@temp.com` // Temporary email
+        const tempPhone = '0000000000' // Default phone
+        
+        registrationData = {
+          name: fullName,
+          email: tempEmail,
+          phone: tempPhone,
+          date: dateString,
+          startTime,
+          endTime
+        }
+      } else {
+        // Regular registration
+        registrationData = {
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          date: dateString,
+          startTime,
+          endTime
+        }
+      }
+
+      if (isEditing && editingRegistration?.id) {
+        // Delete old and create new (since we don't have update endpoint)
+        console.log('Updating registration:', editingRegistration.id)
+        await registrationAPI.delete(editingRegistration.id)
+        
+        // Create new registration with updated data
+        const result = await registrationAPI.create(registrationData)
+        console.log('Registration updated successfully:', result)
+      } else {
+        // Create new registration
+        console.log('Creating registration:', registrationData)
+
+        const result = await registrationAPI.create(registrationData)
+
+        console.log('Registration created successfully:', result)
+      }
+      
+      onSuccess()
+      onClose()
+      
+      // Reset times
+      setStartTime('06:00')
+      setEndTime('07:00')
+    } catch (err: any) {
+      console.error('Registration error:', err)
+      const errorMessage = err.response?.data?.error || err.message || 'שגיאה ביצירת ההרשמה'
+      setError(errorMessage)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const formattedDate = format(selectedDate, 'EEEE, d בMMMM yyyy', { locale: he })
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-dark-card border border-dark-border rounded-2xl max-w-lg w-full p-6 relative animate-fade-in max-h-[90vh] overflow-y-auto">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 left-4 p-2 hover:bg-red-500/20 rounded-lg transition-colors group"
+        >
+          <X className="w-5 h-5 text-gray-400 group-hover:text-red-400" />
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-6">
+          <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Calendar className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">
+            {isEditing ? 'עריכת אימון' : 'הרשמה לאימון'}
+          </h2>
+          <p className="text-cyan-400 text-sm">{formattedDate}</p>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm text-center">
+              {error}
+            </div>
+          )}
+
+          {/* Admin: Register for Self or Other */}
+          {user && isAdmin && !isEditing && (
+            <div className="flex gap-2 mb-4">
+              <button
+                type="button"
+                onClick={() => setRegisterForOther(false)}
+                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                  !registerForOther
+                    ? 'bg-cyan-500 text-white'
+                    : 'bg-dark-hover text-gray-400 hover:bg-dark-border'
+                }`}
+              >
+                עצמי
+              </button>
+              <button
+                type="button"
+                onClick={() => setRegisterForOther(true)}
+                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                  registerForOther
+                    ? 'bg-cyan-500 text-white'
+                    : 'bg-dark-hover text-gray-400 hover:bg-dark-border'
+                }`}
+              >
+                מתאמן אחר
+              </button>
+            </div>
+          )}
+
+          {/* Name fields - only for admin quick registration */}
+          {user && isAdmin && registerForOther && !isEditing && (
+            <div className="grid grid-cols-2 gap-3">
+              <input
+                type="text"
+                placeholder="שם פרטי"
+                value={otherUserFirstName}
+                onChange={(e) => setOtherUserFirstName(e.target.value)}
+                className="w-full bg-dark-hover border border-dark-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                required
+              />
+              <input
+                type="text"
+                placeholder="שם משפחה"
+                value={otherUserLastName}
+                onChange={(e) => setOtherUserLastName(e.target.value)}
+                className="w-full bg-dark-hover border border-dark-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                required
+              />
+            </div>
+          )}
+
+          {/* Date Selector */}
+          <div>
+            <label className="block text-white text-sm font-medium mb-2 flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-cyan-400" />
+              תאריך האימון
+            </label>
+            <input
+              type="date"
+              value={format(selectedDate, 'yyyy-MM-dd')}
+              onChange={(e) => setSelectedDate(new Date(e.target.value))}
+              className="w-full bg-dark-hover border border-dark-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer"
+              dir="ltr"
+              style={{ textAlign: 'right' }}
+            />
+          </div>
+
+          {/* Time Selection */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-white text-sm font-medium mb-2 flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                שעת התחלה
+              </label>
+              <div className="flex gap-2">
+                {/* Minutes - עכשיו מימין */}
+                <div className="relative flex-1">
+                  <select
+                    value={startMinute}
+                    onChange={(e) => handleStartTimeChange(startHour, e.target.value)}
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg px-3 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    style={{
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none'
+                    }}
+                    required
+                  >
+                    {minutes.map((minute) => (
+                      <option key={minute} value={minute} className="bg-dark-card text-white">
+                        {minute}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="text-white text-2xl font-bold self-center">:</div>
+
+                {/* Hours - עכשיו משמאל */}
+                <div className="relative flex-1">
+                  <select
+                    value={startHour}
+                    onChange={(e) => handleStartTimeChange(e.target.value, startMinute)}
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg px-3 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    style={{
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none'
+                    }}
+                    required
+                  >
+                    {hours.map((hour) => (
+                      <option key={hour} value={hour} className="bg-dark-card text-white">
+                        {hour}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-white text-sm font-medium mb-2 flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                שעת סיום
+              </label>
+              <div className="flex gap-2">
+                {/* Minutes - עכשיו מימין */}
+                <div className="relative flex-1">
+                  <select
+                    value={endMinute}
+                    onChange={(e) => handleEndTimeChange(endHour, e.target.value)}
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg px-3 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    style={{
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none'
+                    }}
+                    required
+                  >
+                    {minutes.map((minute) => (
+                      <option key={minute} value={minute} className="bg-dark-card text-white">
+                        {minute}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="text-white text-2xl font-bold self-center">:</div>
+
+                {/* Hours - עכשיו משמאל */}
+                <div className="relative flex-1">
+                  <select
+                    value={endHour}
+                    onChange={(e) => handleEndTimeChange(e.target.value, endMinute)}
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg px-3 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    style={{
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none'
+                    }}
+                    required
+                  >
+                    {hours.map((hour) => (
+                      <option key={hour} value={hour} className="bg-dark-card text-white">
+                        {hour}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all shadow-lg shadow-cyan-500/30"
+          >
+            {loading ? 'שומר...' : (isEditing ? 'עדכן אימון' : 'הרשם לאימון')}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+export default RegistrationModal
+
