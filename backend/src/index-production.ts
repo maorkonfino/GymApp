@@ -3,10 +3,9 @@ import cors from 'cors';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
 import cron from 'node-cron';
 import * as db from './database-postgres';
-import { sendWorkoutReminderEmail } from './services/emailService';
+import { sendWorkoutReminderEmail, sendPasswordResetEmail } from './services/emailService';
 
 // Load environment variables
 dotenv.config();
@@ -236,41 +235,9 @@ app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
     const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
     const resetURL = `${frontendURL}/reset-password?token=${resetToken}`;
 
-    // Send email
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.EMAIL_PORT || '587'),
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: normalizedEmail,
-      subject: 'איפוס סיסמה - BEAST Gym',
-      html: `
-        <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
-          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h1 style="color: #06b6d4; text-align: center;">🦁 BEAST Gym</h1>
-            <h2 style="color: #333;">איפוס סיסמה</h2>
-            <p style="color: #666; line-height: 1.6;">שלום ${user.name},</p>
-            <p style="color: #666; line-height: 1.6;">קיבלנו בקשה לאיפוס הסיסמה שלך.</p>
-            <p style="color: #666; line-height: 1.6;">לחץ על הכפתור למטה כדי לאפס את הסיסמה:</p>
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="${resetURL}" style="background-color: #06b6d4; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">איפוס סיסמה</a>
-            </div>
-            <p style="color: #999; font-size: 12px;">הקישור תקף למשך שעה אחת בלבד.</p>
-            <p style="color: #999; font-size: 12px;">אם לא ביקשת לאפס את הסיסמה, התעלם ממייל זה.</p>
-            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-            <p style="color: #999; font-size: 11px; text-align: center;">BEAST Gym - מערכת ניהול אימונים</p>
-          </div>
-        </div>
-      `
-    });
-
+    // Send email using SendGrid via emailService
+    await sendPasswordResetEmail(normalizedEmail, user.name, resetURL);
+    
     console.log('✅ Password reset email sent to:', normalizedEmail);
     res.json({ message: 'אם האימייל קיים במערכת, נשלח אליו קישור לאיפוס סיסמה' });
   } catch (error) {
