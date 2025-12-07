@@ -81,11 +81,11 @@ export const BeastLogo = ({
 }) => {
   const sizeClasses = {
     small: {
-      container: 'gap-2',
+      container: 'gap-1',
       logo: 'gap-2',
-      text: 'text-2xl',
-      wolf: 'w-8 h-8',
-      slogan: 'text-xs',
+      text: 'text-xl sm:text-2xl',
+      wolf: 'w-6 h-6 sm:w-8 sm:h-8',
+      slogan: 'text-[8px] sm:text-[10px]',
       sloganWidth: 'w-28'
     },
     medium: {
@@ -109,37 +109,39 @@ export const BeastLogo = ({
   const classes = sizeClasses[size]
 
   return (
-    <div className={`flex items-center justify-center ${classes.logo}`}>
+    <div className={`flex flex-col items-center justify-center ${classes.container}`}>
+      {/* Wolf icon with RED eyes - on top */}
+      {showWolf && (
+        <div className="relative flex-shrink-0 mb-2">
+          <WolfIcon className={`${classes.wolf} text-white drop-shadow-lg`} />
+        </div>
+      )}
+      
       {/* BEAST text with scratches */}
-      <div className="flex flex-col items-start">
+      <div className="flex flex-col items-center">
         <h1 
           dir="ltr" 
           className={`${classes.text} font-black tracking-tight relative leading-none`} 
           style={{ fontFamily: 'Arial Black, sans-serif' }}
         >
-          {/* B with RED scratches */}
+          {/* B without scratches */}
+          <span className="text-white">BE</span>
+          {/* A with RED scratches */}
           <span className="text-white relative inline-block">
-            B
+            A
             {showScratch && <ScratchMarks className="text-red-500" />}
           </span>
-          <span className="text-white">EAST</span>
+          <span className="text-white">ST</span>
           <span className="text-white">.</span>
         </h1>
         
         {/* Slogan directly under BEAST */}
         {showSlogan && (
-          <div className={`${classes.slogan} text-cyan-400 font-medium mt-1 ${classes.sloganWidth}`}>
+          <div className={`${classes.slogan} text-cyan-400 font-medium mt-1 whitespace-nowrap`}>
             בית לאימון מבוסס מדע
           </div>
         )}
       </div>
-      
-      {/* Wolf icon with RED eyes */}
-      {showWolf && (
-        <div className="relative flex-shrink-0">
-          <WolfIcon className={`${classes.wolf} text-white drop-shadow-lg`} />
-        </div>
-      )}
     </div>
   )
 }
