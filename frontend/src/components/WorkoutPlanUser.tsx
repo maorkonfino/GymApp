@@ -295,7 +295,7 @@ const WorkoutPlanUser: React.FC = () => {
                     
                       // Always render header, even if collapsed, to show the toggle button
                       return (
-                        <th key={week} className={`border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center ${isWeekCollapsed ? 'w-8' : 'w-12 sm:w-16'}`}>
+                        <th key={week} className={`border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center ${isWeekCollapsed ? 'w-8' : 'w-16 sm:w-20'}`}>
                           <button
                             onClick={() => toggleWeekCollapse(workoutIndex, week)}
                             className="w-full flex items-center justify-center gap-0.5 hover:text-cyan-200 transition-colors"
@@ -305,7 +305,7 @@ const WorkoutPlanUser: React.FC = () => {
                               <ChevronDown className="w-3 h-3" />
                             ) : (
                               <>
-                                <span className="text-[7px] sm:text-[9px]">ש{week}</span>
+                                <span className="text-[7px] sm:text-[9px]">שבוע {week}</span>
                                 <ChevronUp className="w-2 h-2 sm:w-3 sm:h-3" />
                               </>
                             )}
