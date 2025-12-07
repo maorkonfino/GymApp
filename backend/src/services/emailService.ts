@@ -2,11 +2,26 @@ import nodemailer from 'nodemailer';
 
 // Create email transporter
 const createTransporter = () => {
+  const emailUser = process.env.EMAIL_USER;
+  const emailPass = process.env.EMAIL_PASS;
+  
+  console.log('📧 Email config:', {
+    hasUser: !!emailUser,
+    hasPass: !!emailPass,
+    userLength: emailUser?.length || 0,
+    passLength: emailPass?.length || 0
+  });
+  
+  if (!emailUser || !emailPass) {
+    console.error('❌ Missing email credentials! EMAIL_USER or EMAIL_PASS not set');
+    throw new Error('Email credentials not configured');
+  }
+  
   return nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: emailUser,
+      pass: emailPass,
     },
   });
 };
@@ -17,12 +32,16 @@ export const sendPasswordResetEmail = async (
   userName: string,
   resetUrl: string
 ): Promise<void> => {
-  const transporter = createTransporter();
+  console.log('📧 Attempting to send password reset email:', { toEmail, userName });
+  
+  try {
+    const transporter = createTransporter();
+    console.log('✅ Email transporter created successfully');
 
-  const mailOptions = {
-    from: `"BEAST Gym" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-    to: toEmail,
-    subject: 'איפוס סיסמה - BEAST Gym',
+    const mailOptions = {
+      from: `"BEAST Gym" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+      to: toEmail,
+      subject: 'איפוס סיסמה - BEAST Gym',
     html: `
       <!DOCTYPE html>
       <html dir="rtl" lang="he">
@@ -169,12 +188,18 @@ export const sendPasswordResetEmail = async (
     `,
   };
 
-  try {
+    console.log('📤 Sending email...');
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Password reset email sent to ${toEmail}`);
-  } catch (error) {
-    console.error('❌ Error sending email:', error);
-    throw new Error('Failed to send password reset email');
+    console.log(`✅ Password reset email sent successfully to ${toEmail}`);
+  } catch (error: any) {
+    console.error('❌ Error sending password reset email:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response,
+      responseCode: error.responseCode
+    });
+    throw new Error(`Failed to send password reset email: ${error.message}`);
   }
 };
 
@@ -352,8 +377,13 @@ export const sendWorkoutReminderEmail = async (
   try {
     await transporter.sendMail(mailOptions);
     console.log(`✅ Workout reminder email sent to ${toEmail}`);
-  } catch (error) {
-    console.error('❌ Error sending workout reminder email:', error);
-    throw new Error('Failed to send workout reminder email');
+  } catch (error: any) {
+    console.error('❌ Error sending workout reminder email:', {
+      toEmail,
+      message: error.message,
+      code: error.code,
+      command: error.command
+    });
+    throw new Error(`Failed to send workout reminder email: ${error.message}`);
   }
 };
