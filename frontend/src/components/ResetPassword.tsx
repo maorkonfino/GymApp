@@ -146,7 +146,7 @@ const ResetPassword = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-dark-hover border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+                  className="w-full bg-dark-hover border border-dark-border rounded-lg pr-4 pl-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
                   placeholder="הכנס סיסמה חדשה"
                   disabled={loading}
                 />
@@ -169,7 +169,7 @@ const ResetPassword = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-dark-hover border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+                  className="w-full bg-dark-hover border border-dark-border rounded-lg pr-4 pl-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
                   placeholder="הכנס סיסמה שוב"
                   disabled={loading}
                 />
