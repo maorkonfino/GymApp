@@ -1,4 +1,4 @@
-// Wolf Icon - modernized version matching the design
+// Wolf Icon - matching the original design with red eyes
 export const WolfIcon = ({ className = "" }: { className?: string }) => (
   <svg 
     viewBox="0 0 64 64" 
@@ -21,9 +21,9 @@ export const WolfIcon = ({ className = "" }: { className?: string }) => (
     {/* Face details */}
     <path d="M32 38 L30 42 L34 42 Z" fill="currentColor" />
     
-    {/* Eyes - cyan colored */}
-    <circle cx="26" cy="22" r="2.5" className="fill-cyan-400" />
-    <circle cx="38" cy="22" r="2.5" className="fill-cyan-400" />
+    {/* Eyes - RED colored */}
+    <circle cx="26" cy="22" r="2.5" className="fill-red-500" />
+    <circle cx="38" cy="22" r="2.5" className="fill-red-500" />
     
     {/* Inner eye glow */}
     <circle cx="26" cy="22" r="1" fill="white" opacity="0.8" />
@@ -37,17 +37,17 @@ export const WolfIcon = ({ className = "" }: { className?: string }) => (
   </svg>
 )
 
-// Scratch marks for BEAST logo - cyan colored
+// Scratch marks for BEAST logo - RED colored
 export const ScratchMarks = ({ className = "" }: { className?: string }) => (
   <svg className={`absolute inset-0 w-full h-full pointer-events-none ${className}`} viewBox="0 0 100 120">
-    {/* Three diagonal scratches across the B */}
+    {/* Three diagonal scratches across the B - RED */}
     <line x1="15" y1="15" x2="35" y2="105" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity="0.8" />
     <line x1="35" y1="10" x2="55" y2="100" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity="0.9" />
     <line x1="55" y1="15" x2="75" y2="105" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity="0.8" />
   </svg>
 )
 
-// Full BEAST logo matching the provided design
+// Full BEAST logo matching the original design
 export const BeastLogo = ({ 
   size = 'medium',
   showWolf = true,
@@ -63,10 +63,10 @@ export const BeastLogo = ({
     small: {
       container: 'gap-2',
       logo: 'gap-2',
-      text: 'text-3xl',
-      wolf: 'w-10 h-10',
+      text: 'text-2xl',
+      wolf: 'w-8 h-8',
       slogan: 'text-xs',
-      sloganWidth: 'w-32'
+      sloganWidth: 'w-28'
     },
     medium: {
       container: 'gap-3',
@@ -93,10 +93,10 @@ export const BeastLogo = ({
       {/* BEAST text with scratches */}
       <div className="flex flex-col items-start">
         <h1 className={`${classes.text} font-black tracking-tight relative leading-none`} style={{ fontFamily: 'Arial Black, sans-serif' }}>
-          {/* B with scratches */}
+          {/* B with RED scratches */}
           <span className="text-white relative inline-block">
             B
-            {showScratch && <ScratchMarks className="text-cyan-400" />}
+            {showScratch && <ScratchMarks className="text-red-500" />}
           </span>
           <span className="text-white">EAST</span>
           <span className="text-white">.</span>
@@ -110,7 +110,7 @@ export const BeastLogo = ({
         )}
       </div>
       
-      {/* Wolf icon */}
+      {/* Wolf icon with RED eyes */}
       {showWolf && (
         <div className="relative flex-shrink-0">
           <WolfIcon className={`${classes.wolf} text-white drop-shadow-lg`} />
