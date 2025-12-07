@@ -91,23 +91,21 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     }
   }
 
-  // Get registrations that start in this time slot
-  const getRegistrationsStartingInSlot = (date: Date, timeRange: string): Registration[] => {
+  // Get registrations that are active during this time slot
+  const getRegistrationsInSlot = (date: Date, timeRange: string): Registration[] => {
     const dateStr = format(date, 'yyyy-MM-dd')
-    const [rangeStart] = timeRange.split('-')
+    const [slotStart, slotEnd] = timeRange.split('-')
     
-    return registrations.filter((reg) => 
-      reg.date === dateStr && reg.startTime === rangeStart
-    )
-  }
-
-  // Calculate how many rows a registration should span
-  const calculateRowSpan = (reg: Registration): number => {
-    const startMinutes = parseInt(reg.startTime.split(':')[0]) * 60 + parseInt(reg.startTime.split(':')[1])
-    const endMinutes = parseInt(reg.endTime.split(':')[0]) * 60 + parseInt(reg.endTime.split(':')[1])
-    const durationMinutes = endMinutes - startMinutes
-    
-    return Math.ceil(durationMinutes / 30)
+    return registrations.filter((reg) => {
+      if (reg.date !== dateStr) return false
+      
+      // Check if registration overlaps with this time slot
+      const regStart = reg.startTime
+      const regEnd = reg.endTime
+      
+      // Registration overlaps if it starts before slot ends and ends after slot starts
+      return regStart < slotEnd && regEnd > slotStart
+    })
   }
 
   // Get first name only
@@ -227,143 +225,109 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {(() => {
-                    // Build skip map for this render
-                    const skipCells = new Set<string>()
+                  {timeSlotRanges.map((timeRange, timeIdx) => {
+                    const [rangeStart] = timeRange.split('-')
                     
-                    return timeSlotRanges.map((timeRange, timeIdx) => {
-                      const [rangeStart] = timeRange.split('-')
-                      
-                      return (
-                        <tr key={timeIdx} className="hover:bg-dark-hover/30">
-                          {/* Time Range Cell */}
-                          <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight">
-                            {timeRange}
-                          </td>
+                    return (
+                      <tr key={timeIdx} className="hover:bg-dark-hover/30">
+                        {/* Time Range Cell */}
+                        <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight">
+                          {timeRange}
+                        </td>
+                        
+                        {/* Date Cells */}
+                        {weekDates.map((date, dateIdx) => {
+                          // Check for "Closed for Seniors"
+                          const restriction = getRestrictionMessage(date, rangeStart)
                           
-                          {/* Date Cells */}
-                          {weekDates.map((date, dateIdx) => {
-                            const dateStr = format(date, 'yyyy-MM-dd')
-                            const cellKey = `${dateStr}-${timeRange}`
-                            
-                            // Skip if this cell was already rendered by a rowSpan
-                            if (skipCells.has(cellKey)) {
-                              return null
-                            }
-                            
-                            // Check for "Closed for Seniors"
-                            const restriction = getRestrictionMessage(date, rangeStart)
-                            const dayOfWeek = date.getDay()
-                            const isSundayOrThursday = dayOfWeek === 0 || dayOfWeek === 4
-                            
-                            // Handle seniors time (9:00-10:00)
-                            if (restriction && isSundayOrThursday) {
-                              if (rangeStart === '09:00') {
-                                // Mark next cell as rendered
-                                skipCells.add(`${dateStr}-09:30-10:00`)
-                                
-                                return (
-                                  <td 
-                                    key={dateIdx} 
-                                    rowSpan={2}
-                                    className="p-0.5 sm:p-2 border border-dark-border align-middle bg-yellow-500/10"
-                                  >
-                                    <div className="text-center py-1 sm:py-4 text-yellow-400 font-medium text-[8px] sm:text-sm leading-tight">
-                                      🔒 סגור<br/>
-                                      <span className="text-[7px] sm:text-xs">09:00-10:00</span>
-                                    </div>
-                                  </td>
-                                )
-                              }
-                            }
-                            
-                            // Get registrations that START in this time slot
-                            const regsStartingHere = getRegistrationsStartingInSlot(date, timeRange)
-                            
-                            // Render cells for registrations starting here
-                            if (regsStartingHere.length > 0) {
-                              const firstReg = regsStartingHere[0]
-                              const rowSpan = calculateRowSpan(firstReg)
-                              
-                              // Mark future cells as rendered
-                              for (let i = 1; i < rowSpan; i++) {
-                                const futureTimeRange = timeSlotRanges[timeIdx + i]
-                                if (futureTimeRange) {
-                                  skipCells.add(`${dateStr}-${futureTimeRange}`)
-                                }
-                              }
-                              
-                              return (
-                                <td 
-                                  key={dateIdx} 
-                                  rowSpan={rowSpan}
-                                  className={`p-0 border border-dark-border relative ${
-                                    onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
-                                  }`}
-                                  onClick={() => onCellClick && onCellClick(date, timeRange)}
-                                >
-                                  {/* "More" button - top right corner */}
-                                  {regsStartingHere.length > 4 && (
-                                    <button
-                                      onClick={(e) => handleShowAllClick(regsStartingHere, e)}
-                                      className="absolute top-1 right-1 z-10 p-0.5 rounded bg-gray-500/40 hover:bg-gray-500/60 text-gray-300 hover:text-white border border-gray-500/60 transition-colors"
-                                      title={`עוד ${regsStartingHere.length - 4} רשומים`}
-                                    >
-                                      <MoreHorizontal className="w-3 h-3" />
-                                    </button>
-                                  )}
-                                  
-                                  <div className={`grid ${regsStartingHere.length <= 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
-                                    {regsStartingHere.slice(0, 4).map((reg) => (
-                                      <div
-                                        key={reg.id}
-                                        className={`relative px-0.5 py-0.5 sm:px-1.5 sm:py-1 rounded flex flex-col justify-center text-center group ${
-                                          user?.email === reg.email
-                                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                                            : 'bg-blue-500/20 text-blue-300'
-                                        }`}
-                                      >
-                                        {canDeleteRegistration(reg) && (
-                                          <button
-                                            onClick={(e) => handleDeleteRegistration(reg.id!, e)}
-                                            className="absolute -top-1 -right-1 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
-                                            title="מחק רישום"
-                                          >
-                                            <X className="w-2.5 h-2.5" />
-                                          </button>
-                                        )}
-                                        <div className="text-[6px] sm:text-[9px] font-medium leading-tight">
-                                          {getFirstName(reg.name)}
-                                        </div>
-                                        <div className="text-[5px] sm:text-[7px] opacity-60 mt-0.5 leading-tight">
-                                          {reg.startTime}-{reg.endTime}
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </td>
-                              )
-                            }
-                            
-                            // Empty cell - clickable for registration
+                          // Handle restriction
+                          if (restriction) {
                             return (
                               <td 
                                 key={dateIdx} 
-                                className={`p-0.5 border border-dark-border align-top ${
-                                  onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
-                                }`}
-                                onClick={() => onCellClick && onCellClick(date, timeRange)}
+                                className="p-0.5 sm:p-2 border border-dark-border align-middle bg-yellow-500/10"
                               >
-                                <div className="text-center text-gray-600 text-[9px] sm:text-xs py-0.5 sm:py-2">
-                                  {onCellClick ? '+' : '-'}
+                                <div className="text-center py-1 sm:py-2 text-yellow-400 font-medium text-[8px] sm:text-xs leading-tight">
+                                  🔒 סגור
                                 </div>
                               </td>
                             )
-                          })}
-                        </tr>
-                      )
-                    })
-                  })()}
+                          }
+                          
+                          // Get all registrations active in this time slot
+                          const regsInSlot = getRegistrationsInSlot(date, timeRange)
+                          
+                          // Render cell with registrations
+                          if (regsInSlot.length > 0) {
+                            return (
+                              <td 
+                                key={dateIdx} 
+                                className={`p-0 border border-dark-border relative ${
+                                  onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
+                                }`}
+                                onClick={() => onCellClick && onCellClick(date, timeRange)}
+                              >
+                                {/* "More" button - top right corner */}
+                                {regsInSlot.length > 4 && (
+                                  <button
+                                    onClick={(e) => handleShowAllClick(regsInSlot, e)}
+                                    className="absolute top-1 right-1 z-10 p-0.5 rounded bg-gray-500/40 hover:bg-gray-500/60 text-gray-300 hover:text-white border border-gray-500/60 transition-colors"
+                                    title={`עוד ${regsInSlot.length - 4} רשומים`}
+                                  >
+                                    <MoreHorizontal className="w-3 h-3" />
+                                  </button>
+                                )}
+                                
+                                <div className={`grid ${regsInSlot.length <= 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
+                                  {regsInSlot.slice(0, 4).map((reg) => (
+                                    <div
+                                      key={reg.id}
+                                      className={`relative px-0.5 py-0.5 sm:px-1.5 sm:py-1 rounded flex flex-col justify-center text-center group ${
+                                        user?.email === reg.email
+                                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+                                          : 'bg-blue-500/20 text-blue-300'
+                                      }`}
+                                    >
+                                      {canDeleteRegistration(reg) && (
+                                        <button
+                                          onClick={(e) => handleDeleteRegistration(reg.id!, e)}
+                                          className="absolute -top-1 -right-1 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                                          title="מחק רישום"
+                                        >
+                                          <X className="w-2.5 h-2.5" />
+                                        </button>
+                                      )}
+                                      <div className="text-[6px] sm:text-[9px] font-medium leading-tight">
+                                        {getFirstName(reg.name)}
+                                      </div>
+                                      <div className="text-[5px] sm:text-[7px] opacity-60 mt-0.5 leading-tight">
+                                        {reg.startTime}-{reg.endTime}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </td>
+                            )
+                          }
+                          
+                          // Empty cell - clickable for registration
+                          return (
+                            <td 
+                              key={dateIdx} 
+                              className={`p-0.5 border border-dark-border align-top ${
+                                onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
+                              }`}
+                              onClick={() => onCellClick && onCellClick(date, timeRange)}
+                            >
+                              <div className="text-center text-gray-600 text-[9px] sm:text-xs py-0.5 sm:py-2">
+                                {onCellClick ? '+' : '-'}
+                              </div>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    )
+                  })}
             </tbody>
           </table>
         )}
