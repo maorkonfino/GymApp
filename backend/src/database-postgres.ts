@@ -418,6 +418,10 @@ export const updateUser = async (id: number, updates: Partial<Omit<User, 'id' | 
     fields.push(`role = $${paramIndex++}`);
     values.push(updates.role);
   }
+  if (updates.password) {
+    fields.push(`password = $${paramIndex++}`);
+    values.push(updates.password);
+  }
   
   if (fields.length === 0) return;
   

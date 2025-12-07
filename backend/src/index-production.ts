@@ -534,6 +534,31 @@ app.delete('/api/daily-tracking/:email/:date', async (req: Request, res: Respons
   }
 });
 
+// TEMPORARY: Update password endpoint
+app.post('/api/admin/update-password', async (req: Request, res: Response) => {
+  try {
+    const { email, newPassword } = req.body;
+    
+    if (!email || !newPassword) {
+      return res.status(400).json({ error: 'Email and new password required' });
+    }
+    
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const user = await db.getUserByEmail(email);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    await db.updateUser(user.id!, { password: hashedPassword } as any);
+    
+    res.json({ message: 'Password updated successfully', email });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).json({ error: 'Failed to update password' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
