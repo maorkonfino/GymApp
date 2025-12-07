@@ -102,3 +102,19 @@ export const hasTimePassed = (date: string, time: string): boolean => {
   return trainingDateTime < now;
 };
 
+// Check if time slot is during TeenBEAST hours (for showing trainer)
+export const isTeenBeastHours = (date: Date, timeSlot: string): boolean => {
+  const dayOfWeek = date.getDay();
+  const [slotStart] = timeSlot.split('-');
+  
+  const allowedTime = TEEN_BEAST_ALLOWED_TIMES[dayOfWeek];
+  
+  // No Teen hours on Saturday or if not defined
+  if (dayOfWeek === 6 || !allowedTime.start) {
+    return false;
+  }
+  
+  // Check if slot is within Teen hours
+  return slotStart >= allowedTime.start && slotStart < allowedTime.end;
+};
+

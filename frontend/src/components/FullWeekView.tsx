@@ -6,7 +6,7 @@ import { registrationAPI } from '../api'
 import { useAuth } from '../contexts/AuthContext'
 import { X, Calendar, ChevronLeft, ChevronRight, MoreHorizontal, Users } from 'lucide-react'
 import { generateTimeSlotRanges } from '../utils/timeSlotRanges'
-import { getRestrictionMessage } from '../utils/timeRestrictions'
+import { getRestrictionMessage, isTeenBeastHours } from '../utils/timeRestrictions'
 
 interface FullWeekViewProps {
   isOpen: boolean
@@ -277,6 +277,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                               }
                             }
                             
+                            // Check if this is TeenBEAST hours (show trainer)
+                            const isTeenHours = isTeenBeastHours(date, timeRange)
+                            
                             // Get registrations that START in this time slot
                             const regsStartingHere = getRegistrationsStartingInSlot(date, timeRange)
                             
@@ -299,7 +302,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   rowSpan={rowSpan}
                                   className={`p-0 border border-dark-border relative ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
-                                  }`}
+                                  } ${isTeenHours ? 'bg-gradient-to-br from-cyan-500/10 to-blue-500/10' : ''}`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
                                 >
                                   {/* "More" button - top right corner */}
@@ -311,6 +314,15 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     >
                                       <MoreHorizontal className="w-3 h-3" />
                                     </button>
+                                  )}
+                                  
+                                  {/* Teen hours - show trainer badge at top */}
+                                  {isTeenHours && (
+                                    <div className="text-center pt-0.5 pb-1">
+                                      <div className="inline-block px-1 sm:px-1.5 py-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded text-[5px] sm:text-[7px] font-bold leading-tight">
+                                        שלומי - מאמן
+                                      </div>
+                                    </div>
                                   )}
                                   
                                   <div className={`grid ${regsStartingHere.length <= 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
@@ -340,6 +352,25 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                         </div>
                                       </div>
                                     ))}
+                                  </div>
+                                </td>
+                              )
+                            }
+                            
+                            // Empty cell or TeenBEAST hours (show trainer)
+                            if (isTeenHours) {
+                              return (
+                                <td 
+                                  key={dateIdx} 
+                                  className={`p-0.5 border border-dark-border align-middle ${
+                                    onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
+                                  } bg-gradient-to-br from-cyan-500/10 to-blue-500/10`}
+                                  onClick={() => onCellClick && onCellClick(date, timeRange)}
+                                >
+                                  <div className="text-center py-1 sm:py-2">
+                                    <div className="inline-block px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded text-[6px] sm:text-[9px] font-bold leading-tight">
+                                      שלומי - מאמן
+                                    </div>
                                   </div>
                                 </td>
                               )
