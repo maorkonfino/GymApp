@@ -5,6 +5,8 @@ import { format } from 'date-fns'
 import WeightGraph from './WeightGraph'
 import BeastLogo from './BeastLogo'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+
 interface NutritionGoals {
   regularDay: {
     protein: number
@@ -51,7 +53,7 @@ const NutritionTracking: React.FC = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3001/api/nutrition-goals/${user.email}`)
+        const response = await fetch(`${API_URL}/nutrition-goals/${user.email}`)
         const data = await response.json()
         
         // Check if there's actual nutrition goals (at least one value > 0)
@@ -92,7 +94,7 @@ const NutritionTracking: React.FC = () => {
       if (!user) return
 
       try {
-        const response = await fetch(`http://localhost:3001/api/nutrition-goals/${user.email}`)
+        const response = await fetch(`${API_URL}/nutrition-goals/${user.email}`)
         const data = await response.json()
         
         if (data) {
@@ -140,7 +142,7 @@ const NutritionTracking: React.FC = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3001/api/daily-tracking/${user.email}`)
+        const response = await fetch(`${API_URL}/daily-tracking/${user.email}`)
         const data = await response.json()
         
         const today = format(new Date(), 'yyyy-MM-dd')
@@ -356,7 +358,7 @@ const NutritionTracking: React.FC = () => {
 
     setIsSaving(true)
     try {
-      await fetch(`http://localhost:3001/api/daily-tracking`, {
+      await fetch(`${API_URL}/daily-tracking`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
