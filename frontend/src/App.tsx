@@ -27,6 +27,13 @@ function AppContent() {
   const [refreshTrigger, setRefreshTrigger] = useState(0)
   const [editingRegistration, setEditingRegistration] = useState<any>(null)
 
+  // Reset weekOffset to 0 when switching to day view (registration page)
+  useEffect(() => {
+    if (viewMode === 'day') {
+      setWeekOffset(0)
+    }
+  }, [viewMode])
+
   const handleWeekChange = (direction: 'prev' | 'next') => {
     setWeekOffset(prev => direction === 'next' ? prev + 1 : prev - 1)
   }

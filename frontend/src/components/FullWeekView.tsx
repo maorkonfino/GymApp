@@ -215,12 +215,12 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
           <table className="w-full text-sm border-collapse">
             <thead className="sticky top-0 bg-dark-card z-20 shadow-lg">
                   <tr>
-                    <th className="p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
+                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-xs sm:text-sm">
                       שעות
                     </th>
                     {weekDates.map((date, idx) => (
-                      <th key={idx} className="p-2 text-center border border-dark-border bg-dark-hover text-gray-400 font-medium min-w-[150px]">
-                        <div>{format(date, 'EEEE', { locale: he })}</div>
+                      <th key={idx} className="p-2 text-center border border-dark-border bg-dark-hover text-gray-400 font-medium min-w-[120px] sm:min-w-[150px]">
+                        <div className="text-xs sm:text-sm">{format(date, 'EEEE', { locale: he })}</div>
                         <div className="text-xs text-cyan-400 mt-1">{format(date, 'd.M')}</div>
                       </th>
                     ))}
@@ -237,7 +237,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       return (
                         <tr key={timeIdx} className="hover:bg-dark-hover/30">
                           {/* Time Range Cell */}
-                          <td className="p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
+                          <td className="p-1 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[10px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                             {timeRange}
                           </td>
                           

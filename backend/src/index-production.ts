@@ -51,8 +51,9 @@ app.post('/api/auth/register', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'כל השדות נדרשים' });
     }
 
-    // Check if user already exists
-    const existingUser = await db.getUserByEmail(email);
+    // Check if user already exists (case-insensitive)
+    const normalizedEmail = email.toLowerCase();
+    const existingUser = await db.getUserByEmail(normalizedEmail);
     if (existingUser) {
       return res.status(400).json({ error: 'משתמש עם אימייל זה כבר קיים במערכת' });
     }
@@ -63,7 +64,7 @@ app.post('/api/auth/register', async (req: Request, res: Response) => {
     // Create new user
     const fullName = `${name} ${lastName}`;
     const userId = await db.createUser({ 
-      email, 
+      email: normalizedEmail, 
       name: fullName, 
       phone,
       password: hashedPassword,
@@ -94,7 +95,7 @@ app.post('/api/auth/login-refresh', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'אימייל נדרש' });
     }
 
-    const user = await db.getUserByEmail(email);
+    const user = await db.getUserByEmail(email.toLowerCase());
     
     if (!user) {
       return res.status(401).json({ error: 'משתמש לא נמצא' });
@@ -118,8 +119,8 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'אימייל וססמה נדרשים' });
     }
 
-    // Get user by email (includes password field)
-    const user = await db.getUserByEmail(email);
+    // Get user by email (case-insensitive)
+    const user = await db.getUserByEmail(email.toLowerCase());
     
     if (!user || !user.password) {
       return res.status(401).json({ error: 'אימייל או ססמה שגויים' });
