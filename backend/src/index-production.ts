@@ -119,6 +119,12 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
+    console.log('🔐 Login attempt:', {
+      email,
+      emailLower: email.toLowerCase(),
+      passwordLength: password?.length
+    });
+
     if (!email || !password) {
       return res.status(400).json({ error: 'אימייל וסיסמה נדרשים' });
     }
@@ -126,17 +132,34 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
     // Get user by email (case-insensitive)
     const user = await db.getUserByEmail(email.toLowerCase());
     
+    console.log('👤 User found:', {
+      found: !!user,
+      hasPassword: !!user?.password,
+      userEmail: user?.email,
+      userName: user?.name
+    });
+    
     if (!user || !user.password) {
+      console.log('❌ User not found or no password');
       return res.status(401).json({ error: 'אימייל או סיסמה שגויים' });
     }
 
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     
+    console.log('🔑 Password validation:', {
+      isValid: isPasswordValid,
+      providedPassword: password,
+      hashedPasswordPrefix: user.password.substring(0, 20)
+    });
+    
     if (!isPasswordValid) {
+      console.log('❌ Password invalid');
       return res.status(401).json({ error: 'אימייל או סיסמה שגויים' });
     }
 
+    console.log('✅ Login successful for:', user.email);
+    
     // Don't send password back to client
     const { password: _, ...userWithoutPassword } = user;
     res.json(userWithoutPassword);
