@@ -39,6 +39,7 @@ const WorkoutPlanUser: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false)
   const [userAddedWeeks, setUserAddedWeeks] = useState(1) // For flexible plans
   const [collapsedWorkouts, setCollapsedWorkouts] = useState<Set<number>>(new Set()) // Track collapsed workouts
+  const [collapsedWeeks, setCollapsedWeeks] = useState<Set<string>>(new Set()) // Track collapsed weeks (format: "workoutIndex-weekNumber")
 
   useEffect(() => {
     fetchWorkoutPlan()
@@ -106,6 +107,19 @@ const WorkoutPlanUser: React.FC = () => {
         newSet.delete(workoutIndex)
       } else {
         newSet.add(workoutIndex)
+      }
+      return newSet
+    })
+  }
+
+  const toggleWeekCollapse = (workoutIndex: number, weekNumber: number) => {
+    const weekKey = `${workoutIndex}-${weekNumber}`
+    setCollapsedWeeks(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(weekKey)) {
+        newSet.delete(weekKey)
+      } else {
+        newSet.add(weekKey)
       }
       return newSet
     })
@@ -250,11 +264,29 @@ const WorkoutPlanUser: React.FC = () => {
                   <th className="border border-dark-border px-0.5 sm:px-1 py-0.5 sm:py-1 text-gray-300 font-semibold text-center w-12 sm:w-16">חזרות</th>
                   <th className="border border-dark-border px-0.5 sm:px-1 py-0.5 sm:py-1 text-gray-300 font-semibold text-center w-12 sm:w-16">מנוחה</th>
                   <th className="border border-dark-border px-0.5 sm:px-1 py-0.5 sm:py-1 text-gray-300 font-semibold text-center w-8 sm:w-12">RIR</th>
-                  {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => (
-                    <th key={week} className="border border-dark-border px-0.5 sm:px-1 py-0.5 sm:py-1 text-cyan-300 font-semibold text-center w-16 sm:w-20">
-                      שבוע {week}
-                    </th>
-                  ))}
+                  {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => {
+                    const weekKey = `${workoutIndex}-${week}`
+                    const isWeekCollapsed = collapsedWeeks.has(weekKey)
+                    
+                    // Always render header, even if collapsed, to show the toggle button
+                    return (
+                      <th key={week} className={`border border-dark-border px-0.5 sm:px-1 py-0.5 sm:py-1 text-cyan-300 font-semibold text-center ${isWeekCollapsed ? 'w-12' : 'w-16 sm:w-20'}`}>
+                        <button
+                          onClick={() => toggleWeekCollapse(workoutIndex, week)}
+                          className="w-full flex items-center justify-center gap-1 hover:text-cyan-200 transition-colors"
+                        >
+                          {isWeekCollapsed ? (
+                            <ChevronDown className="w-4 h-4" title={`שבוע ${week}`} />
+                          ) : (
+                            <>
+                              <span>שבוע {week}</span>
+                              <ChevronUp className="w-3 h-3" />
+                            </>
+                          )}
+                        </button>
+                      </th>
+                    )
+                  })}
                   {plan.numberOfWeeks === 'flexible' && (
                     <th className="border border-dark-border px-1 py-1">
                       <button
@@ -288,35 +320,45 @@ const WorkoutPlanUser: React.FC = () => {
                       <td className="border border-dark-border px-0.5 sm:px-1 py-0.5 sm:py-1 text-center text-gray-300">
                         {exercise.rir}
                       </td>
-                      {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => (
-                        <td key={week} className="border border-dark-border px-0.5 py-0.5">
-                          <div className="space-y-0.5">
-                            {Array.from({ length: numSets }, (_, setIdx) => {
-                              const data = getWeeklyData(exercise, week, setIdx)
-                              return (
-                                <div key={setIdx} className="flex gap-0.5">
-                                  <input
-                                    type="text"
-                                    placeholder="R"
-                                    value={data.reps}
-                                    onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'reps', e.target.value)}
-                                    className="w-6 sm:w-8 bg-dark-hover text-white text-[8px] sm:text-[10px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
-                                    maxLength={3}
-                                  />
-                                  <input
-                                    type="text"
-                                    placeholder="KG"
-                                    value={data.weight}
-                                    onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'weight', e.target.value)}
-                                    className="w-7 sm:w-9 bg-dark-hover text-white text-[8px] sm:text-[10px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
-                                    maxLength={3}
-                                  />
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </td>
-                      ))}
+                      {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => {
+                        const weekKey = `${workoutIndex}-${week}`
+                        const isWeekCollapsed = collapsedWeeks.has(weekKey)
+                        
+                        if (isWeekCollapsed) {
+                          // Render minimal cell for collapsed week
+                          return <td key={week} className="border border-dark-border px-0 py-0.5 w-12"></td>
+                        }
+                        
+                        return (
+                          <td key={week} className="border border-dark-border px-0.5 py-0.5">
+                            <div className="space-y-0.5">
+                              {Array.from({ length: numSets }, (_, setIdx) => {
+                                const data = getWeeklyData(exercise, week, setIdx)
+                                return (
+                                  <div key={setIdx} className="flex gap-0.5">
+                                    <input
+                                      type="text"
+                                      placeholder="R"
+                                      value={data.reps}
+                                      onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'reps', e.target.value)}
+                                      className="w-6 sm:w-8 bg-dark-hover text-white text-[8px] sm:text-[10px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
+                                      maxLength={3}
+                                    />
+                                    <input
+                                      type="text"
+                                      placeholder="KG"
+                                      value={data.weight}
+                                      onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'weight', e.target.value)}
+                                      className="w-7 sm:w-9 bg-dark-hover text-white text-[8px] sm:text-[10px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
+                                      maxLength={3}
+                                    />
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </td>
+                        )
+                      })}
                     </tr>
                   )
                 })}
