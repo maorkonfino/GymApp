@@ -42,8 +42,13 @@ const NavigationCards: React.FC = () => {
     }
   ];
 
-  // Filter based on user role
+  // Filter based on user role and hide current page button
   const cards = allCards.filter(card => {
+    // Hide the button for the current page
+    if (card.path === location.pathname) {
+      return false;
+    }
+    
     if (!user) return card.path === '/'; // Guest can see registration only
     if (isAdmin) return true; // Admin sees all
     
@@ -71,7 +76,6 @@ const NavigationCards: React.FC = () => {
             border border-dark-border rounded-xl sm:rounded-2xl p-4 sm:p-6
             cursor-pointer transition-all duration-300
             hover:scale-105 hover:shadow-xl active:scale-95
-            ${location.pathname === card.path ? 'ring-2 ring-cyan-400/50' : ''}
           `}
         >
           <div className="flex flex-col items-center text-center space-y-2 sm:space-y-3">
