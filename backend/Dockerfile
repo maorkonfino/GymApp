@@ -34,5 +34,5 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 3001
 
 # Start server
-CMD ["npm", "start"]
+CMD ["node", "dist/index-production.js"]
 
