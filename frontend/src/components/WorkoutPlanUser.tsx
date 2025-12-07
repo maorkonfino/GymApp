@@ -215,10 +215,7 @@ const WorkoutPlanUser: React.FC = () => {
   if (!hasWorkoutPlan && !isAdmin) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-250px)] text-center p-4">
-        <BeastLogo size="large" showScratch={true} showWolf={true} />
-        <p className="text-xl text-cyan-400 font-medium mt-4">
-          בית לאימון מבוסס מדע
-        </p>
+        <BeastLogo size="large" showScratch={true} showWolf={true} showSlogan={true} />
         <h2 className="text-3xl font-bold text-white mt-6 mb-4">תוכנית האימון שלי</h2>
         <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6 max-w-md w-full">
           <p className="text-red-300 text-lg font-medium mb-2">⚠️ אין לך תוכנית אימון</p>
