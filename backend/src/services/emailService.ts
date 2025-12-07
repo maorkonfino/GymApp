@@ -38,7 +38,12 @@ export const sendPasswordResetEmail = async (
         email: fromEmail,
         name: 'BEAST Gym'
       },
+      replyTo: fromEmail, // Add reply-to to improve deliverability
       subject: 'איפוס סיסמה - BEAST Gym',
+      trackingSettings: {
+        clickTracking: { enable: false },
+        openTracking: { enable: false }
+      },
     html: `
       <!DOCTYPE html>
       <html dir="rtl" lang="he">
@@ -225,7 +230,12 @@ export const sendWorkoutReminderEmail = async (
       email: fromEmail,
       name: 'BEAST Gym'
     },
+    replyTo: fromEmail, // Add reply-to to improve deliverability
     subject: `תזכורת לאימון מחר - BEAST Gym`,
+    trackingSettings: {
+      clickTracking: { enable: false },
+      openTracking: { enable: false }
+    },
     html: `
       <!DOCTYPE html>
       <html dir="rtl" lang="he">
