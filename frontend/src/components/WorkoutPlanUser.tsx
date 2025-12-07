@@ -260,34 +260,42 @@ const WorkoutPlanUser: React.FC = () => {
               <thead className="sticky top-0 z-20">
                 <tr className="bg-dark-hover">
                   <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-right sticky right-0 bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-[50px] sm:w-[70px]">תרגיל</th>
-                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">סטים</th>
-                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">חזרות</th>
-                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">מנוחה</th>
-                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">RIR</th>
-                  {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => {
-                    const weekKey = `${workoutIndex}-${week}`
-                    const isWeekCollapsed = collapsedWeeks.has(weekKey)
+                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center sticky right-[50px] sm:right-[70px] bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-6 sm:w-8">סטים</th>
+                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center sticky right-[56px] sm:right-[78px] bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-8 sm:w-12">חזרות</th>
+                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center sticky right-[64px] sm:right-[90px] bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-8 sm:w-12">מנוחה</th>
+                  <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center sticky right-[72px] sm:right-[102px] bg-dark-hover z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-6 sm:w-8">RIR</th>
+                  {(() => {
+                    // Sort weeks: open weeks first (by number), then collapsed weeks (by number)
+                    const allWeeks = Array.from({ length: getActualWeeks() }, (_, i) => i + 1)
+                    const openWeeks = allWeeks.filter(week => !collapsedWeeks.has(`${workoutIndex}-${week}`))
+                    const closedWeeks = allWeeks.filter(week => collapsedWeeks.has(`${workoutIndex}-${week}`))
+                    const sortedWeeks = [...openWeeks, ...closedWeeks]
                     
-                    // Always render header, even if collapsed, to show the toggle button
-                    return (
-                      <th key={week} className={`border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center ${isWeekCollapsed ? 'w-8' : 'w-12 sm:w-16'}`}>
-                        <button
-                          onClick={() => toggleWeekCollapse(workoutIndex, week)}
-                          className="w-full flex items-center justify-center gap-0.5 hover:text-cyan-200 transition-colors"
-                          title={isWeekCollapsed ? `שבוע ${week}` : undefined}
-                        >
-                          {isWeekCollapsed ? (
-                            <ChevronDown className="w-3 h-3" />
-                          ) : (
-                            <>
-                              <span className="text-[7px] sm:text-[9px]">ש{week}</span>
-                              <ChevronUp className="w-2 h-2 sm:w-3 sm:h-3" />
-                            </>
-                          )}
-                        </button>
-                      </th>
-                    )
-                  })}
+                    return sortedWeeks.map(week => {
+                      const weekKey = `${workoutIndex}-${week}`
+                      const isWeekCollapsed = collapsedWeeks.has(weekKey)
+                    
+                      // Always render header, even if collapsed, to show the toggle button
+                      return (
+                        <th key={week} className={`border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center ${isWeekCollapsed ? 'w-8' : 'w-12 sm:w-16'}`}>
+                          <button
+                            onClick={() => toggleWeekCollapse(workoutIndex, week)}
+                            className="w-full flex items-center justify-center gap-0.5 hover:text-cyan-200 transition-colors"
+                            title={isWeekCollapsed ? `שבוע ${week}` : undefined}
+                          >
+                            {isWeekCollapsed ? (
+                              <ChevronDown className="w-3 h-3" />
+                            ) : (
+                              <>
+                                <span className="text-[7px] sm:text-[9px]">ש{week}</span>
+                                <ChevronUp className="w-2 h-2 sm:w-3 sm:h-3" />
+                              </>
+                            )}
+                          </button>
+                        </th>
+                      )
+                    })
+                  })()}
                   {plan.numberOfWeeks === 'flexible' && (
                     <th className="border border-dark-border px-1 py-1">
                       <button
@@ -309,57 +317,65 @@ const WorkoutPlanUser: React.FC = () => {
                       <td className="border border-dark-border px-0.5 py-0.5 text-white font-medium sticky right-0 bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.name}
                       </td>
-                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300">
+                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300 sticky right-[50px] sm:right-[70px] bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.sets}
                       </td>
-                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300">
+                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300 sticky right-[56px] sm:right-[78px] bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.repsRange}
                       </td>
-                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300">
+                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300 sticky right-[64px] sm:right-[90px] bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.rest}
                       </td>
-                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300">
+                      <td className="border border-dark-border px-0.5 py-0.5 text-center text-gray-300 sticky right-[72px] sm:right-[102px] bg-dark-card z-10 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">
                         {exercise.rir}
                       </td>
-                      {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => {
-                        const weekKey = `${workoutIndex}-${week}`
-                        const isWeekCollapsed = collapsedWeeks.has(weekKey)
+                      {(() => {
+                        // Sort weeks: open weeks first (by number), then collapsed weeks (by number)
+                        const allWeeks = Array.from({ length: getActualWeeks() }, (_, i) => i + 1)
+                        const openWeeks = allWeeks.filter(week => !collapsedWeeks.has(`${workoutIndex}-${week}`))
+                        const closedWeeks = allWeeks.filter(week => collapsedWeeks.has(`${workoutIndex}-${week}`))
+                        const sortedWeeks = [...openWeeks, ...closedWeeks]
                         
-                        if (isWeekCollapsed) {
-                          // Render minimal cell for collapsed week
-                          return <td key={week} className="border border-dark-border px-0 py-0.5 w-8"></td>
-                        }
+                        return sortedWeeks.map(week => {
+                          const weekKey = `${workoutIndex}-${week}`
+                          const isWeekCollapsed = collapsedWeeks.has(weekKey)
                         
-                        return (
-                          <td key={week} className="border border-dark-border px-0.5 py-0.5">
-                            <div className="space-y-0.5">
-                              {Array.from({ length: numSets }, (_, setIdx) => {
-                                const data = getWeeklyData(exercise, week, setIdx)
-                                return (
-                                  <div key={setIdx} className="flex gap-0.5">
-                                    <input
-                                      type="text"
-                                      placeholder="R"
-                                      value={data.reps}
-                                      onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'reps', e.target.value)}
-                                      className="w-5 sm:w-6 bg-dark-hover text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
-                                      maxLength={3}
-                                    />
-                                    <input
-                                      type="text"
-                                      placeholder="KG"
-                                      value={data.weight}
-                                      onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'weight', e.target.value)}
-                                      className="w-6 sm:w-7 bg-dark-hover text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
-                                      maxLength={3}
-                                    />
-                                  </div>
-                                )
-                              })}
-                            </div>
-                          </td>
-                        )
-                      })}
+                          if (isWeekCollapsed) {
+                            // Render minimal cell for collapsed week
+                            return <td key={week} className="border border-dark-border px-0 py-0.5 w-8"></td>
+                          }
+                          
+                          return (
+                            <td key={week} className="border border-dark-border px-0.5 py-0.5">
+                              <div className="space-y-0.5">
+                                {Array.from({ length: numSets }, (_, setIdx) => {
+                                  const data = getWeeklyData(exercise, week, setIdx)
+                                  return (
+                                    <div key={setIdx} className="flex gap-0.5">
+                                      <input
+                                        type="text"
+                                        placeholder="R"
+                                        value={data.reps}
+                                        onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'reps', e.target.value)}
+                                        className="w-5 sm:w-6 bg-dark-hover text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
+                                        maxLength={3}
+                                      />
+                                      <input
+                                        type="text"
+                                        placeholder="KG"
+                                        value={data.weight}
+                                        onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'weight', e.target.value)}
+                                        className="w-6 sm:w-7 bg-dark-hover text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
+                                        maxLength={3}
+                                      />
+                                    </div>
+                                  )
+                                })}
+                              </div>
+                            </td>
+                          )
+                        })
+                      })()}
                     </tr>
                   )
                 })}
