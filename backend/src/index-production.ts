@@ -187,7 +187,7 @@ app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
     const resetURL = `${frontendURL}/reset-password?token=${resetToken}`;
 
     // Send email
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST || 'smtp.gmail.com',
       port: parseInt(process.env.EMAIL_PORT || '587'),
       secure: false,
