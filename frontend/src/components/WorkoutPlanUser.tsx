@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Dumbbell } from 'lucide-react'
+import { Dumbbell, ChevronDown, ChevronUp, Plus } from 'lucide-react'
 import BeastLogo from './BeastLogo'
 import api from '../api'
 
@@ -26,7 +26,7 @@ interface Workout {
 }
 
 interface WorkoutPlan {
-  numberOfWeeks: number
+  numberOfWeeks: number | 'flexible'
   workouts: Workout[]
 }
 
@@ -37,6 +37,8 @@ const WorkoutPlanUser: React.FC = () => {
   const [hasWorkoutPlan, setHasWorkoutPlan] = useState<boolean | null>(null)
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [userAddedWeeks, setUserAddedWeeks] = useState(1) // For flexible plans
+  const [collapsedWorkouts, setCollapsedWorkouts] = useState<Set<number>>(new Set()) // Track collapsed workouts
 
   useEffect(() => {
     fetchWorkoutPlan()
@@ -95,6 +97,32 @@ const WorkoutPlanUser: React.FC = () => {
     
     exercise.weeklyData[week][setIndex][field] = value
     setPlan(newPlan)
+  }
+
+  const toggleWorkoutCollapse = (workoutIndex: number) => {
+    setCollapsedWorkouts(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(workoutIndex)) {
+        newSet.delete(workoutIndex)
+      } else {
+        newSet.add(workoutIndex)
+      }
+      return newSet
+    })
+  }
+
+  const addWeek = () => {
+    if (plan?.numberOfWeeks === 'flexible') {
+      setUserAddedWeeks(prev => prev + 1)
+    }
+  }
+
+  const getActualWeeks = () => {
+    if (!plan) return 0
+    if (plan.numberOfWeeks === 'flexible') {
+      return userAddedWeeks
+    }
+    return plan.numberOfWeeks
   }
 
   const getWeeklyData = (exercise: Exercise, week: number, setIndex: number) => {
@@ -181,7 +209,9 @@ const WorkoutPlanUser: React.FC = () => {
     <div className="max-w-7xl mx-auto p-4 space-y-6">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-white mb-2">תוכנית האימון שלי</h1>
-        <p className="text-cyan-400 mb-2">מעקב אחר התקדמות - {plan.numberOfWeeks} שבועות</p>
+        <p className="text-cyan-400 mb-2">
+          מעקב אחר התקדמות - {plan.numberOfWeeks === 'flexible' ? `${userAddedWeeks} שבועות (גמיש)` : `${plan.numberOfWeeks} שבועות`}
+        </p>
         {isSaving ? (
           <div className="text-cyan-400 flex items-center gap-2 justify-center text-sm">
             <div className="w-4 h-4 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin"></div>
@@ -192,13 +222,25 @@ const WorkoutPlanUser: React.FC = () => {
         )}
       </div>
 
-      {plan.workouts.map((workout, workoutIndex) => (
+      {plan.workouts.map((workout, workoutIndex) => {
+        const isCollapsed = collapsedWorkouts.has(workoutIndex)
+        
+        return (
         <div key={workoutIndex} className="bg-dark-card border border-dark-border rounded-xl p-6 shadow-xl">
-          <div className="flex items-center gap-3 mb-6">
-            <Dumbbell className="w-8 h-8 text-cyan-400" />
-            <h2 className="text-2xl font-bold text-white">{workout.name}</h2>
+          <div 
+            className="flex items-center justify-between mb-6 cursor-pointer hover:bg-dark-hover/30 -m-2 p-2 rounded-lg transition-colors"
+            onClick={() => toggleWorkoutCollapse(workoutIndex)}
+          >
+            <div className="flex items-center gap-3">
+              <Dumbbell className="w-8 h-8 text-cyan-400" />
+              <h2 className="text-2xl font-bold text-white">{workout.name}</h2>
+            </div>
+            <button className="text-cyan-400 hover:text-cyan-300 transition-colors">
+              {isCollapsed ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
+            </button>
           </div>
 
+          {!isCollapsed && (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
@@ -208,11 +250,22 @@ const WorkoutPlanUser: React.FC = () => {
                   <th className="border border-dark-border px-2 py-2 text-gray-300 font-semibold text-center w-24">טווח חזרות</th>
                   <th className="border border-dark-border px-2 py-2 text-gray-300 font-semibold text-center w-24">מנוחה</th>
                   <th className="border border-dark-border px-2 py-2 text-gray-300 font-semibold text-center w-16">RIR</th>
-                  {Array.from({ length: plan.numberOfWeeks }, (_, i) => i + 1).map(week => (
+                  {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => (
                     <th key={week} className="border border-dark-border px-2 py-2 text-cyan-300 font-semibold text-center">
                       שבוע {week}
                     </th>
                   ))}
+                  {plan.numberOfWeeks === 'flexible' && (
+                    <th className="border border-dark-border px-2 py-2">
+                      <button
+                        onClick={addWeek}
+                        className="w-full px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1"
+                        title="הוסף שבוע"
+                      >
+                        <span className="text-xl">+</span> שבוע
+                      </button>
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -235,7 +288,7 @@ const WorkoutPlanUser: React.FC = () => {
                       <td className="border border-dark-border px-2 py-2 text-center text-gray-300">
                         {exercise.rir}
                       </td>
-                      {Array.from({ length: plan.numberOfWeeks }, (_, i) => i + 1).map(week => (
+                      {Array.from({ length: getActualWeeks() }, (_, i) => i + 1).map(week => (
                         <td key={week} className="border border-dark-border px-1 py-1">
                           <div className="space-y-1">
                             {Array.from({ length: numSets }, (_, setIdx) => {
@@ -270,8 +323,10 @@ const WorkoutPlanUser: React.FC = () => {
               </tbody>
             </table>
           </div>
+          )}
         </div>
-      ))}
+        )
+      })}
 
       <div className="flex justify-center">
         {isSaving ? (

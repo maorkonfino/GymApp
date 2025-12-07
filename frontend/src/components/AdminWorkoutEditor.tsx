@@ -30,12 +30,12 @@ interface Workout {
 }
 
 interface WorkoutPlan {
-  numberOfWeeks: number
+  numberOfWeeks: number | 'flexible'
   workouts: Workout[]
 }
 
 const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }) => {
-  const [numberOfWeeks, setNumberOfWeeks] = useState(4)
+  const [numberOfWeeks, setNumberOfWeeks] = useState<number | 'flexible'>(4)
   const [workouts, setWorkouts] = useState<Workout[]>([
     {
       name: 'אימון 1',
@@ -248,13 +248,19 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                 <label className="block text-purple-300 font-semibold mb-2">מספר שבועות בתוכנית:</label>
                 <select
                   value={numberOfWeeks}
-                  onChange={(e) => setNumberOfWeeks(parseInt(e.target.value))}
+                  onChange={(e) => setNumberOfWeeks(e.target.value === 'flexible' ? 'flexible' : parseInt(e.target.value))}
                   className="w-full bg-dark-card border border-purple-500/50 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                 >
+                  <option value="flexible">גמיש (המתאמן יוסיף שבועות)</option>
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => (
                     <option key={num} value={num}>{num} שבועות</option>
                   ))}
                 </select>
+                {numberOfWeeks === 'flexible' && (
+                  <p className="text-sm text-purple-300 mt-2">
+                    💡 במצב גמיש, המתאמן יוכל להוסיף שבועות נוספים בעצמו
+                  </p>
+                )}
               </div>
 
               {/* Workouts */}
@@ -291,11 +297,16 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                           <th className="border border-dark-border px-2 py-2 text-gray-300 text-sm font-semibold text-center w-24">טווח חזרות</th>
                           <th className="border border-dark-border px-2 py-2 text-gray-300 text-sm font-semibold text-center w-24">מנוחה</th>
                           <th className="border border-dark-border px-2 py-2 text-gray-300 text-sm font-semibold text-center w-16">RIR</th>
-                          {Array.from({ length: numberOfWeeks }, (_, i) => i + 1).map(week => (
+                          {Array.from({ length: numberOfWeeks === 'flexible' ? 1 : numberOfWeeks }, (_, i) => i + 1).map(week => (
                             <th key={week} className="border border-dark-border px-2 py-2 text-cyan-300 text-sm font-semibold text-center" colSpan={1}>
                               שבוע {week}
                             </th>
                           ))}
+                          {numberOfWeeks === 'flexible' && (
+                            <th className="border border-dark-border px-2 py-2 text-purple-300 text-sm font-semibold text-center" colSpan={1}>
+                              ...גמיש
+                            </th>
+                          )}
                           <th className="border border-dark-border px-2 py-2 w-12"></th>
                         </tr>
                       </thead>
@@ -349,7 +360,7 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                                   className="w-full bg-dark-card text-white text-sm text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
                                 />
                               </td>
-                              {Array.from({ length: numberOfWeeks }, (_, i) => i + 1).map(week => (
+                              {Array.from({ length: numberOfWeeks === 'flexible' ? 1 : numberOfWeeks }, (_, i) => i + 1).map(week => (
                                 <td key={week} className="border border-dark-border px-1 py-1">
                                   <div className="space-y-1">
                                     {Array.from({ length: numSets }, (_, setIdx) => {
