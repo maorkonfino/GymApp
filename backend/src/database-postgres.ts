@@ -1,9 +1,11 @@
 import { Pool, PoolClient } from 'pg';
 
-// Create PostgreSQL connection pool
+// Create PostgreSQL connection pool with SSL configuration for Supabase
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : undefined,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 // Initialize database tables
