@@ -343,7 +343,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     className="p-0.5 sm:p-2 border border-dark-border align-middle bg-yellow-500/10"
                                   >
                                     <div className="text-center py-1 sm:py-4 text-yellow-400 font-medium text-[8px] sm:text-sm leading-tight">
-                                      🔒 סגור<br/>
+                                      🔒 סגור לגיל השלישי<br/>
                                       <span className="text-[7px] sm:text-xs">09:00-10:00</span>
                                     </div>
                                   </td>
@@ -370,17 +370,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 <td 
                                   key={dateIdx} 
                                   rowSpan={teenRowSpan}
-                                  className={`p-0 border border-dark-border relative bg-gradient-to-br from-cyan-500/10 to-blue-500/10 ${
-                                    onCellClick ? 'cursor-pointer hover:bg-cyan-500/15 transition-colors' : ''
-                                  }`}
-                                  onClick={() => onCellClick && onCellClick(date, timeRange)}
+                                  className="p-0.5 sm:p-2 border border-dark-border align-middle bg-cyan-500/10"
                                 >
-                                  <div className="grid grid-cols-1 gap-0.5 h-full p-0.5">
-                                    <div className="relative px-0.5 py-0.5 sm:px-1.5 sm:py-1 rounded flex flex-col justify-center text-center bg-gradient-to-r from-cyan-500/30 to-blue-600/30 text-cyan-300 border border-cyan-500/40">
-                                      <div className="text-[6px] sm:text-[9px] font-medium leading-tight">
-                                        שלומי
-                                      </div>
-                                    </div>
+                                  <div className="text-center py-1 sm:py-4 text-cyan-400 font-medium text-[8px] sm:text-sm leading-tight">
+                                    שלומי
                                   </div>
                                 </td>
                               )
