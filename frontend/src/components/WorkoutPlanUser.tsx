@@ -274,9 +274,10 @@ const WorkoutPlanUser: React.FC = () => {
                         <button
                           onClick={() => toggleWeekCollapse(workoutIndex, week)}
                           className="w-full flex items-center justify-center gap-1 hover:text-cyan-200 transition-colors"
+                          title={isWeekCollapsed ? `שבוע ${week}` : undefined}
                         >
                           {isWeekCollapsed ? (
-                            <ChevronDown className="w-4 h-4" title={`שבוע ${week}`} />
+                            <ChevronDown className="w-4 h-4" />
                           ) : (
                             <>
                               <span>שבוע {week}</span>
