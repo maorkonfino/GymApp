@@ -203,57 +203,55 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      {/* Week Navigation - Fixed at top of viewport */}
-      <div className="fixed top-[64px] sm:top-[80px] left-0 right-0 z-40 bg-dark-bg px-4 sm:px-6 lg:px-8 py-2 sm:py-3 shadow-lg border-b border-dark-border">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between bg-dark-hover rounded-lg p-2 sm:p-3">
-            <button
-              onClick={() => onWeekChange('prev')}
-              className="p-1.5 sm:p-2 hover:bg-dark-card rounded-lg transition-colors flex items-center gap-1 sm:gap-2 text-cyan-400"
-            >
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="text-xs sm:text-sm">שבוע קודם</span>
-            </button>
-            
-            <div className="text-center">
-              <div className="text-white font-medium text-xs sm:text-base">
-                {format(weekDates[0], 'd.M')} - {format(weekDates[6], 'd.M.yyyy')}
-              </div>
-              <div className="text-[10px] sm:text-sm text-cyan-400 mt-0.5 sm:mt-1">
-                {(() => {
-                  const startMonth = format(weekDates[0], 'MMMM', { locale: he })
-                  const endMonth = format(weekDates[6], 'MMMM', { locale: he })
-                  const year = format(weekDates[6], 'yyyy')
-                  
-                  if (startMonth === endMonth) {
-                    return `${startMonth} ${year}`
-                  } else {
-                    return `${startMonth} - ${endMonth} ${year}`
-                  }
-                })()}
-              </div>
-            </div>
-            
-            <button
-              onClick={() => onWeekChange('next')}
-              className="p-1.5 sm:p-2 hover:bg-dark-card rounded-lg transition-colors flex items-center gap-1 sm:gap-2 text-cyan-400"
-            >
-              <span className="text-xs sm:text-sm">שבוע הבא</span>
-              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      {/* Title and spacing for fixed navigation */}
+      {/* Title - Only in embedded mode */}
       {embedded && (
-        <div className="pt-[76px] sm:pt-[88px] mb-2 sm:mb-4">
+        <div className="mb-2 sm:mb-4">
           <h2 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
             <span className="text-cyan-400 text-base sm:text-2xl">📅</span>
             הרשמה לאימון
           </h2>
         </div>
       )}
+      
+      {/* Week Navigation - Sticky */}
+      <div className="sticky top-0 z-30 bg-dark-card pb-2 sm:pb-4 -mx-2 sm:-mx-4 px-2 sm:px-4">
+        <div className="flex items-center justify-between bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
+          <button
+            onClick={() => onWeekChange('prev')}
+            className="p-1.5 sm:p-2 hover:bg-dark-card rounded-lg transition-colors flex items-center gap-1 sm:gap-2 text-cyan-400"
+          >
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-xs sm:text-sm">שבוע קודם</span>
+          </button>
+          
+          <div className="text-center">
+            <div className="text-white font-medium text-xs sm:text-base">
+              {format(weekDates[0], 'd.M')} - {format(weekDates[6], 'd.M.yyyy')}
+            </div>
+            <div className="text-[10px] sm:text-sm text-cyan-400 mt-0.5 sm:mt-1">
+              {(() => {
+                const startMonth = format(weekDates[0], 'MMMM', { locale: he })
+                const endMonth = format(weekDates[6], 'MMMM', { locale: he })
+                const year = format(weekDates[6], 'yyyy')
+                
+                if (startMonth === endMonth) {
+                  return `${startMonth} ${year}`
+                } else {
+                  return `${startMonth} - ${endMonth} ${year}`
+                }
+              })()}
+            </div>
+          </div>
+          
+          <button
+            onClick={() => onWeekChange('next')}
+            className="p-1.5 sm:p-2 hover:bg-dark-card rounded-lg transition-colors flex items-center gap-1 sm:gap-2 text-cyan-400"
+          >
+            <span className="text-xs sm:text-sm">שבוע הבא</span>
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+        </div>
+      </div>
         
         {loading ? (
           <div className="text-center py-12">
@@ -262,7 +260,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
           </div>
         ) : (
         <table className="w-full text-sm border-collapse table-fixed">
-          <thead className="sticky top-[140px] sm:top-[164px] bg-dark-card z-30 shadow-lg">
+          <thead className="sticky top-[56px] sm:top-[64px] bg-dark-card z-20 shadow-lg">
                   <tr>
                     <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[45px] sm:w-[80px]">
                       שעות

@@ -93,7 +93,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-bg flex flex-col">
+    <div className="h-screen bg-dark-bg flex flex-col overflow-hidden">
       <Header 
         onLoginClick={() => setShowLoginModal(true)}
         onProfileClick={() => setShowProfileModal(true)}
@@ -101,14 +101,14 @@ function AppContent() {
       />
       
       {/* Navigation Cards - Fixed width container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 w-full flex-shrink-0">
         <div className="animate-fade-in">
           <NavigationCards />
         </div>
       </div>
 
       {/* Main Content - Full width */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto min-h-0">
         <Routes>
           {/* Home/Registration page */}
           <Route path="/" element={
