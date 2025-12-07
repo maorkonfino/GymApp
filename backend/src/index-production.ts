@@ -811,6 +811,45 @@ setTimeout(() => {
   sendWorkoutReminders();
 }, 5000);
 
+// Temporary Admin Password Reset Endpoint (for debugging)
+app.post('/api/admin/reset-user-password', async (req: Request, res: Response) => {
+  try {
+    const { email, newPassword, adminSecret } = req.body;
+
+    // Simple admin secret check
+    if (adminSecret !== 'BEAST_ADMIN_2024') {
+      console.log('❌ Invalid admin secret');
+      return res.status(403).json({ error: 'אין הרשאה' });
+    }
+
+    if (!email || !newPassword) {
+      return res.status(400).json({ error: 'אימייל וסיסמה חדשה נדרשים' });
+    }
+
+    const normalizedEmail = email.toLowerCase();
+    const user = await db.getUserByEmail(normalizedEmail);
+
+    if (!user) {
+      console.log('❌ User not found:', normalizedEmail);
+      return res.status(404).json({ error: 'משתמש לא נמצא' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await db.updateUser(user.id!, { password: hashedPassword } as any);
+
+    console.log(`✅ Password reset successfully for: ${normalizedEmail}`);
+    res.json({ 
+      success: true,
+      message: 'הסיסמה אופסה בהצלחה',
+      user: user.name,
+      email: normalizedEmail 
+    });
+  } catch (error) {
+    console.error('Admin reset password error:', error);
+    res.status(500).json({ error: 'שגיאה באיפוס הסיסמה' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
