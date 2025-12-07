@@ -594,7 +594,7 @@ const NutritionTracking: React.FC = () => {
               </div>
             </div>
 
-            <div className="overflow-auto max-h-[600px]">
+            <div className="overflow-auto">
               <table className="w-full text-sm">
                 <thead className="sticky top-0 z-20">
                   <tr className="border-b border-dark-border bg-dark-card">

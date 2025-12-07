@@ -241,7 +241,7 @@ const WorkoutPlanUser: React.FC = () => {
           </div>
 
           {!isCollapsed && (
-          <div className="overflow-auto max-h-[600px]">
+          <div className="overflow-auto">
             <table className="w-full border-collapse text-xs">
               <thead className="sticky top-0 z-20">
                 <tr className="bg-dark-hover">
