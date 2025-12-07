@@ -5,10 +5,11 @@ import api from '../api'
 interface ForgotPasswordModalProps {
   isOpen: boolean
   onClose: () => void
+  initialEmail?: string
 }
 
-const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClose }) => {
-  const [email, setEmail] = useState('')
+const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClose, initialEmail = '' }) => {
+  const [email, setEmail] = useState(initialEmail)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
@@ -34,11 +35,18 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
   }
 
   const handleClose = () => {
-    setEmail('')
+    setEmail(initialEmail)
     setError('')
     setSuccess(false)
     onClose()
   }
+
+  // Update email when initialEmail changes
+  React.useEffect(() => {
+    if (isOpen) {
+      setEmail(initialEmail)
+    }
+  }, [isOpen, initialEmail])
 
   if (!isOpen) return null
 

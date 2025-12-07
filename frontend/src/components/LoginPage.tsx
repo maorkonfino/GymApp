@@ -41,7 +41,7 @@ const WolfIcon = ({ className }: { className?: string }) => (
 interface LoginPageProps {
   onLogin: (email: string, password: string, rememberMe?: boolean) => Promise<void>
   onRegister: (name: string, lastName: string, phone: string, email: string, password: string) => Promise<void>
-  onForgotPassword?: () => void
+  onForgotPassword?: (email: string) => void
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPassword }) => {
@@ -381,7 +381,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                 </label>
                 <button
                   type="button"
-                  onClick={onForgotPassword}
+                  onClick={() => onForgotPassword && onForgotPassword(formData.email)}
                   className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
                 >
                   שכחתי סיסמה

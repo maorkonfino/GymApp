@@ -24,6 +24,7 @@ function AppContent() {
   const [showProfileModal, setShowProfileModal] = useState(false)
   const [showManageUsers, setShowManageUsers] = useState(false)
   const [showForgotPassword, setShowForgotPassword] = useState(false)
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('')
   const [viewMode, setViewMode] = useState<ViewMode>('day')
   const [weekOffset, setWeekOffset] = useState(0)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
@@ -81,11 +82,18 @@ function AppContent() {
         <LoginPage 
           onLogin={login} 
           onRegister={register} 
-          onForgotPassword={() => setShowForgotPassword(true)}
+          onForgotPassword={(email) => {
+            setForgotPasswordEmail(email)
+            setShowForgotPassword(true)
+          }}
         />
         <ForgotPasswordModal
           isOpen={showForgotPassword}
-          onClose={() => setShowForgotPassword(false)}
+          onClose={() => {
+            setShowForgotPassword(false)
+            setForgotPasswordEmail('')
+          }}
+          initialEmail={forgotPasswordEmail}
         />
       </>
     )
