@@ -112,7 +112,7 @@ function AppContent() {
         <Routes>
           {/* Home/Registration page */}
           <Route path="/" element={
-            <div className="px-4 sm:px-6 lg:px-8 pb-4">
+            <div className="px-4 sm:px-6 lg:px-8 py-4">
               <FullWeekView
                 isOpen={true}
                 onClose={() => {}}
@@ -124,7 +124,7 @@ function AppContent() {
                 onDataChange={handleDataChange}
               />
               {/* Spacing below table */}
-              <div className="h-16 sm:h-20"></div>
+              <div className="h-32 sm:h-40"></div>
             </div>
           } />
 
