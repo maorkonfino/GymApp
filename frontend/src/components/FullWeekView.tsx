@@ -6,7 +6,7 @@ import { registrationAPI } from '../api'
 import { useAuth } from '../contexts/AuthContext'
 import { X, Calendar, ChevronLeft, ChevronRight, MoreHorizontal, Users } from 'lucide-react'
 import { generateTimeSlotRanges } from '../utils/timeSlotRanges'
-import { getRestrictionMessage, isTeenBeastHours } from '../utils/timeRestrictions'
+import { getRestrictionMessage } from '../utils/timeRestrictions'
 
 interface FullWeekViewProps {
   isOpen: boolean
@@ -145,6 +145,43 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   // Get first name only
   const getFirstName = (fullName: string): string => {
     return fullName.split(' ')[0]
+  }
+
+  // Calculate rowSpan for TeenBEAST hours
+  const getTeenHoursRowSpan = (date: Date, startTime: string): number => {
+    const dayOfWeek = date.getDay()
+    const teenTimes: { [key: number]: { start: string; end: string } } = {
+      0: { start: '15:30', end: '18:30' }, // Sunday
+      1: { start: '15:30', end: '18:30' }, // Monday
+      2: { start: '15:30', end: '17:30' }, // Tuesday
+      3: { start: '15:30', end: '18:30' }, // Wednesday
+      4: { start: '15:30', end: '18:30' }, // Thursday
+      5: { start: '12:00', end: '14:00' }, // Friday
+    }
+    
+    const times = teenTimes[dayOfWeek]
+    if (!times || startTime !== times.start) return 0
+    
+    // Calculate duration in 30-minute slots
+    const [startHour, startMin] = times.start.split(':').map(Number)
+    const [endHour, endMin] = times.end.split(':').map(Number)
+    const startMinutes = startHour * 60 + startMin
+    const endMinutes = endHour * 60 + endMin
+    const durationMinutes = endMinutes - startMinutes
+    
+    return durationMinutes / 30 // Each slot is 30 minutes
+  }
+
+  // Check if this is the start of TeenBEAST hours
+  const isTeenHoursStart = (date: Date, timeSlot: string): boolean => {
+    const dayOfWeek = date.getDay()
+    const [slotStart] = timeSlot.split('-')
+    
+    const teenStartTimes: { [key: number]: string } = {
+      0: '15:30', 1: '15:30', 2: '15:30', 3: '15:30', 4: '15:30', 5: '12:00'
+    }
+    
+    return teenStartTimes[dayOfWeek] === slotStart
   }
 
   // Handle "Show All" modal
@@ -314,8 +351,38 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                               }
                             }
                             
-                            // Check if this is TeenBEAST hours (show trainer)
-                            const isTeenHours = isTeenBeastHours(date, timeRange)
+                            // Check if this is the start of TeenBEAST hours (show trainer as merged cell)
+                            const isTeenStart = isTeenHoursStart(date, timeRange)
+                            
+                            // Handle TeenBEAST hours - merged cell for entire duration
+                            if (isTeenStart) {
+                              const teenRowSpan = getTeenHoursRowSpan(date, rangeStart)
+                              
+                              // Mark future cells as rendered
+                              for (let i = 1; i < teenRowSpan; i++) {
+                                const futureTimeRange = timeSlotRanges[timeIdx + i]
+                                if (futureTimeRange) {
+                                  skipCells.add(`${dateStr}-${futureTimeRange}`)
+                                }
+                              }
+                              
+                              return (
+                                <td 
+                                  key={dateIdx} 
+                                  rowSpan={teenRowSpan}
+                                  className={`p-2 border border-dark-border align-middle bg-gradient-to-br from-cyan-500/10 to-blue-500/10 ${
+                                    onCellClick ? 'cursor-pointer hover:bg-cyan-500/15 transition-colors' : ''
+                                  }`}
+                                  onClick={() => onCellClick && onCellClick(date, timeRange)}
+                                >
+                                  <div className="flex items-center justify-center h-full">
+                                    <div className="inline-block px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg text-sm sm:text-base font-bold shadow-lg">
+                                      שלומי
+                                    </div>
+                                  </div>
+                                </td>
+                              )
+                            }
                             
                             // Get registrations that START in this time slot
                             const regsStartingHere = getRegistrationsStartingInSlot(date, timeRange)
@@ -337,12 +404,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 <td 
                                   key={dateIdx} 
                                   rowSpan={rowSpan}
-                                  className={`p-0 border border-dark-border relative ${
+                                  className={`p-0 border border-dark-border relative bg-blue-500/15 ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
-                                  } ${
-                                    isTeenHours 
-                                      ? 'bg-gradient-to-br from-cyan-500/10 to-blue-500/10' 
-                                      : 'bg-blue-500/15'
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
                                 >
@@ -355,15 +418,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     >
                                       <MoreHorizontal className="w-3 h-3" />
                                     </button>
-                                  )}
-                                  
-                                  {/* Teen hours - show trainer badge at top */}
-                                  {isTeenHours && (
-                                    <div className="text-center pt-0.5 pb-1">
-                                      <div className="inline-block px-1 sm:px-1.5 py-0.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded text-[5px] sm:text-[7px] font-bold leading-tight">
-                                        שלומי - מאמן
-                                      </div>
-                                    </div>
                                   )}
                                   
                                   <div className={`grid ${regsStartingHere.length <= 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
@@ -393,25 +447,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                         </div>
                                       </div>
                                     ))}
-                                  </div>
-                                </td>
-                              )
-                            }
-                            
-                            // Empty cell or TeenBEAST hours (show trainer)
-                            if (isTeenHours) {
-                              return (
-                                <td 
-                                  key={dateIdx} 
-                                  className={`p-0.5 border border-dark-border align-middle ${
-                                    onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
-                                  } bg-gradient-to-br from-cyan-500/10 to-blue-500/10`}
-                                  onClick={() => onCellClick && onCellClick(date, timeRange)}
-                                >
-                                  <div className="text-center py-1 sm:py-2">
-                                    <div className="inline-block px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded text-[6px] sm:text-[9px] font-bold leading-tight">
-                                      שלומי - מאמן
-                                    </div>
                                   </div>
                                 </td>
                               )
