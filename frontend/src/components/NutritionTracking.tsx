@@ -675,13 +675,13 @@ const NutritionTracking: React.FC = () => {
                           )}
                         </td>
                         <td className="p-2 text-center">
-                          {isAverage && 'weekKey' in entry ? (
+                          {isAverage && 'weekKey' in entry && typeof entry.weekKey === 'string' ? (
                             <button
-                              onClick={() => toggleWeekCollapse(entry.weekKey!)}
+                              onClick={() => toggleWeekCollapse(entry.weekKey as string)}
                               className="p-1.5 hover:bg-cyan-500/20 rounded-lg transition-colors text-cyan-400"
-                              title={collapsedWeeks.has(entry.weekKey!) ? "פתח שבוע" : "סגור שבוע"}
+                              title={collapsedWeeks.has(entry.weekKey as string) ? "פתח שבוע" : "סגור שבוע"}
                             >
-                              {collapsedWeeks.has(entry.weekKey!) ? (
+                              {collapsedWeeks.has(entry.weekKey as string) ? (
                                 <ChevronDown className="w-4 h-4" />
                               ) : (
                                 <ChevronUp className="w-4 h-4" />
