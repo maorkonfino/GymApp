@@ -469,5 +469,12 @@ export const deleteExpiredTokens = async (): Promise<void> => {
   await pool.query(query);
 };
 
+// Update registration reminder status
+export const updateRegistrationReminderStatus = async (id: number, reminderType: '24h' | '4h'): Promise<void> => {
+  const field = reminderType === '24h' ? 'reminder_24h_sent' : 'reminder_4h_sent';
+  const query = `UPDATE registrations SET ${field} = 1 WHERE id = $1`;
+  await pool.query(query, [id]);
+};
+
 export default pool;
 

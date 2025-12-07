@@ -4,7 +4,9 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import cron from 'node-cron';
 import * as db from './database-postgres';
+import { sendWorkoutReminderEmail } from './services/emailService';
 
 // Load environment variables
 dotenv.config();
@@ -683,6 +685,78 @@ app.post('/api/admin/update-password', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to update password' });
   }
 });
+
+// ===== WORKOUT REMINDERS CRON JOB =====
+
+// Function to send workout reminders
+const sendWorkoutReminders = async () => {
+  try {
+    console.log('🔔 Checking for workout reminders...');
+    
+    // Get current time and 24 hours from now
+    const now = new Date();
+    const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    
+    // Format dates for query
+    const tomorrowDateStr = tomorrow.toISOString().split('T')[0];
+    
+    console.log(`📅 Checking for workouts on ${tomorrowDateStr}`);
+    
+    // Get all registrations for tomorrow that haven't been reminded
+    const registrations = await db.getRegistrationsByDateRange(tomorrowDateStr, tomorrowDateStr);
+    
+    if (registrations.length === 0) {
+      console.log('📭 No workouts found for tomorrow');
+      return;
+    }
+    
+    console.log(`📬 Found ${registrations.length} workouts for tomorrow`);
+    
+    // Send reminder for each registration that hasn't been reminded yet
+    for (const reg of registrations) {
+      // Check if reminder already sent
+      if (reg.reminder_24h_sent) {
+        console.log(`⏭️  Reminder already sent for ${reg.email} at ${reg.start_time}`);
+        continue;
+      }
+      
+      try {
+        // Send email
+        await sendWorkoutReminderEmail(
+          reg.email,
+          reg.full_name,
+          reg.date,
+          reg.start_time,
+          reg.end_time
+        );
+        
+        // Mark as sent
+        await db.updateRegistrationReminderStatus(reg.id!, '24h');
+        console.log(`✅ Sent reminder to ${reg.email} for ${reg.start_time}`);
+      } catch (error) {
+        console.error(`❌ Failed to send reminder to ${reg.email}:`, error);
+      }
+    }
+    
+    console.log('✅ Workout reminders check completed');
+  } catch (error) {
+    console.error('❌ Error in sendWorkoutReminders:', error);
+  }
+};
+
+// Run reminder check every hour at minute 0
+// Format: "0 * * * *" means: at minute 0 of every hour
+cron.schedule('0 * * * *', sendWorkoutReminders, {
+  timezone: 'Asia/Jerusalem'
+});
+
+console.log('⏰ Workout reminders cron job scheduled (runs every hour)');
+
+// Also run once on startup (after a small delay to ensure DB is ready)
+setTimeout(() => {
+  console.log('🚀 Running initial workout reminders check...');
+  sendWorkoutReminders();
+}, 5000);
 
 // Start server
 app.listen(PORT, () => {
