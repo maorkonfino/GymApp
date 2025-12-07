@@ -72,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                       <span className="text-[10px] sm:text-xs bg-gradient-to-r from-orange-500 to-red-600 text-white px-1.5 sm:px-2 py-0.5 rounded font-bold flex-shrink-0">
                         TeenBEAST
                       </span>
-                    ) : user.role === 'online' ? (
+                    ) : user.role === 'onlinebeast' ? (
                       <span className="text-[10px] sm:text-xs bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-1.5 sm:px-2 py-0.5 rounded font-bold flex-shrink-0">
                         OnlineBEAST
                       </span>

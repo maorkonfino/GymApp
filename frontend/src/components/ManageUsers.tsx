@@ -15,7 +15,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [editMode, setEditMode] = useState<'role' | 'workout' | 'nutrition' | null>(null)
-  const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz' | 'teenbeast' | 'online'>('kibbutz')
+  const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz' | 'teenbeast' | 'onlinebeast'>('kibbutz')
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
@@ -130,14 +130,14 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                             ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
                             : user.role === 'teenbeast'
                             ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
-                            : user.role === 'online'
+                            : user.role === 'onlinebeast'
                             ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
                             : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                         }`}>
                           {user.role === 'admin' ? 'מנהל' 
                             : user.role === 'vip' ? 'BEAST' 
                             : user.role === 'teenbeast' ? 'TeenBEAST' 
-                            : user.role === 'online' ? 'OnlineBEAST'
+                            : user.role === 'onlinebeast' ? 'OnlineBEAST'
                             : 'קיבוץ'}
                         </span>
                       </div>
@@ -209,7 +209,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                   { value: 'kibbutz', label: 'קיבוץ', desc: 'גישה לכל הכפתורים (לפי תוכנית)', gradient: 'from-green-500 to-emerald-600' },
                   { value: 'vip', label: 'BEAST', desc: 'גישה לכל הכפתורים (לפי תוכנית)', gradient: 'from-cyan-500 to-blue-600' },
                   { value: 'teenbeast', label: 'TeenBEAST', desc: 'גישה מוגבלת לשעות נוער בלבד', gradient: 'from-orange-500 to-red-600' },
-                  { value: 'online', label: 'OnlineBEAST', desc: 'גישה מקוונת בלבד (ללא הרשמה לתורים)', gradient: 'from-indigo-500 to-purple-600' },
+                  { value: 'onlinebeast', label: 'OnlineBEAST', desc: 'גישה מקוונת בלבד (ללא הרשמה לתורים)', gradient: 'from-indigo-500 to-purple-600' },
                   { value: 'admin', label: 'מנהל', desc: 'גישת ניהול מלאה', gradient: 'from-purple-500 to-pink-600' }
                 ].map((role) => (
                   <button

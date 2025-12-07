@@ -23,7 +23,7 @@ export interface DayData {
   registrations: Registration[];
 }
 
-export type UserType = 'admin' | 'vip' | 'kibbutz' | 'teenbeast' | 'online';
+export type UserType = 'admin' | 'vip' | 'kibbutz' | 'teenbeast' | 'onlinebeast';
 
 export interface User {
   id: string;

@@ -38,9 +38,9 @@ function AppContent() {
     }
   }, [location.pathname])
   
-  // Redirect online users from registration page to workout plan
+  // Redirect OnlineBEAST users from registration page to workout plan
   useEffect(() => {
-    if (user?.role === 'online' && location.pathname === '/') {
+    if (user?.role === 'onlinebeast' && location.pathname === '/') {
       navigate('/workout-plan', { replace: true })
     }
   }, [user, location.pathname, navigate])
