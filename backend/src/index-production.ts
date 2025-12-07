@@ -51,6 +51,15 @@ app.post('/api/auth/register', async (req: Request, res: Response) => {
   try {
     const { name, lastName, phone, email, password } = req.body;
 
+    console.log('📝 Registration attempt:', {
+      name,
+      lastName,
+      email,
+      emailLower: email.toLowerCase(),
+      passwordLength: password?.length,
+      passwordSample: password?.substring(0, 3) + '***'
+    });
+
     if (!name || !lastName || !phone || !email || !password) {
       return res.status(400).json({ error: 'כל השדות נדרשים' });
     }
@@ -59,11 +68,17 @@ app.post('/api/auth/register', async (req: Request, res: Response) => {
     const normalizedEmail = email.toLowerCase();
     const existingUser = await db.getUserByEmail(normalizedEmail);
     if (existingUser) {
+      console.log('❌ User already exists:', normalizedEmail);
       return res.status(400).json({ error: 'משתמש עם אימייל זה כבר קיים במערכת' });
     }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('🔐 Password hashed:', {
+      originalLength: password.length,
+      hashedLength: hashedPassword.length,
+      hashedPrefix: hashedPassword.substring(0, 20)
+    });
 
     // Create new user
     const fullName = `${name} ${lastName}`;
@@ -75,11 +90,21 @@ app.post('/api/auth/register', async (req: Request, res: Response) => {
       role: 'kibbutz' 
     });
     
+    console.log('👤 User created with ID:', userId);
+    
     const user = await db.getUserById(userId);
     
     if (!user) {
+      console.log('❌ Failed to retrieve created user');
       return res.status(500).json({ error: 'שגיאה ביצירת משתמש' });
     }
+
+    console.log('✅ Registration successful:', {
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+      hasPassword: !!user.password
+    });
 
     // Don't send password back
     const { password: _, ...userWithoutPassword } = user;
