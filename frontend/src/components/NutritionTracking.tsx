@@ -595,18 +595,18 @@ const NutritionTracking: React.FC = () => {
             </div>
 
             <div className="overflow-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-[8px] sm:text-[10px]">
                 <thead className="sticky top-0 z-20">
                   <tr className="border-b border-dark-border bg-dark-card">
-                    <th className="text-right p-2 text-gray-400 font-medium sticky right-0 bg-dark-card z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)]">תאריך</th>
-                    <th className="text-center p-2 text-gray-400 font-medium">משקל בוקר</th>
-                    <th className="text-center p-2 text-gray-400 font-medium">סה"כ קלוריות</th>
-                    <th className="text-center p-2 text-gray-400 font-medium">חלבון</th>
-                    <th className="text-center p-2 text-gray-400 font-medium">שומן</th>
-                    <th className="text-center p-2 text-gray-400 font-medium">פחממה</th>
-                    <th className="text-center p-2 text-gray-400 font-medium">צעדים</th>
-                    <th className="text-right p-2 text-gray-400 font-medium min-w-[200px]">הערות ובקשות</th>
-                    <th className="w-16"></th>
+                    <th className="text-right p-0.5 sm:p-1 text-gray-400 font-medium sticky right-0 bg-dark-card z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] min-w-[50px]">תאריך</th>
+                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">משקל</th>
+                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">קלוריות</th>
+                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">חלבון</th>
+                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">שומן</th>
+                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">פחמימות</th>
+                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">צעדים</th>
+                    <th className="text-right p-0.5 sm:p-1 text-gray-400 font-medium w-24 sm:w-32">הערות</th>
+                    <th className="w-8 sm:w-12"></th>
                   </tr>
                 </thead>
                 <tbody>
