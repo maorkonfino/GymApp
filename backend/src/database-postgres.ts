@@ -389,7 +389,7 @@ export const createUser = async (user: Omit<User, 'id' | 'created_at'>): Promise
 };
 
 export const getUserByEmail = async (email: string): Promise<User | undefined> => {
-  const query = 'SELECT * FROM users WHERE email = $1';
+  const query = 'SELECT * FROM users WHERE LOWER(email) = LOWER($1)';
   const result = await pool.query(query, [email]);
   return result.rows[0];
 };
