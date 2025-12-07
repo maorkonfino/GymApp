@@ -282,6 +282,36 @@ app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
   }
 });
 
+// TEMPORARY: Admin password reset endpoint
+app.post('/api/admin/reset-user-password', async (req: Request, res: Response) => {
+  try {
+    const { email, newPassword, adminSecret } = req.body;
+
+    // Simple secret check (you should replace with proper admin authentication)
+    if (adminSecret !== 'BEAST_ADMIN_2024') {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    if (!email || !newPassword) {
+      return res.status(400).json({ error: 'Email and new password required' });
+    }
+
+    const user = await db.getUserByEmail(email.toLowerCase());
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await db.updateUser(user.id!, { password: hashedPassword } as any);
+
+    console.log('✅ Admin reset password for:', email);
+    res.json({ message: 'Password updated successfully', user: { email: user.email, name: user.name } });
+  } catch (error) {
+    console.error('Admin reset password error:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+});
+
 // ===== REGISTRATIONS =====
 
 // Create registration
