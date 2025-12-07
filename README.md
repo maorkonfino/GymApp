@@ -249,3 +249,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [⬆ חזרה למעלה](#-beast-gym---מערכת-ניהול-אימונים-ותזונה)
 
 </div>
+# Test auto-deploy
