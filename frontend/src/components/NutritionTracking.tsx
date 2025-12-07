@@ -132,6 +132,7 @@ const NutritionTracking: React.FC = () => {
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [collapsedWeeks, setCollapsedWeeks] = useState<Set<string>>(new Set()) // Track collapsed weeks
+  const [goalsCollapsed, setGoalsCollapsed] = useState(false) // Track if nutrition goals table is collapsed
 
   // Load daily tracking entries from server
   useEffect(() => {
@@ -496,18 +497,33 @@ const NutritionTracking: React.FC = () => {
         <>
           {/* Goals Table - All Users */}
           <div className="bg-dark-card border border-dark-border rounded-xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-green-400">יעדי תזונה</h3>
-              {isAdmin && (
-                <button
-                  onClick={() => setEditingGoals(!editingGoals)}
-                  className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg text-sm transition-all"
-                >
-                  {editingGoals ? 'שמור יעדים' : 'ערוך יעדים'}
+            <div 
+              className="flex items-center justify-between mb-4 cursor-pointer hover:bg-dark-hover/30 -m-2 p-2 rounded-lg transition-colors"
+              onClick={() => setGoalsCollapsed(!goalsCollapsed)}
+            >
+              <div className="flex items-center gap-3">
+                <Apple className="w-6 h-6 text-green-400" />
+                <h3 className="text-xl font-bold text-green-400">יעדי תזונה</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                {!goalsCollapsed && isAdmin && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setEditingGoals(!editingGoals)
+                    }}
+                    className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg text-sm transition-all"
+                  >
+                    {editingGoals ? 'שמור יעדים' : 'ערוך יעדים'}
+                  </button>
+                )}
+                <button className="text-green-400 hover:text-green-300 transition-colors">
+                  {goalsCollapsed ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
                 </button>
-              )}
+              </div>
             </div>
 
+            {!goalsCollapsed && (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -569,12 +585,16 @@ const NutritionTracking: React.FC = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            )}
+          </div>
 
           {/* Daily Tracking Table */}
           <div className="bg-dark-card border border-dark-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-green-400">יומן מעקב</h3>
+              <div className="flex items-center gap-3">
+                <LineChart className="w-6 h-6 text-green-400" />
+                <h3 className="text-xl font-bold text-green-400">יומן מעקב</h3>
+              </div>
               <div className="flex gap-2 items-center">
                 <button
                   onClick={addRow}
@@ -624,18 +644,31 @@ const NutritionTracking: React.FC = () => {
                         }`}
                       >
                         <td className={`p-2 sticky right-0 shadow-[2px_0_5px_rgba(0,0,0,0.3)] ${isAverage ? 'bg-cyan-500/10' : 'bg-dark-card'}`}>
-                          {isAverage ? (
-                            <div className="text-cyan-300 text-xs px-2 py-1 font-semibold">
-                              {entry.notes}
+                          {isAverage && 'weekKey' in entry && typeof entry.weekKey === 'string' ? (
+                            <div className="flex items-center justify-between">
+                              <div className="text-cyan-300 text-xs px-2 py-1 font-semibold">
+                                {entry.notes}
+                              </div>
+                              <button
+                                onClick={() => toggleWeekCollapse(entry.weekKey as string)}
+                                className="p-1.5 hover:bg-cyan-500/20 rounded-lg transition-colors text-cyan-400"
+                                title={collapsedWeeks.has(entry.weekKey as string) ? "פתח שבוע" : "סגור שבוע"}
+                              >
+                                {collapsedWeeks.has(entry.weekKey as string) ? (
+                                  <ChevronDown className="w-4 h-4" />
+                                ) : (
+                                  <ChevronUp className="w-4 h-4" />
+                                )}
+                              </button>
                             </div>
-                            ) : actualIndex >= 0 ? (
-                              <input
-                                type="date"
-                                value={entry.date}
-                                onChange={(e) => updateEntry(actualIndex, 'date', e.target.value)}
-                                className="w-32 bg-dark-hover border border-dark-border rounded px-2 py-1 text-white text-xs focus:outline-none focus:ring-1 focus:ring-green-500"
-                              />
-                            ) : (
+                          ) : actualIndex >= 0 ? (
+                            <input
+                              type="date"
+                              value={entry.date}
+                              onChange={(e) => updateEntry(actualIndex, 'date', e.target.value)}
+                              className="w-32 bg-dark-hover border border-dark-border rounded px-2 py-1 text-white text-xs focus:outline-none focus:ring-1 focus:ring-green-500"
+                            />
+                          ) : (
                             <div className="text-gray-600 text-xs px-2 py-1">-</div>
                           )}
                         </td>
@@ -677,19 +710,7 @@ const NutritionTracking: React.FC = () => {
                           )}
                         </td>
                         <td className="p-2 text-center">
-                          {isAverage && 'weekKey' in entry && typeof entry.weekKey === 'string' ? (
-                            <button
-                              onClick={() => toggleWeekCollapse(entry.weekKey as string)}
-                              className="p-1.5 hover:bg-cyan-500/20 rounded-lg transition-colors text-cyan-400"
-                              title={collapsedWeeks.has(entry.weekKey as string) ? "פתח שבוע" : "סגור שבוע"}
-                            >
-                              {collapsedWeeks.has(entry.weekKey as string) ? (
-                                <ChevronDown className="w-4 h-4" />
-                              ) : (
-                                <ChevronUp className="w-4 h-4" />
-                              )}
-                            </button>
-                          ) : !isAverage && actualIndex >= 0 && (
+                          {!isAverage && actualIndex >= 0 && (
                             <button
                               onClick={() => removeRow(actualIndex)}
                               className="text-red-400 hover:text-red-300 transition-colors p-1"
