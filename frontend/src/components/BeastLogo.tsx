@@ -72,12 +72,14 @@ export const BeastLogo = ({
   size = 'medium',
   showWolf = true,
   showScratch = true,
-  showSlogan = true
+  showSlogan = true,
+  layout = 'vertical'
 }: { 
   size?: 'small' | 'medium' | 'large'
   showWolf?: boolean
   showScratch?: boolean
   showSlogan?: boolean
+  layout?: 'vertical' | 'horizontal'
 }) => {
   const sizeClasses = {
     small: {
@@ -108,6 +110,47 @@ export const BeastLogo = ({
 
   const classes = sizeClasses[size]
 
+  if (layout === 'horizontal') {
+    // Horizontal layout - wolf on the left, text and slogan on the right
+    return (
+      <div className="flex items-center justify-center gap-2 sm:gap-3">
+        {/* Wolf icon with RED eyes - on the left */}
+        {showWolf && (
+          <div className="relative flex-shrink-0">
+            <WolfIcon className={`${classes.wolf} text-white drop-shadow-lg`} />
+          </div>
+        )}
+        
+        {/* BEAST text with scratches and slogan */}
+        <div className="flex flex-col items-start">
+          <h1 
+            dir="ltr" 
+            className={`${classes.text} font-black tracking-tight relative leading-none`} 
+            style={{ fontFamily: 'Arial Black, sans-serif' }}
+          >
+            {/* B without scratches */}
+            <span className="text-white">BE</span>
+            {/* A with RED scratches */}
+            <span className="text-white relative inline-block">
+              A
+              {showScratch && <ScratchMarks className="text-red-500" />}
+            </span>
+            <span className="text-white">ST</span>
+            <span className="text-white">.</span>
+          </h1>
+          
+          {/* Slogan directly under BEAST */}
+          {showSlogan && (
+            <div className={`${classes.slogan} text-cyan-400 font-medium mt-0.5 whitespace-nowrap`}>
+              בית לאימון מבוסס מדע
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // Vertical layout (default) - wolf on top
   return (
     <div className={`flex flex-col items-center justify-center ${classes.container}`}>
       {/* Wolf icon with RED eyes - on top */}

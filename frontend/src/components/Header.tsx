@@ -93,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
           
           {/* Left side - Logo */}
           <div className="flex-shrink-0">
-            <BeastLogo size="small" showScratch={true} showWolf={true} showSlogan={true} />
+            <BeastLogo size="small" showScratch={true} showWolf={true} showSlogan={true} layout="horizontal" />
           </div>
         </div>
       </div>
