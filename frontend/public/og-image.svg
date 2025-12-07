@@ -1,0 +1,99 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Subtle pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="1" fill="#06b6d4" opacity="0.1"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Top accent bar -->
+  <rect width="1200" height="8" fill="url(#accentGradient)"/>
+  
+  <!-- Wolf Icon (scaled up) -->
+  <g transform="translate(150, 150)">
+    <circle cx="100" cy="100" r="110" fill="url(#accentGradient)" opacity="0.2"/>
+    <g transform="scale(5)">
+      <!-- Wolf head - side profile -->
+      <path d="M 20 40 Q 25 20 35 15 Q 40 12 45 12 Q 50 13 52 18 L 50 25 Q 48 35 45 42 L 40 50 L 35 58 L 30 62 L 25 60 L 22 55 Z" fill="#06b6d4"/>
+      <path d="M 35 15 L 38 5 L 42 8 L 40 18 Z" fill="#06b6d4"/>
+      <path d="M 45 42 L 55 40 L 65 38 L 72 36 L 75 38 L 75 42 L 72 45 L 65 46 L 55 47 L 48 48 Z" fill="#06b6d4"/>
+      <path d="M 48 48 L 60 50 L 68 51 L 70 52 L 68 55 L 60 56 L 50 56 L 42 54 Z" fill="#06b6d4"/>
+      <circle cx="75" cy="40" r="3" fill="rgba(0,0,0,0.5)"/>
+      <ellipse cx="52" cy="30" rx="4" ry="3" fill="white"/>
+      <circle cx="53" cy="30" r="2" fill="rgba(0,0,0,0.8)"/>
+      <path d="M 30 35 L 28 38 M 32 32 L 30 35 M 28 45 L 26 48" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+      <path d="M 60 52 L 60 54 M 64 52 L 64 54 M 68 52 L 68 53.5" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+    </g>
+  </g>
+  
+  <!-- Main content -->
+  <g transform="translate(420, 200)">
+    <!-- BEAST logo text -->
+    <text x="0" y="0" font-family="Arial, sans-serif" font-weight="bold" font-size="140" fill="#ffffff" letter-spacing="5">
+      <tspan fill="#ffffff">BE</tspan>
+      <tspan fill="#06b6d4">A</tspan>
+      <tspan fill="#ffffff">ST</tspan>
+    </text>
+    
+    <!-- Scratch marks on A -->
+    <g transform="translate(205, -120)">
+      <line x1="5" y1="20" x2="25" y2="140" stroke="white" stroke-width="8" opacity="0.3"/>
+      <line x1="25" y1="20" x2="45" y2="140" stroke="white" stroke-width="8" opacity="0.3"/>
+      <line x1="45" y1="20" x2="65" y2="140" stroke="white" stroke-width="8" opacity="0.3"/>
+    </g>
+    
+    <!-- Slogan -->
+    <text x="0" y="60" font-family="Arial, sans-serif" font-size="36" fill="#06b6d4" font-weight="500">
+      בית לאימון מבוסס מדע
+    </text>
+    
+    <!-- Description -->
+    <text x="0" y="130" font-family="Arial, sans-serif" font-size="28" fill="#cbd5e1" font-weight="400">
+      מערכת ניהול אימונים אישיים
+    </text>
+    <text x="0" y="170" font-family="Arial, sans-serif" font-size="28" fill="#cbd5e1" font-weight="400">
+      מעקב תזונה והתקדמות מתקדמת
+    </text>
+  </g>
+  
+  <!-- Features badges -->
+  <g transform="translate(420, 480)">
+    <!-- Badge 1 -->
+    <rect x="0" y="0" width="180" height="50" rx="25" fill="#06b6d4" opacity="0.2"/>
+    <text x="90" y="33" font-family="Arial, sans-serif" font-size="20" fill="#06b6d4" font-weight="600" text-anchor="middle">
+      💪 אימונים אישיים
+    </text>
+    
+    <!-- Badge 2 -->
+    <rect x="200" y="0" width="160" height="50" rx="25" fill="#3b82f6" opacity="0.2"/>
+    <text x="280" y="33" font-family="Arial, sans-serif" font-size="20" fill="#3b82f6" font-weight="600" text-anchor="middle">
+      🍎 מעקב תזונה
+    </text>
+    
+    <!-- Badge 3 -->
+    <rect x="380" y="0" width="150" height="50" rx="25" fill="#8b5cf6" opacity="0.2"/>
+    <text x="455" y="33" font-family="Arial, sans-serif" font-size="20" fill="#8b5cf6" font-weight="600" text-anchor="middle">
+      📊 התקדמות
+    </text>
+  </g>
+  
+  <!-- Bottom accent -->
+  <rect y="622" width="1200" height="8" fill="url(#accentGradient)"/>
+</svg>
+
