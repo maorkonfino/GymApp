@@ -615,18 +615,18 @@ const NutritionTracking: React.FC = () => {
             </div>
 
             <div className="overflow-auto">
-              <table className="w-full text-[8px] sm:text-[10px]">
+              <table className="w-full text-[7px] sm:text-[9px]">
                 <thead className="sticky top-0 z-20">
                   <tr className="border-b border-dark-border bg-dark-card">
-                    <th className="text-right p-0.5 sm:p-1 text-gray-400 font-medium sticky right-0 bg-dark-card z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] min-w-[50px]">תאריך</th>
-                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">משקל</th>
-                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">קלוריות</th>
-                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">חלבון</th>
-                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">שומן</th>
-                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">פחמימות</th>
-                    <th className="text-center p-0.5 sm:p-1 text-gray-400 font-medium w-12 sm:w-16">צעדים</th>
-                    <th className="text-right p-0.5 sm:p-1 text-gray-400 font-medium w-24 sm:w-32">הערות</th>
-                    <th className="w-8 sm:w-12"></th>
+                    <th className="text-right p-0.5 text-gray-400 font-medium sticky right-0 bg-dark-card z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-[45px] sm:w-[60px]">תאריך</th>
+                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">משקל</th>
+                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">קלור</th>
+                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">חלבון</th>
+                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">שומן</th>
+                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">פחמ'</th>
+                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">צעדים</th>
+                    <th className="text-right p-0.5 text-gray-400 font-medium w-16 sm:w-24">הערות</th>
+                    <th className="w-6 sm:w-8"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -643,21 +643,21 @@ const NutritionTracking: React.FC = () => {
                             : 'hover:bg-dark-hover/30'
                         }`}
                       >
-                        <td className={`p-2 sticky right-0 shadow-[2px_0_5px_rgba(0,0,0,0.3)] ${isAverage ? 'bg-cyan-500/10' : 'bg-dark-card'}`}>
+                        <td className={`p-0.5 sticky right-0 shadow-[2px_0_5px_rgba(0,0,0,0.3)] ${isAverage ? 'bg-cyan-500/10' : 'bg-dark-card'}`}>
                           {isAverage && 'weekKey' in entry && typeof entry.weekKey === 'string' ? (
                             <div className="flex items-center justify-between">
-                              <div className="text-cyan-300 text-xs px-2 py-1 font-semibold">
+                              <div className="text-cyan-300 text-[7px] sm:text-[9px] px-0.5 py-0.5 font-semibold">
                                 {entry.notes}
                               </div>
                               <button
                                 onClick={() => toggleWeekCollapse(entry.weekKey as string)}
-                                className="p-1.5 hover:bg-cyan-500/20 rounded-lg transition-colors text-cyan-400"
+                                className="p-0.5 hover:bg-cyan-500/20 rounded transition-colors text-cyan-400"
                                 title={collapsedWeeks.has(entry.weekKey as string) ? "פתח שבוע" : "סגור שבוע"}
                               >
                                 {collapsedWeeks.has(entry.weekKey as string) ? (
-                                  <ChevronDown className="w-4 h-4" />
+                                  <ChevronDown className="w-3 h-3" />
                                 ) : (
-                                  <ChevronUp className="w-4 h-4" />
+                                  <ChevronUp className="w-3 h-3" />
                                 )}
                               </button>
                             </div>
@@ -666,16 +666,16 @@ const NutritionTracking: React.FC = () => {
                               type="date"
                               value={entry.date}
                               onChange={(e) => updateEntry(actualIndex, 'date', e.target.value)}
-                              className="w-32 bg-dark-hover border border-dark-border rounded px-2 py-1 text-white text-xs focus:outline-none focus:ring-1 focus:ring-green-500"
+                              className="w-[40px] sm:w-[55px] bg-dark-hover border border-dark-border rounded px-0.5 py-0.5 text-white text-[7px] sm:text-[9px] focus:outline-none focus:ring-1 focus:ring-green-500"
                             />
                           ) : (
-                            <div className="text-gray-600 text-xs px-2 py-1">-</div>
+                            <div className="text-gray-600 text-[7px]">-</div>
                           )}
                         </td>
                         {(['morningWeight', 'calories', 'protein', 'fat', 'carbs', 'steps'] as const).map((field) => (
-                          <td key={field} className="p-2 text-center">
+                          <td key={field} className="p-0.5 text-center">
                             {isAverage && field === 'morningWeight' ? (
-                              <div className="text-cyan-300 font-bold text-sm">
+                              <div className="text-cyan-300 font-bold text-[8px] sm:text-[10px]">
                                 {entry[field]}
                               </div>
                             ) : isAverage ? (
@@ -686,7 +686,7 @@ const NutritionTracking: React.FC = () => {
                                 step="0.1"
                                 value={entry[field]}
                                 onChange={(e) => updateEntry(actualIndex, field, e.target.value)}
-                                className="w-20 bg-dark-hover border border-dark-border rounded px-2 py-1 text-white text-center text-xs font-bold focus:outline-none focus:ring-1 focus:ring-green-500"
+                                className="w-9 sm:w-11 bg-dark-hover border border-dark-border rounded px-0.5 py-0.5 text-white text-center text-[7px] sm:text-[9px] font-bold focus:outline-none focus:ring-1 focus:ring-green-500"
                                 placeholder="0"
                               />
                             ) : (
@@ -694,22 +694,22 @@ const NutritionTracking: React.FC = () => {
                             )}
                           </td>
                         ))}
-                        <td className="p-2">
+                        <td className="p-0.5">
                           {isAverage ? (
-                            <div className="text-gray-600 text-xs">-</div>
+                            <div className="text-gray-600 text-[7px]">-</div>
                           ) : actualIndex >= 0 ? (
                             <input
                               type="text"
                               value={entry.notes}
                               onChange={(e) => updateEntry(actualIndex, 'notes', e.target.value)}
-                              className="w-full bg-dark-hover border border-dark-border rounded px-2 py-1 text-white text-xs focus:outline-none focus:ring-1 focus:ring-green-500"
+                              className="w-full bg-dark-hover border border-dark-border rounded px-0.5 py-0.5 text-white text-[7px] sm:text-[9px] focus:outline-none focus:ring-1 focus:ring-green-500"
                               placeholder="הערות..."
                             />
                           ) : (
-                            <div className="text-gray-600 text-xs">-</div>
+                            <div className="text-gray-600 text-[7px]">-</div>
                           )}
                         </td>
-                        <td className="p-2 text-center">
+                        <td className="p-0.5 text-center">
                           {!isAverage && actualIndex >= 0 && (
                             <button
                               onClick={() => removeRow(actualIndex)}
