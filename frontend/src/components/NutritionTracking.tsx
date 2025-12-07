@@ -131,8 +131,16 @@ const NutritionTracking: React.FC = () => {
   const [entries, setEntries] = useState<DailyEntry[]>([])
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
-  const [collapsedWeeks, setCollapsedWeeks] = useState<Set<string>>(new Set()) // Track collapsed weeks
-  const [goalsCollapsed, setGoalsCollapsed] = useState(false) // Track if nutrition goals table is collapsed
+  const [collapsedWeeks, setCollapsedWeeks] = useState<Set<string>>(() => {
+    // Load collapsed weeks from localStorage
+    const saved = localStorage.getItem('nutrition-collapsed-weeks')
+    return saved ? new Set(JSON.parse(saved)) : new Set()
+  })
+  const [goalsCollapsed, setGoalsCollapsed] = useState(() => {
+    // Load goals collapsed state from localStorage
+    const saved = localStorage.getItem('nutrition-goals-collapsed')
+    return saved === 'true'
+  })
   const [notesModalOpen, setNotesModalOpen] = useState(false)
   const [notesModalIndex, setNotesModalIndex] = useState<number>(-1)
   const [notesModalValue, setNotesModalValue] = useState('')
@@ -216,6 +224,16 @@ const NutritionTracking: React.FC = () => {
 
     loadEntries()
   }, [user])
+
+  // Save collapsed weeks to localStorage
+  useEffect(() => {
+    localStorage.setItem('nutrition-collapsed-weeks', JSON.stringify(Array.from(collapsedWeeks)))
+  }, [collapsedWeeks])
+
+  // Save goals collapsed state to localStorage
+  useEffect(() => {
+    localStorage.setItem('nutrition-goals-collapsed', goalsCollapsed.toString())
+  }, [goalsCollapsed])
 
   const addRow = () => {
     const today = format(new Date(), 'yyyy-MM-dd')

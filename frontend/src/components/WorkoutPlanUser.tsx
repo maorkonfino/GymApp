@@ -38,12 +38,30 @@ const WorkoutPlanUser: React.FC = () => {
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [userAddedWeeks, setUserAddedWeeks] = useState(1) // For flexible plans
-  const [collapsedWorkouts, setCollapsedWorkouts] = useState<Set<number>>(new Set()) // Track collapsed workouts
-  const [collapsedWeeks, setCollapsedWeeks] = useState<Set<string>>(new Set()) // Track collapsed weeks (format: "workoutIndex-weekNumber")
+  const [collapsedWorkouts, setCollapsedWorkouts] = useState<Set<number>>(() => {
+    // Load collapsed workouts from localStorage
+    const saved = localStorage.getItem('workout-collapsed-workouts')
+    return saved ? new Set(JSON.parse(saved)) : new Set()
+  })
+  const [collapsedWeeks, setCollapsedWeeks] = useState<Set<string>>(() => {
+    // Load collapsed weeks from localStorage
+    const saved = localStorage.getItem('workout-collapsed-weeks')
+    return saved ? new Set(JSON.parse(saved)) : new Set()
+  })
 
   useEffect(() => {
     fetchWorkoutPlan()
   }, [user])
+
+  // Save collapsed workouts to localStorage
+  useEffect(() => {
+    localStorage.setItem('workout-collapsed-workouts', JSON.stringify(Array.from(collapsedWorkouts)))
+  }, [collapsedWorkouts])
+
+  // Save collapsed weeks to localStorage
+  useEffect(() => {
+    localStorage.setItem('workout-collapsed-weeks', JSON.stringify(Array.from(collapsedWeeks)))
+  }, [collapsedWeeks])
 
   const fetchWorkoutPlan = async () => {
     if (!user) {
