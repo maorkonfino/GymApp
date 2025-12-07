@@ -262,7 +262,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         <table className="w-full text-sm border-collapse table-fixed">
           <thead className="bg-dark-card shadow-lg">
                   <tr>
-                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[45px] sm:w-[80px]">
+                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[70px] sm:w-[100px]">
                       שעות
                     </th>
                     {weekDates.map((date, idx) => (
@@ -284,7 +284,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       return (
                         <tr key={timeIdx} className="hover:bg-dark-hover/30">
                           {/* Time Range Cell */}
-                          <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight">
+                          <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[70px] sm:w-[100px]">
                             {timeRange}
                           </td>
                           
