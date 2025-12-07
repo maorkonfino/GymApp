@@ -133,6 +133,9 @@ const NutritionTracking: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false)
   const [collapsedWeeks, setCollapsedWeeks] = useState<Set<string>>(new Set()) // Track collapsed weeks
   const [goalsCollapsed, setGoalsCollapsed] = useState(false) // Track if nutrition goals table is collapsed
+  const [notesModalOpen, setNotesModalOpen] = useState(false)
+  const [notesModalIndex, setNotesModalIndex] = useState<number>(-1)
+  const [notesModalValue, setNotesModalValue] = useState('')
 
   // Load daily tracking entries from server
   useEffect(() => {
@@ -266,6 +269,28 @@ const NutritionTracking: React.FC = () => {
       newGoals[day].carbs
     )
     setGoals(newGoals)
+  }
+
+  const openNotesModal = (index: number) => {
+    if (index < 0 || index >= entries.length) return
+    setNotesModalIndex(index)
+    setNotesModalValue(entries[index].notes)
+    setNotesModalOpen(true)
+  }
+
+  const saveAndCloseNotesModal = () => {
+    if (notesModalIndex >= 0 && notesModalIndex < entries.length) {
+      updateEntry(notesModalIndex, 'notes', notesModalValue)
+    }
+    setNotesModalOpen(false)
+    setNotesModalIndex(-1)
+    setNotesModalValue('')
+  }
+
+  const closeNotesModal = () => {
+    setNotesModalOpen(false)
+    setNotesModalIndex(-1)
+    setNotesModalValue('')
   }
 
   // Get week number for a date (Sunday = start of week)
@@ -552,9 +577,9 @@ const NutritionTracking: React.FC = () => {
                     {(['protein', 'fat', 'carbs'] as const).map((nutrient) => (
                       <tr key={nutrient} className="border-b border-dark-border/30">
                         <td className="p-3 text-white">
-                          {nutrient === 'protein' ? 'חלבון (גרם)' : 
-                           nutrient === 'fat' ? 'שומן (גרם)' : 
-                           'פחממה (גרם)'}
+                          {nutrient === 'protein' ? 'חלבון' : 
+                           nutrient === 'fat' ? 'שומן' : 
+                           'פחמימה'}
                         </td>
                         <td className="p-3 text-center">
                           {isAdmin && editingGoals ? (
@@ -620,10 +645,10 @@ const NutritionTracking: React.FC = () => {
                   <tr className="border-b border-dark-border bg-dark-card">
                     <th className="text-right p-0.5 text-gray-400 font-medium sticky right-0 bg-dark-card z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-[45px] sm:w-[60px]">תאריך</th>
                     <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">משקל</th>
-                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">קלור</th>
+                    <th className="text-center p-0.5 text-gray-400 font-medium w-12 sm:w-16">קלוריות</th>
                     <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">חלבון</th>
                     <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">שומן</th>
-                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">פחמ'</th>
+                    <th className="text-center p-0.5 text-gray-400 font-medium w-12 sm:w-16">פחמימות</th>
                     <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">צעדים</th>
                     <th className="text-right p-0.5 text-gray-400 font-medium w-16 sm:w-24">הערות</th>
                     <th className="w-6 sm:w-8"></th>
@@ -698,13 +723,13 @@ const NutritionTracking: React.FC = () => {
                           {isAverage ? (
                             <div className="text-gray-600 text-[7px]">-</div>
                           ) : actualIndex >= 0 ? (
-                            <input
-                              type="text"
-                              value={entry.notes}
-                              onChange={(e) => updateEntry(actualIndex, 'notes', e.target.value)}
-                              className="w-full bg-dark-hover border border-dark-border rounded px-0.5 py-0.5 text-white text-[7px] sm:text-[9px] focus:outline-none focus:ring-1 focus:ring-green-500"
-                              placeholder="הערות..."
-                            />
+                            <button
+                              onClick={() => openNotesModal(actualIndex)}
+                              className="w-full bg-dark-hover hover:bg-dark-border border border-dark-border rounded px-0.5 py-0.5 text-white text-[7px] sm:text-[9px] text-right transition-colors focus:outline-none focus:ring-1 focus:ring-green-500"
+                              title="לחץ לעריכת הערות"
+                            >
+                              {entry.notes || 'הוסף הערות...'}
+                            </button>
                           ) : (
                             <div className="text-gray-600 text-[7px]">-</div>
                           )}
@@ -738,6 +763,43 @@ const NutritionTracking: React.FC = () => {
             }))
           }
         />
+      )}
+
+      {/* Notes Modal */}
+      {notesModalOpen && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-dark-card border border-dark-border rounded-xl shadow-2xl max-w-2xl w-full animate-fade-in">
+            <div className="p-6 border-b border-dark-border">
+              <h3 className="text-2xl font-bold text-white">עריכת הערות ובקשות</h3>
+              <p className="text-gray-400 text-sm mt-1">כתוב כאן הערות, בקשות או שאלות למאמן</p>
+            </div>
+            
+            <div className="p-6">
+              <textarea
+                value={notesModalValue}
+                onChange={(e) => setNotesModalValue(e.target.value)}
+                className="w-full h-64 bg-dark-hover border border-dark-border rounded-lg p-4 text-white text-base focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+                placeholder="הכנס הערות, בקשות או שאלות כאן..."
+                autoFocus
+              />
+            </div>
+
+            <div className="p-6 border-t border-dark-border flex gap-3 justify-end">
+              <button
+                onClick={closeNotesModal}
+                className="px-6 py-2.5 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-all font-medium"
+              >
+                ביטול
+              </button>
+              <button
+                onClick={saveAndCloseNotesModal}
+                className="px-6 py-2.5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg transition-all font-medium shadow-lg"
+              >
+                שמור וסגור
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
