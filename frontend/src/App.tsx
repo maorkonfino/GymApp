@@ -123,6 +123,8 @@ function AppContent() {
                 embedded={true}
                 onDataChange={handleDataChange}
               />
+              {/* Spacing below table */}
+              <div className="h-16 sm:h-20"></div>
             </div>
           } />
 

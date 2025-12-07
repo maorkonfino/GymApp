@@ -414,9 +414,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
             </tbody>
           </table>
         )}
-        
-        {/* Spacing at bottom */}
-        <div className="h-16 sm:h-20"></div>
     </div>
   )
 
