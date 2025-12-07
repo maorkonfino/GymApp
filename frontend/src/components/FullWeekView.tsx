@@ -185,11 +185,14 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
 
   const content = (
     <div 
-      className={embedded ? 'h-full flex flex-col bg-dark-card border border-dark-border rounded-2xl' : ''}
+      className={embedded ? 'bg-dark-card border border-dark-border rounded-2xl px-2 sm:px-4 py-2 sm:py-4' : ''}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
-      {/* Title - Only in embedded mode (outside scroll area) */}
+      {/* Title - Only in embedded mode */}
       {embedded && (
-        <div className="mb-2 sm:mb-4 px-2 sm:px-4 pt-2 sm:pt-4">
+        <div className="mb-2 sm:mb-4">
           <h2 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
             <span className="text-cyan-400 text-base sm:text-2xl">📅</span>
             הרשמה לאימון
@@ -197,16 +200,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         </div>
       )}
       
-      {/* Scrollable Container */}
-      <div 
-        className={embedded ? 'flex-1 overflow-auto px-2 sm:px-4 pb-2 sm:pb-4' : 'overflow-auto'}
-        style={!embedded ? { maxHeight: '60vh' } : {}}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        {/* Week Navigation - Sticky */}
-        <div className="sticky top-0 z-30 bg-dark-card pb-2 sm:pb-4">
+      {/* Week Navigation - Sticky */}
+      <div className="sticky top-0 z-30 bg-dark-card pb-2 sm:pb-4">
           <div className="flex items-center justify-between bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
             <button
               onClick={() => onWeekChange('prev')}
@@ -250,8 +245,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
             <p className="text-gray-400">טוען...</p>
           </div>
         ) : (
-        <table className="w-full text-sm border-collapse table-fixed">
-          <thead className="sticky top-[56px] sm:top-[64px] bg-dark-card z-20 shadow-lg">
+      <table className="w-full text-sm border-collapse table-fixed">
+        <thead className="sticky top-[56px] sm:top-[64px] bg-dark-card z-20 shadow-lg">
                   <tr>
                     <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[45px] sm:w-[80px]">
                       שעות
@@ -405,7 +400,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
           </tbody>
         </table>
         )}
-      </div>
     </div>
   )
 

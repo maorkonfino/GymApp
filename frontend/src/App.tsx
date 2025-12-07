@@ -112,7 +112,7 @@ function AppContent() {
         <Routes>
           {/* Home/Registration page */}
           <Route path="/" element={
-            <div className="h-full px-4 sm:px-6 lg:px-8 pb-4">
+            <div className="h-full overflow-auto px-4 sm:px-6 lg:px-8 pb-4">
               <FullWeekView
                 isOpen={true}
                 onClose={() => {}}
