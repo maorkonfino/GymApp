@@ -332,25 +332,91 @@ app.post('/api/admin/reset-user-password', async (req: Request, res: Response) =
 // Create registration
 app.post('/api/registrations', async (req: Request, res: Response) => {
   try {
+    console.log('\n📝 NEW REGISTRATION REQUEST:', req.body);
     const { name, email, phone, date, startTime, endTime } = req.body;
 
     if (!name || !email || !phone || !date || !startTime || !endTime) {
+      console.log('❌ Missing required fields');
       return res.status(400).json({ error: 'All fields are required' });
     }
+
+    // Helper function to parse time
+    const parseTime = (timeStr: string) => {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    // Check for duplicate registration (same user, date, and overlapping time)
+    const existingRegistrations = await db.getRegistrationsByDate(date);
+    const newStartMinutes = parseTime(startTime);
+    const newEndMinutes = parseTime(endTime);
+    
+    console.log('=== DUPLICATE CHECK START ===');
+    console.log('New registration:', { email, date, startTime, endTime });
+    console.log('Existing registrations for this date:', existingRegistrations.length);
+    
+    const duplicateRegistration = existingRegistrations.find((reg: any) => {
+      // Skip temp emails (admin quick registrations)
+      if (reg.email && reg.email.includes('@temp.com')) {
+        console.log('  ⏭️  Skipping temp email:', reg.email);
+        return false;
+      }
+      
+      if (email && email.includes('@temp.com')) {
+        console.log('  ⏭️  New registration is temp email:', email);
+        return false;
+      }
+      
+      console.log(`Comparing with existing registration:`, {
+        existingEmail: `"${reg.email}"`,
+        newEmail: `"${email}"`,
+        existingTimes: `${reg.start_time}-${reg.end_time}`,
+        newTimes: `${startTime}-${endTime}`
+      });
+      
+      // Compare emails (case insensitive)
+      const emailMatch = reg.email && email && reg.email.toLowerCase() === email.toLowerCase();
+      
+      if (!emailMatch) {
+        console.log('  ✗ Different email');
+        return false;
+      }
+      
+      const existingStartMinutes = parseTime(reg.start_time);
+      const existingEndMinutes = parseTime(reg.end_time);
+      
+      // Check if times overlap
+      const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
+      
+      console.log('  ✓ Same email! Checking overlap:', {
+        newStart: `${startTime} (${newStartMinutes}min)`,
+        newEnd: `${endTime} (${newEndMinutes}min)`,
+        existingStart: `${reg.start_time} (${existingStartMinutes}min)`,
+        existingEnd: `${reg.end_time} (${existingEndMinutes}min)`,
+        hasOverlap: hasOverlap ? '🔴 YES - DUPLICATE!' : '✅ NO'
+      });
+      
+      return hasOverlap;
+    });
+    
+    if (duplicateRegistration) {
+      console.log('❌ DUPLICATE FOUND! Rejecting registration');
+      console.log('=== DUPLICATE CHECK END ===');
+      return res.status(400).json({ 
+        error: 'כבר קיים רישום עבורך באותו התאריך ושעות חופפות' 
+      });
+    }
+    
+    console.log('✅ No duplicate found, proceeding with registration');
+    console.log('=== DUPLICATE CHECK END ===');
 
     // Check if registration overlaps with "Closed for Seniors" time
     const registrationDate = new Date(date);
     const dayOfWeek = registrationDate.getDay(); // 0 = Sunday, 4 = Thursday
     
     if (dayOfWeek === 0 || dayOfWeek === 4) {
-      // Parse times
-      const parseTime = (timeStr: string) => {
-        const [hours, minutes] = timeStr.split(':').map(Number);
-        return hours * 60 + minutes;
-      };
-      
-      const startMinutes = parseTime(startTime);
-      const endMinutes = parseTime(endTime);
+      const startMinutes = newStartMinutes;
+      const endMinutes = newEndMinutes;
       const closedStart = 9 * 60; // 9:00
       const closedEnd = 10 * 60; // 10:00
       
@@ -373,9 +439,10 @@ app.post('/api/registrations', async (req: Request, res: Response) => {
       end_time: endTime
     });
 
+    console.log('✅ Registration created successfully! ID:', id);
     res.status(201).json({ id, message: 'Registration created successfully' });
   } catch (error) {
-    console.error('Error creating registration:', error);
+    console.error('❌ Error creating registration:', error);
     res.status(500).json({ error: 'Failed to create registration' });
   }
 });
@@ -441,6 +508,18 @@ app.delete('/api/registrations/:id', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error deleting registration:', error);
     res.status(500).json({ error: 'Failed to delete registration' });
+  }
+});
+
+// Delete old registrations
+app.delete('/api/registrations/cleanup/old', async (req: Request, res: Response) => {
+  try {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    await db.deleteOldRegistrations(today);
+    res.json({ message: 'Old registrations cleaned up successfully' });
+  } catch (error) {
+    console.error('Error cleaning up old registrations:', error);
+    res.status(500).json({ error: 'Failed to clean up old registrations' });
   }
 });
 

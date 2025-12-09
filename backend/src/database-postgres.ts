@@ -219,6 +219,11 @@ export const deleteRegistration = async (id: number): Promise<void> => {
   await pool.query(query, [id]);
 };
 
+export const deleteOldRegistrations = async (today: string): Promise<void> => {
+  const query = 'DELETE FROM registrations WHERE date < $1';
+  await pool.query(query, [today]);
+};
+
 export const getRegistrationsByUser = async (email: string): Promise<Registration[]> => {
   const query = `
     SELECT * FROM registrations 
