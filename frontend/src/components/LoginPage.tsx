@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Mail, Lock, User, UserPlus, LogIn, Phone } from 'lucide-react'
-import BeastLogo from './BeastLogo'
 
 interface LoginPageProps {
   onLogin: (email: string, password: string, rememberMe?: boolean) => Promise<void>
@@ -79,8 +78,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
       <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg flex items-center justify-center p-4">
         <div className="max-w-md w-full">
           {/* Logo & Brand */}
-          <div className="text-center mb-12 animate-fade-in">
-            <BeastLogo size="large" showScratch={true} showWolf={true} showSlogan={true} layout="vertical" />
+          <div className="text-center mb-12 animate-fade-in flex justify-center">
+            <img 
+              src="/header-logo.svg" 
+              alt="BEAST Logo" 
+              className="h-48 sm:h-56 w-auto"
+            />
           </div>
 
           {/* Action Buttons */}
