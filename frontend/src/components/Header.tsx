@@ -13,6 +13,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
   const { user, logout, isAdmin } = useAuth()
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
   const [showInstallButton, setShowInstallButton] = useState(false)
+  const [showInstallModal, setShowInstallModal] = useState(false)
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -31,8 +32,18 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
 
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) return
+  const handleInstallClick = () => {
+    setShowInstallModal(true)
+  }
+
+  const confirmInstall = async () => {
+    setShowInstallModal(false)
+    
+    if (!deferredPrompt) {
+      // For iOS Safari - show instructions
+      alert('📱 להתקנת האפליקציה:\n\n1. לחץ על כפתור השיתוף (⬆️)\n2. בחר "הוסף למסך הבית"\n3. לחץ "הוסף"')
+      return
+    }
 
     deferredPrompt.prompt()
     const { outcome } = await deferredPrompt.userChoice
@@ -140,6 +151,60 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
           </div>
         </div>
       </div>
+
+      {/* Install Modal */}
+      {showInstallModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+          <div className="bg-dark-card border-2 border-cyan-500/50 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in">
+            <div className="text-center mb-6">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/50">
+                <Download className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2">הוסף BEAST לדף הבית</h3>
+              <p className="text-gray-300 text-sm">התקן את האפליקציה לגישה מהירה ונוחה</p>
+            </div>
+
+            <div className="space-y-3 mb-6 text-right">
+              <div className="flex items-start gap-3 bg-dark-hover p-3 rounded-lg">
+                <div className="w-6 h-6 bg-cyan-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-cyan-400 font-bold text-sm">1</span>
+                </div>
+                <p className="text-gray-300 text-sm">גישה מהירה ישירות מהמסך הראשי</p>
+              </div>
+              
+              <div className="flex items-start gap-3 bg-dark-hover p-3 rounded-lg">
+                <div className="w-6 h-6 bg-cyan-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-cyan-400 font-bold text-sm">2</span>
+                </div>
+                <p className="text-gray-300 text-sm">עובד גם ללא אינטרנט</p>
+              </div>
+              
+              <div className="flex items-start gap-3 bg-dark-hover p-3 rounded-lg">
+                <div className="w-6 h-6 bg-cyan-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-cyan-400 font-bold text-sm">3</span>
+                </div>
+                <p className="text-gray-300 text-sm">חוויית שימוש כמו אפליקציה רגילה</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowInstallModal(false)}
+                className="flex-1 px-4 py-3 bg-dark-hover hover:bg-dark-border text-gray-300 rounded-lg font-medium transition-all"
+              >
+                ביטול
+              </button>
+              <button
+                onClick={confirmInstall}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg font-medium transition-all shadow-lg shadow-green-500/30 flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                התקן עכשיו
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
