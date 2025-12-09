@@ -289,11 +289,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
                                 >
-                                  {/* "More" button - top right corner for 3+ registrations */}
+                                  {/* "More" button - top left corner for 3+ registrations */}
                                   {regsStartingHere.length > 2 && (
                                     <button
                                       onClick={(e) => handleShowAllClick(regsStartingHere, e)}
-                                      className="absolute top-0.5 right-0.5 z-10 text-white hover:text-cyan-400 transition-colors"
+                                      className="absolute top-0.5 left-0.5 z-10 text-white hover:text-cyan-400 transition-colors"
                                       title={`עוד ${regsStartingHere.length - 2} רשומים`}
                                     >
                                       <ChevronDown className="w-2.5 h-2.5" />
