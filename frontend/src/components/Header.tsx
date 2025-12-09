@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { LogOut, UserCircle2, UserPlus, Users } from 'lucide-react'
+import { LogOut, UserCircle2, UserPlus, Users, Download } from 'lucide-react'
 import BeastLogo from './BeastLogo'
 
 interface HeaderProps {
@@ -11,6 +11,38 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageUsersClick }) => {
   const { user, logout, isAdmin } = useAuth()
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [showInstallButton, setShowInstallButton] = useState(false)
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+      setShowInstallButton(true)
+    }
+
+    window.addEventListener('beforeinstallprompt', handler)
+
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setShowInstallButton(false)
+    }
+
+    return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return
+
+    deferredPrompt.prompt()
+    const { outcome } = await deferredPrompt.userChoice
+    
+    if (outcome === 'accepted') {
+      setShowInstallButton(false)
+    }
+    
+    setDeferredPrompt(null)
+  }
 
   return (
     <header className="bg-dark-card border-b border-dark-border sticky top-0 z-50 backdrop-blur-lg bg-opacity-95">
@@ -47,6 +79,19 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                     ) : null}
                   </p>
                   <div className="flex items-center gap-1 sm:gap-2 flex-wrap text-[10px] sm:text-xs">
+                    {showInstallButton && (
+                      <>
+                        <button
+                          onClick={handleInstallClick}
+                          className="text-green-400 hover:text-green-300 transition-colors flex items-center gap-0.5 sm:gap-1 whitespace-nowrap"
+                          title="התקן אפליקציה"
+                        >
+                          <Download className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                          <span className="hidden sm:inline">התקן</span>
+                        </button>
+                        <span className="text-gray-600 text-[8px] sm:text-xs">|</span>
+                      </>
+                    )}
                     <button
                       onClick={onProfileClick}
                       className="text-cyan-400 hover:text-cyan-300 transition-colors whitespace-nowrap"

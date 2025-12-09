@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Apple, Plus, Trash2, LineChart, ChevronDown, ChevronUp } from 'lucide-react'
+import { Apple, Trash2, LineChart, ChevronDown, ChevronUp } from 'lucide-react'
 import { format } from 'date-fns'
+import { he } from 'date-fns/locale'
 import WeightGraph from './WeightGraph'
 import BeastLogo from './BeastLogo'
+import NotesModal from './NotesModal'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
@@ -157,7 +159,6 @@ const NutritionTracking: React.FC = () => {
         const response = await fetch(`${API_URL}/daily-tracking/${user.email}`)
         const data = await response.json()
         
-        const today = format(new Date(), 'yyyy-MM-dd')
         let formattedEntries: DailyEntry[] = []
         
         if (data && Array.isArray(data) && data.length > 0) {
@@ -171,13 +172,26 @@ const NutritionTracking: React.FC = () => {
             steps: entry.steps?.toString() || '',
             notes: entry.notes || ''
           }))
+        }
+        
+        // Add current week's dates if they don't exist
+        const today = new Date()
+        const currentDayOfWeek = today.getDay() // 0 = Sunday, 1 = Monday, etc.
+        const startOfWeek = new Date(today)
+        startOfWeek.setDate(today.getDate() - currentDayOfWeek) // Go back to Sunday
+        
+        // Create 7 days for the current week
+        for (let i = 0; i < 7; i++) {
+          const date = new Date(startOfWeek)
+          date.setDate(startOfWeek.getDate() + i)
+          const dateStr = format(date, 'yyyy-MM-dd')
           
-          // Check if today's entry exists, if not add it
-          const hasToday = formattedEntries.some((entry: DailyEntry) => entry.date === today)
+          // Check if this date already exists
+          const exists = formattedEntries.some((entry: DailyEntry) => entry.date === dateStr)
           
-          if (!hasToday) {
+          if (!exists) {
             formattedEntries.push({
-              date: today,
+              date: dateStr,
               morningWeight: '',
               calories: '',
               protein: '',
@@ -187,18 +201,6 @@ const NutritionTracking: React.FC = () => {
               notes: ''
             })
           }
-        } else {
-          // First time - create entry for today
-          formattedEntries = [{
-            date: today,
-            morningWeight: '',
-            calories: '',
-            protein: '',
-            fat: '',
-            carbs: '',
-            steps: '',
-            notes: ''
-          }]
         }
         
         // Sort by date
@@ -207,18 +209,29 @@ const NutritionTracking: React.FC = () => {
         
       } catch (error) {
         console.error('Error loading daily tracking:', error)
-        // First time - create entry for today
-        const today = format(new Date(), 'yyyy-MM-dd')
-        setEntries([{
-          date: today,
-          morningWeight: '',
-          calories: '',
-          protein: '',
-          fat: '',
-          carbs: '',
-          steps: '',
-          notes: ''
-        }])
+        // First time - create current week's entries
+        const today = new Date()
+        const currentDayOfWeek = today.getDay()
+        const startOfWeek = new Date(today)
+        startOfWeek.setDate(today.getDate() - currentDayOfWeek)
+        
+        const weekEntries: DailyEntry[] = []
+        for (let i = 0; i < 7; i++) {
+          const date = new Date(startOfWeek)
+          date.setDate(startOfWeek.getDate() + i)
+          weekEntries.push({
+            date: format(date, 'yyyy-MM-dd'),
+            morningWeight: '',
+            calories: '',
+            protein: '',
+            fat: '',
+            carbs: '',
+            steps: '',
+            notes: ''
+          })
+        }
+        
+        setEntries(weekEntries)
       }
     }
 
@@ -235,29 +248,6 @@ const NutritionTracking: React.FC = () => {
     localStorage.setItem('nutrition-goals-collapsed', goalsCollapsed.toString())
   }, [goalsCollapsed])
 
-  const addRow = () => {
-    const today = format(new Date(), 'yyyy-MM-dd')
-    const exists = entries.some(e => e.date === today)
-    
-    if (exists) {
-      alert('כבר קיימת שורה לתאריך הנוכחי')
-      return
-    }
-    
-    const newEntries = [...entries, {
-      date: today,
-      morningWeight: '',
-      calories: '',
-      protein: '',
-      fat: '',
-      carbs: '',
-      steps: '',
-      notes: ''
-    }]
-    
-    newEntries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    setEntries(newEntries)
-  }
 
   const removeRow = (index: number) => {
     if (index < 0 || index >= entries.length) return
@@ -296,19 +286,17 @@ const NutritionTracking: React.FC = () => {
     setNotesModalOpen(true)
   }
 
-  const saveAndCloseNotesModal = () => {
-    if (notesModalIndex >= 0 && notesModalIndex < entries.length) {
-      updateEntry(notesModalIndex, 'notes', notesModalValue)
-    }
+  const closeNotesModal = () => {
     setNotesModalOpen(false)
     setNotesModalIndex(-1)
     setNotesModalValue('')
   }
 
-  const closeNotesModal = () => {
-    setNotesModalOpen(false)
-    setNotesModalIndex(-1)
-    setNotesModalValue('')
+  const saveNotesModal = (newNotes: string) => {
+    if (notesModalIndex !== -1) {
+      updateEntry(notesModalIndex, 'notes', newNotes)
+    }
+    closeNotesModal()
   }
 
   // Get week number for a date (Sunday = start of week)
@@ -638,13 +626,6 @@ const NutritionTracking: React.FC = () => {
                 <h3 className="text-xl font-bold text-green-400">יומן מעקב</h3>
               </div>
               <div className="flex gap-2 items-center">
-                <button
-                  onClick={addRow}
-                  className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg text-sm transition-all flex items-center gap-1"
-                >
-                  <Plus className="w-3 h-3" />
-                  הוסף שורה
-                </button>
                 {isSaving ? (
                   <span className="text-xs text-cyan-400 flex items-center gap-1">
                     <div className="w-3 h-3 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin"></div>
@@ -704,12 +685,9 @@ const NutritionTracking: React.FC = () => {
                               </button>
                             </div>
                           ) : actualIndex >= 0 ? (
-                            <input
-                              type="date"
-                              value={entry.date}
-                              onChange={(e) => updateEntry(actualIndex, 'date', e.target.value)}
-                              className="w-[40px] sm:w-[55px] bg-dark-hover border border-dark-border rounded px-0.5 py-0.5 text-white text-[7px] sm:text-[9px] focus:outline-none focus:ring-1 focus:ring-green-500"
-                            />
+                            <div className="text-white text-[7px] sm:text-[9px] px-0.5 py-0.5 font-medium whitespace-nowrap">
+                              {format(new Date(entry.date), "EEE d.M", { locale: he })}
+                            </div>
                           ) : (
                             <div className="text-gray-600 text-[7px]">-</div>
                           )}
@@ -784,39 +762,12 @@ const NutritionTracking: React.FC = () => {
 
       {/* Notes Modal */}
       {notesModalOpen && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-card border border-dark-border rounded-xl shadow-2xl max-w-2xl w-full animate-fade-in">
-            <div className="p-6 border-b border-dark-border">
-              <h3 className="text-2xl font-bold text-white">עריכת הערות ובקשות</h3>
-              <p className="text-gray-400 text-sm mt-1">כתוב כאן הערות, בקשות או שאלות למאמן</p>
-            </div>
-            
-            <div className="p-6">
-              <textarea
-                value={notesModalValue}
-                onChange={(e) => setNotesModalValue(e.target.value)}
-                className="w-full h-64 bg-dark-hover border border-dark-border rounded-lg p-4 text-white text-base focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
-                placeholder="הכנס הערות, בקשות או שאלות כאן..."
-                autoFocus
-              />
-            </div>
-
-            <div className="p-6 border-t border-dark-border flex gap-3 justify-end">
-              <button
-                onClick={closeNotesModal}
-                className="px-6 py-2.5 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-all font-medium"
-              >
-                ביטול
-              </button>
-              <button
-                onClick={saveAndCloseNotesModal}
-                className="px-6 py-2.5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg transition-all font-medium shadow-lg"
-              >
-                שמור וסגור
-              </button>
-            </div>
-          </div>
-        </div>
+        <NotesModal
+          isOpen={notesModalOpen}
+          onClose={closeNotesModal}
+          onSave={saveNotesModal}
+          initialNotes={notesModalValue}
+        />
       )}
     </div>
   )

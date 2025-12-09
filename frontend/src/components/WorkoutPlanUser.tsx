@@ -376,12 +376,12 @@ const WorkoutPlanUser: React.FC = () => {
                                         maxLength={3}
                                       />
                                       <input
-                                        type="text"
+                                        type="number"
+                                        step="0.1"
                                         placeholder="KG"
                                         value={data.weight}
                                         onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'weight', e.target.value)}
-                                        className="w-6 sm:w-7 bg-dark-hover text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
-                                        maxLength={3}
+                                        className="w-7 sm:w-8 bg-dark-hover text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
                                       />
                                     </div>
                                   )

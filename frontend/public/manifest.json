@@ -1,7 +1,7 @@
 {
-  "name": "BEAST Gym - מערכת ניהול אימונים",
-  "short_name": "BEAST Gym",
-  "description": "מערכת ניהול אימונים ומעקב תזונה",
+  "name": "BEAST - בית לאימון מבוסס מדע",
+  "short_name": "BEAST",
+  "description": "בית לאימון מבוסס מדע - מערכת ניהול אימונים ומעקב תזונה",
   "theme_color": "#06b6d4",
   "background_color": "#0f172a",
   "display": "standalone",

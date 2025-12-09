@@ -166,14 +166,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                     <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="text"
-                      name="search"
+                      name="first-name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      onFocus={(e) => e.target.removeAttribute('readonly')}
-                      readOnly
                       className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="הכנס שם פרטי"
-                      autoComplete="none"
+                      autoComplete="off"
                       data-lpignore="true"
                       data-form-type="other"
                       required
@@ -189,14 +187,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                     <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="text"
-                      name="query"
+                      name="last-name"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                      onFocus={(e) => e.target.removeAttribute('readonly')}
-                      readOnly
                       className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="הכנס שם משפחה"
-                      autoComplete="none"
+                      autoComplete="off"
                       data-lpignore="true"
                       data-form-type="other"
                       required
@@ -211,15 +207,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                   <div className="relative">
                     <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
-                      type="text"
+                      type="tel"
                       name="mobile"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      onFocus={(e) => e.target.removeAttribute('readonly')}
-                      readOnly
                       className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="הכנס מספר נייד"
-                      autoComplete="none"
+                      autoComplete="off"
                       data-lpignore="true"
                       data-form-type="other"
                       required
@@ -236,15 +230,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
               <div className="relative">
                 <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
-                  type="text"
-                  name="usertext"
+                  type="email"
+                  name="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  onFocus={(e) => e.target.removeAttribute('readonly')}
-                  readOnly
                   className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 text-right"
                   placeholder="example@email.com"
-                  autoComplete="none"
+                  autoComplete="off"
                   data-lpignore="true"
                   data-form-type="other"
                   required
@@ -260,14 +252,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                 <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="password"
-                  name="secret"
+                  name="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  onFocus={(e) => e.target.removeAttribute('readonly')}
-                  readOnly
                   className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   placeholder="••••••••"
-                  autoComplete="none"
+                  autoComplete="off"
                   data-lpignore="true"
                   data-form-type="other"
                   required
@@ -288,14 +278,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                   <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="password"
-                    name="verify"
+                    name="confirm-password"
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                    onFocus={(e) => e.target.removeAttribute('readonly')}
-                    readOnly
                     className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                     placeholder="••••••••"
-                    autoComplete="none"
+                    autoComplete="off"
                     data-lpignore="true"
                     data-form-type="other"
                     required
