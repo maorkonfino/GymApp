@@ -266,8 +266,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       שעות
                     </th>
                     {weekDates.map((date, idx) => (
-                      <th key={idx} className="p-0.5 sm:p-2 text-center border border-dark-border bg-dark-hover text-gray-400 font-medium">
-                        <div className="text-[8px] sm:text-sm leading-tight">{format(date, 'EEE', { locale: he })}</div>
+                      <th key={idx} className="p-0.5 sm:p-2 text-center border border-dark-border bg-dark-hover font-medium">
+                        <div className="text-[10px] sm:text-base leading-tight text-cyan-400 font-bold">{format(date, 'EEE', { locale: he })}</div>
                         <div className="text-[7px] sm:text-xs text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
                       </th>
                     ))}
