@@ -17,6 +17,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const [editMode, setEditMode] = useState<'role' | 'workout' | 'nutrition' | null>(null)
   const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz' | 'teenbeast' | 'onlinebeast'>('kibbutz')
   const [searchQuery, setSearchQuery] = useState('')
+  const [roleFilter, setRoleFilter] = useState<string>('all')
 
   useEffect(() => {
     if (isOpen) {
@@ -104,6 +105,70 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
 
+          {/* Role Filter */}
+          <div className="mb-4 flex gap-2 flex-wrap">
+            <button
+              onClick={() => setRoleFilter('all')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                roleFilter === 'all'
+                  ? 'bg-cyan-500 text-white'
+                  : 'bg-dark-hover text-gray-400 hover:bg-dark-border'
+              }`}
+            >
+              כולם
+            </button>
+            <button
+              onClick={() => setRoleFilter('admin')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                roleFilter === 'admin'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white'
+                  : 'bg-dark-hover text-gray-400 hover:bg-dark-border'
+              }`}
+            >
+              מנהל
+            </button>
+            <button
+              onClick={() => setRoleFilter('vip')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                roleFilter === 'vip'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                  : 'bg-dark-hover text-gray-400 hover:bg-dark-border'
+              }`}
+            >
+              BEAST
+            </button>
+            <button
+              onClick={() => setRoleFilter('teenbeast')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                roleFilter === 'teenbeast'
+                  ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
+                  : 'bg-dark-hover text-gray-400 hover:bg-dark-border'
+              }`}
+            >
+              TeenBEAST
+            </button>
+            <button
+              onClick={() => setRoleFilter('onlinebeast')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                roleFilter === 'onlinebeast'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
+                  : 'bg-dark-hover text-gray-400 hover:bg-dark-border'
+              }`}
+            >
+              OnlineBEAST
+            </button>
+            <button
+              onClick={() => setRoleFilter('kibbutz')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                roleFilter === 'kibbutz'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                  : 'bg-dark-hover text-gray-400 hover:bg-dark-border'
+              }`}
+            >
+              קיבוץ
+            </button>
+          </div>
+
           {loading ? (
             <div className="text-center py-12">
               <div className="w-12 h-12 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin mx-auto mb-4"></div>
@@ -112,7 +177,13 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
           ) : (
             <div className="space-y-3">
               {users
-                .filter(user => user.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                .filter(user => {
+                  // Filter by search query
+                  const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase())
+                  // Filter by role
+                  const matchesRole = roleFilter === 'all' || user.role === roleFilter
+                  return matchesSearch && matchesRole
+                })
                 .map((user) => (
                 <div
                   key={user.id}
