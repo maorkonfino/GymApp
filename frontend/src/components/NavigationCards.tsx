@@ -29,8 +29,8 @@ const NavigationCards: React.FC = () => {
     {
       title: 'תוכנית האימון שלי',
       icon: <FileText className="w-6 h-6" />,
-      color: 'text-purple-400',
-      bgGradient: 'from-purple-500/20 to-pink-500/20',
+      color: 'text-red-400',
+      bgGradient: 'from-red-500/20 to-orange-500/20',
       path: '/workout-plan'
     },
     {
