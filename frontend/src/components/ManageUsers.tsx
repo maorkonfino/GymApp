@@ -227,31 +227,31 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                           setSelectedRole(user.role)
                           setEditMode('role')
                         }}
-                        className="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1"
+                        className="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
                         title="ערוך תפקיד"
                       >
-                        <Edit2 className="w-3 h-3" />
-                        תפקיד
+                        <Edit2 className="w-3 h-3 flex-shrink-0" />
+                        <span className="flex-shrink-0">תפקיד</span>
                       </button>
 
                       {/* Edit Workout Plan */}
                       <button
                         onClick={() => handleEditWorkout(user)}
-                        className="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1"
+                        className="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
                         title="ערוך תכנית אימון"
                       >
-                        <Dumbbell className="w-3 h-3" />
-                        אימון
+                        <Dumbbell className="w-3 h-3 flex-shrink-0" />
+                        <span className="flex-shrink-0">אימון</span>
                       </button>
 
                       {/* Edit Nutrition Plan */}
                       <button
                         onClick={() => handleEditNutrition(user)}
-                        className="px-3 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1"
+                        className="px-3 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
                         title="ערוך תכנית תזונה"
                       >
-                        <Apple className="w-3 h-3" />
-                        תזונה
+                        <Apple className="w-3 h-3 flex-shrink-0" />
+                        <span className="flex-shrink-0">תזונה</span>
                       </button>
                     </div>
                   </div>
