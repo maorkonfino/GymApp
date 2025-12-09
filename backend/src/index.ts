@@ -176,7 +176,23 @@ app.post('/api/registrations', (req: Request, res: Response) => {
     const newStartMinutes = parseTime(startTime);
     const newEndMinutes = parseTime(endTime);
     
+    console.log('Checking for duplicates:', {
+      email,
+      date,
+      startTime,
+      endTime,
+      existingCount: existingRegistrations.length
+    });
+    
     const duplicateRegistration = existingRegistrations.find((reg: any) => {
+      console.log('Checking registration:', {
+        regEmail: reg.email,
+        inputEmail: email,
+        emailMatch: reg.email === email,
+        regStart: reg.start_time,
+        regEnd: reg.end_time
+      });
+      
       if (reg.email !== email) return false;
       
       const existingStartMinutes = parseTime(reg.start_time);
@@ -184,14 +200,26 @@ app.post('/api/registrations', (req: Request, res: Response) => {
       
       // Check if times overlap
       const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
+      
+      console.log('Time overlap check:', {
+        newStart: newStartMinutes,
+        newEnd: newEndMinutes,
+        existingStart: existingStartMinutes,
+        existingEnd: existingEndMinutes,
+        hasOverlap
+      });
+      
       return hasOverlap;
     });
     
     if (duplicateRegistration) {
+      console.log('Duplicate found! Rejecting registration');
       return res.status(400).json({ 
         error: 'כבר קיים רישום עבורך באותו התאריך ושעות חופפות' 
       });
     }
+    
+    console.log('No duplicate found, proceeding with registration');
 
     // Check if registration overlaps with "Closed for Seniors" time
     const registrationDate = new Date(date);
