@@ -57,13 +57,13 @@ export const WolfIcon = ({ className = "" }: { className?: string }) => (
   </svg>
 )
 
-// Scratch marks for BEAST logo - RED colored
+// Scratch marks for BEAST logo - RED colored (scratches on B letter)
 export const ScratchMarks = ({ className = "" }: { className?: string }) => (
   <svg className={`absolute inset-0 w-full h-full pointer-events-none ${className}`} viewBox="0 0 100 120">
-    {/* Three diagonal scratches across the B - RED */}
-    <line x1="15" y1="15" x2="35" y2="105" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity="0.8" />
-    <line x1="35" y1="10" x2="55" y2="100" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity="0.9" />
-    <line x1="55" y1="15" x2="75" y2="105" stroke="currentColor" strokeWidth="4" strokeLinecap="round" opacity="0.8" />
+    {/* Three diagonal scratches across the B - matching the logo */}
+    <line x1="10" y1="15" x2="30" y2="105" stroke="currentColor" strokeWidth="5" strokeLinecap="round" opacity="0.85" />
+    <line x1="30" y1="10" x2="50" y2="100" stroke="currentColor" strokeWidth="5" strokeLinecap="round" opacity="0.90" />
+    <line x1="50" y1="15" x2="70" y2="105" stroke="currentColor" strokeWidth="5" strokeLinecap="round" opacity="0.85" />
   </svg>
 )
 
@@ -121,14 +121,12 @@ export const BeastLogo = ({
             className={`${classes.text} font-black tracking-wider relative leading-none`} 
             style={{ fontFamily: 'Arial Black, sans-serif', letterSpacing: '0.05em' }}
           >
-            {/* B without scratches */}
-            <span className="text-white">BE</span>
-            {/* A with RED scratches */}
+            {/* B with RED scratches */}
             <span className="text-white relative inline-block">
-              A
+              B
               {showScratch && <ScratchMarks className="text-red-500" />}
             </span>
-            <span className="text-white">ST</span>
+            <span className="text-white">EAST</span>
             <span className="text-white">.</span>
           </h1>
           
@@ -167,14 +165,12 @@ export const BeastLogo = ({
           className={`${classes.text} font-black tracking-tight relative leading-none`} 
           style={{ fontFamily: 'Arial Black, sans-serif' }}
         >
-          {/* B without scratches */}
-          <span className="text-white">BE</span>
-          {/* A with RED scratches */}
+          {/* B with RED scratches */}
           <span className="text-white relative inline-block">
-            A
+            B
             {showScratch && <ScratchMarks className="text-red-500" />}
           </span>
-          <span className="text-white">ST</span>
+          <span className="text-white">EAST</span>
           <span className="text-white">.</span>
         </h1>
         
