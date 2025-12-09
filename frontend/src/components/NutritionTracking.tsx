@@ -330,6 +330,8 @@ const NutritionTracking: React.FC = () => {
     if (!entries || entries.length === 0) return []
 
     try {
+      const today = format(new Date(), 'yyyy-MM-dd')
+      
       // Group entries by week
       const weeks: { [key: string]: DailyEntry[] } = {}
       entries.forEach(entry => {
@@ -342,7 +344,7 @@ const NutritionTracking: React.FC = () => {
       })
 
       // Create result array with entries and weekly averages
-      const result: (DailyEntry & { isAverage?: boolean; weekKey?: string })[] = []
+      const result: (DailyEntry & { isAverage?: boolean; weekKey?: string; isToday?: boolean })[] = []
       
       Object.keys(weeks).sort((a, b) => new Date(b).getTime() - new Date(a).getTime()).forEach(weekKey => {
         const weekEntries = weeks[weekKey].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -374,9 +376,25 @@ const NutritionTracking: React.FC = () => {
 
         // Add week entries only if not collapsed
         if (!isCollapsed) {
-          result.push(...weekEntries)
+          // Mark today's entry
+          const entriesWithToday = weekEntries.map(entry => ({
+            ...entry,
+            isToday: entry.date === today
+          }))
+          result.push(...entriesWithToday)
         }
       })
+
+      // Move today's entry to the top (right after the first average row)
+      const todayIndex = result.findIndex(entry => !entry.isAverage && entry.date === today)
+      if (todayIndex > 0) {
+        const todayEntry = result.splice(todayIndex, 1)[0]
+        // Find the first non-average entry position
+        const firstEntryIndex = result.findIndex(entry => !entry.isAverage)
+        if (firstEntryIndex >= 0) {
+          result.splice(firstEntryIndex, 0, todayEntry)
+        }
+      }
 
       return result
     } catch (error) {
@@ -655,6 +673,7 @@ const NutritionTracking: React.FC = () => {
                 <tbody>
                   {getEntriesWithAverages().map((entry, displayIndex) => {
                     const isAverage = 'isAverage' in entry && entry.isAverage
+                    const isToday = 'isToday' in entry && entry.isToday
                     const actualIndex = isAverage ? -1 : entries.findIndex(e => e.date === entry.date)
                     
                     return (
@@ -663,10 +682,16 @@ const NutritionTracking: React.FC = () => {
                         className={`border-b border-dark-border/30 ${
                           isAverage 
                             ? 'bg-cyan-500/10 hover:bg-cyan-500/20 font-bold' 
+                            : isToday
+                            ? 'bg-green-500/10 hover:bg-green-500/20'
                             : 'hover:bg-dark-hover/30'
                         }`}
                       >
-                        <td className={`p-0.5 sticky right-0 shadow-[2px_0_5px_rgba(0,0,0,0.3)] ${isAverage ? 'bg-cyan-500/10' : 'bg-dark-card'}`}>
+                        <td className={`p-0.5 sticky right-0 shadow-[2px_0_5px_rgba(0,0,0,0.3)] ${
+                          isAverage ? 'bg-cyan-500/10' : 
+                          isToday ? 'bg-green-500/10' : 
+                          'bg-dark-card'
+                        }`}>
                           {isAverage && 'weekKey' in entry && typeof entry.weekKey === 'string' ? (
                             <div className="flex items-center justify-between">
                               <div className="text-cyan-300 text-[7px] sm:text-[9px] px-0.5 py-0.5 font-semibold">
