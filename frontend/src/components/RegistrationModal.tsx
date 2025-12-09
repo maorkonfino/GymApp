@@ -396,7 +396,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           )}
 
           {/* Time Selection */}
-          <div className="flex items-end gap-3">
+          <div className="flex items-end gap-3 justify-center">
             {/* End Time - משמאל */}
             <div className="flex-1">
               <label className="block text-white text-lg font-bold mb-3 text-center">

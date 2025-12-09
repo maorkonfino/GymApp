@@ -322,7 +322,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                         <div 
                                           className="font-bold leading-none mb-1 overflow-hidden"
                                           style={{ 
-                                            fontSize: `${Math.max(7, Math.min(11, 100 / getFirstName(reg.name).length))}px`
+                                            fontSize: `${Math.max(9, Math.min(14, 110 / getFirstName(reg.name).length))}px`
                                           }}
                                         >
                                           <div className="truncate">{getFirstName(reg.name)}</div>
@@ -330,7 +330,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                         <div 
                                           className="opacity-60 leading-none"
                                           style={{
-                                            fontSize: `${Math.max(6, Math.min(9, 70 / `${reg.startTime}-${reg.endTime}`.length))}px`
+                                            fontSize: `${Math.max(7, Math.min(10, 75 / `${reg.startTime}-${reg.endTime}`.length))}px`
                                           }}
                                         >
                                           <div className="truncate">{reg.startTime}-{reg.endTime}</div>
