@@ -28,7 +28,12 @@ db.initDatabase().then(() => {
 
 // Health check
 app.get('/api/health', (req: Request, res: Response) => {
-  res.json({ status: 'ok', message: 'Server is running' });
+  res.json({ 
+    status: 'ok', 
+    message: 'Server is running',
+    version: 'v2.0-duplicate-check',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // ===== USERS =====

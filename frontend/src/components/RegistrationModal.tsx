@@ -172,12 +172,18 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
       }
 
       // Check for duplicate registration (only for regular users, not admin quick registration)
+      console.log('DEBUG: Checking conditions - registerForOther:', registerForOther, 'isEditing:', isEditing);
+      
       if (!registerForOther && !isEditing) {
         console.log('🔍 Checking for duplicate registrations...');
         try {
           const response = await registrationAPI.get(`/registrations/range?start=${dateString}&end=${dateString}`)
           const existingRegistrations = response.data || []
           console.log('📋 Existing registrations:', existingRegistrations.length);
+          
+          // DEBUG: Show on mobile
+          if (existingRegistrations.length > 0) {
+            console.log('DEBUG: Found', existingRegistrations.length, 'existing registrations');
           
           // Parse time to minutes for comparison
           const parseTime = (timeStr: string) => {
@@ -215,16 +221,29 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           
           if (hasDuplicate) {
             console.log('❌ DUPLICATE FOUND! Blocking registration');
-            setError('כבר קיים רישום עבורך באותו התאריך ושעות חופפות')
-            setLoading(false)
-            return
+            const duplicateReg = existingRegistrations.find((reg: any) => {
+              if (reg.email !== user.email) return false;
+              const existingStartMinutes = parseTime(reg.start_time);
+              const existingEndMinutes = parseTime(reg.end_time);
+              return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
+            });
+            
+            const errorMsg = duplicateReg 
+              ? `כבר קיים רישום עבורך ב-${format(selectedDate, 'd.M.yyyy')} בשעות ${duplicateReg.start_time}-${duplicateReg.end_time}\n\nלא ניתן להירשם פעמיים לאותן שעות חופפות.`
+              : 'כבר קיים רישום עבורך באותו התאריך ושעות חופפות';
+            
+            setError(errorMsg);
+            setLoading(false);
+            return;
           }
           
           console.log('✅ No duplicate found, proceeding...');
         } catch (err) {
-          console.error('❌ Error checking for duplicates:', err)
+          console.error('❌ Error checking for duplicates:', err);
           // Continue anyway - backend will catch it
         }
+      } else {
+        console.log('DEBUG: Skipping duplicate check - registerForOther:', registerForOther, 'isEditing:', isEditing);
       }
 
       // Determine registration data
