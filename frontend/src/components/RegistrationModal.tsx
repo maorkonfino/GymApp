@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { X, Clock, Calendar } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { registrationAPI } from '../api'
-import { canRegisterAtTime } from '../utils/timeRestrictions'
+import { canRegisterAtTime, getAvailableTimeOptions } from '../utils/timeRestrictions'
 import { format } from 'date-fns'
 import { he } from 'date-fns/locale'
 
@@ -40,8 +40,21 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
   const [startHour, startMinute] = startTime.split(':')
   const [endHour, endMinute] = endTime.split(':')
 
-  const hours = Array.from({ length: 18 }, (_, i) => String(i + 6).padStart(2, '0')) // 6-23
-  const minutes = ['00', '15', '30', '45']
+  // Get available times based on date and user role
+  const availableTimes = useMemo(() => {
+    return getAvailableTimeOptions(selectedDate, user?.role)
+  }, [selectedDate, user?.role])
+
+  // Extract unique hours and minutes from available times
+  const hours = useMemo(() => {
+    const hoursSet = new Set(availableTimes.map(time => time.split(':')[0]))
+    return Array.from(hoursSet).sort()
+  }, [availableTimes])
+
+  const minutes = useMemo(() => {
+    const minutesSet = new Set(availableTimes.map(time => time.split(':')[1]))
+    return Array.from(minutesSet).sort()
+  }, [availableTimes])
 
   const handleStartTimeChange = (hour: string, minute: string) => {
     setStartTime(`${hour}:${minute}`)
@@ -81,12 +94,44 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
     
     const [hours, minutes] = startTime.split(':').map(Number)
     const newEndHour = hours + 1
-    if (newEndHour <= 23) {
-      setEndTime(`${String(newEndHour).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`)
+    
+    // Check if new end time is in available times
+    const newEndTime = `${String(newEndHour).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
+    if (availableTimes.includes(newEndTime)) {
+      setEndTime(newEndTime)
+    } else if (availableTimes.length > 0) {
+      // Find next available time
+      const currentIndex = availableTimes.indexOf(startTime)
+      if (currentIndex >= 0 && currentIndex < availableTimes.length - 1) {
+        setEndTime(availableTimes[currentIndex + 1])
+      }
     }
-  }, [startTime, editingRegistration])
+  }, [startTime, editingRegistration, availableTimes])
+
+  // Update start/end times if they're not in available times
+  useEffect(() => {
+    if (availableTimes.length === 0) return
+    
+    // If current start time is not available, set to first available
+    if (!availableTimes.includes(startTime)) {
+      setStartTime(availableTimes[0])
+    }
+    
+    // If current end time is not available, set to next available after start
+    if (!availableTimes.includes(endTime)) {
+      const startIndex = availableTimes.indexOf(startTime)
+      if (startIndex >= 0 && startIndex < availableTimes.length - 1) {
+        setEndTime(availableTimes[startIndex + 1])
+      } else if (availableTimes.length > 1) {
+        setEndTime(availableTimes[1])
+      }
+    }
+  }, [selectedDate, availableTimes])
 
   if (!isOpen) return null
+  
+  // Check if no times available for this date
+  const noTimesAvailable = availableTimes.length === 0
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -209,6 +254,16 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           </h2>
           <p className="text-cyan-400 text-sm">{formattedDate}</p>
         </div>
+
+        {/* No times available message */}
+        {noTimesAvailable && user?.role === 'teenbeast' && (
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-center mb-6">
+            <p className="text-yellow-300 font-medium mb-2">⚠️ לא ניתן להירשם ביום זה</p>
+            <p className="text-gray-400 text-sm">
+              משתמשי TeenBEAST יכולים להירשם רק בימים ובשעות מסוימים
+            </p>
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -414,10 +469,10 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || noTimesAvailable}
             className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all shadow-lg shadow-cyan-500/30"
           >
-            {loading ? 'שומר...' : (isEditing ? 'עדכן אימון' : 'הרשם לאימון')}
+            {loading ? 'שומר...' : noTimesAvailable ? 'לא זמין ביום זה' : (isEditing ? 'עדכן אימון' : 'הרשם לאימון')}
           </button>
         </form>
       </div>

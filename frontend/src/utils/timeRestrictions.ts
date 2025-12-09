@@ -118,3 +118,55 @@ export const isTeenBeastHours = (date: Date, timeSlot: string): boolean => {
   return slotStart >= allowedTime.start && slotStart < allowedTime.end;
 };
 
+// Get allowed time range for TeenBEAST users for a specific date
+export const getTeenBeastAllowedTimes = (date: Date): { start: string; end: string } | null => {
+  const dayOfWeek = date.getDay();
+  const allowedTime = TEEN_BEAST_ALLOWED_TIMES[dayOfWeek];
+  
+  // No registration on Saturday or if not defined
+  if (dayOfWeek === 6 || !allowedTime.start) {
+    return null;
+  }
+  
+  return allowedTime;
+};
+
+// Generate time options in 15-minute intervals for a date, filtered by user role
+export const getAvailableTimeOptions = (date: Date, userRole?: string): string[] => {
+  const times: string[] = [];
+  
+  // If TeenBEAST, get allowed times
+  if (userRole === 'teenbeast') {
+    const allowedTimes = getTeenBeastAllowedTimes(date);
+    if (!allowedTimes) {
+      return []; // No times available on this day
+    }
+    
+    // Parse start and end times
+    const [startHour, startMinute] = allowedTimes.start.split(':').map(Number);
+    const [endHour, endMinute] = allowedTimes.end.split(':').map(Number);
+    
+    // Generate times in 15-minute intervals within allowed range
+    for (let h = startHour; h <= endHour; h++) {
+      for (let m = 0; m < 60; m += 15) {
+        // Skip if before start time
+        if (h === startHour && m < startMinute) continue;
+        // Skip if after end time
+        if (h === endHour && m > endMinute) break;
+        if (h > endHour) break;
+        
+        times.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+      }
+    }
+  } else {
+    // For other users, show all times from 06:00 to 23:00
+    for (let h = 6; h <= 23; h++) {
+      for (let m = 0; m < 60; m += 15) {
+        times.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+      }
+    }
+  }
+  
+  return times;
+};
+
