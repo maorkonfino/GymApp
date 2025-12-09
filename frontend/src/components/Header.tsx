@@ -75,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
             {user ? (
               <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1">
                 {/* PWA Install Button - Always visible */}
-                {showInstallButton ? (
+                {showInstallButton && (
                   <button
                     onClick={handleInstallClick}
                     className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl flex items-center justify-center transition-all shadow-lg hover:shadow-green-500/50 flex-shrink-0"
@@ -83,16 +83,6 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                   >
                     <Download className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </button>
-                ) : (
-                  <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
-                    <UserCircle2 className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400" />
-                    <button
-                      onClick={onProfileClick}
-                      className="text-cyan-400 hover:text-cyan-300 transition-colors whitespace-nowrap text-[9px] sm:text-[10px]"
-                    >
-                      ערוך פרופיל
-                    </button>
-                  </div>
                 )}
                 <div className="text-right min-w-0 flex-1">
                   <p className="text-white font-medium text-xs sm:text-base flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1 flex-wrap">
@@ -120,6 +110,15 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                     ) : null}
                   </p>
                   <div className="flex items-center gap-1 sm:gap-2 flex-wrap text-[10px] sm:text-xs">
+                    <button 
+                      onClick={onProfileClick}
+                      className="text-cyan-400 hover:text-cyan-300 transition-colors whitespace-nowrap flex items-center gap-0.5"
+                      title="ערוך פרופיל"
+                    >
+                      <UserCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                      <span>ערוך פרופיל</span>
+                    </button>
+                    <span className="text-gray-600">|</span>
                     <button 
                       onClick={logout}
                       className="text-orange-400 hover:text-orange-300 transition-colors whitespace-nowrap"
