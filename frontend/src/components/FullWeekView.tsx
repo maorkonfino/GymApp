@@ -205,8 +205,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     >
       {/* Title - Only in embedded mode */}
       {embedded && (
-        <div className="mb-2 sm:mb-4">
-          <h2 className="text-lg sm:text-2xl font-bold text-white flex items-center gap-2 sm:gap-3">
+        <div className="mb-2 sm:mb-4 text-center">
+          <h2 className="text-lg sm:text-2xl font-bold text-white flex items-center justify-center gap-2 sm:gap-3">
             <span className="text-cyan-400 text-base sm:text-2xl">📅</span>
             הרשמה לאימון
           </h2>
@@ -267,8 +267,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         <table className="w-full text-sm border-collapse table-fixed">
           <thead className="bg-dark-card shadow-lg sticky top-0 z-20">
                   <tr>
-                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-orange-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[70px] sm:w-[100px]">
-                      שעות
+                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[70px] sm:w-[100px]">
+                      <span className="text-white">שעות</span>
+                      <span className="text-gray-500 mx-0.5">|</span>
+                      <span className="text-cyan-400">יום</span>
                     </th>
                     {weekDates.map((date, idx) => (
                       <th key={idx} className="p-0.5 sm:p-2 text-center border border-dark-border bg-dark-hover font-medium">
