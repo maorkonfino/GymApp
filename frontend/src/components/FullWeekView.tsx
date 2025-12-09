@@ -289,49 +289,46 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
                                 >
-                                  {/* Show all registrations if 2 or less */}
-                                  {regsStartingHere.length <= 2 ? (
-                                    <div className="flex flex-col gap-1 h-full p-1 overflow-hidden">
-                                      {regsStartingHere.map((reg) => (
-                                        <div
-                                          key={reg.id}
-                                          className={`relative px-1 py-1 rounded flex flex-col justify-center text-center group min-h-[32px] overflow-hidden ${
-                                            user?.email === reg.email
-                                              ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                                              : 'bg-blue-500/20 text-blue-300'
-                                          }`}
-                                        >
-                                          {canDeleteRegistration(reg) && (
-                                            <button
-                                              onClick={(e) => handleDeleteRegistration(reg.id!, e)}
-                                              className="absolute -top-1 -right-1 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
-                                              title="מחק רישום"
-                                            >
-                                              <X className="w-2.5 h-2.5" />
-                                            </button>
-                                          )}
-                                          <div className="font-bold leading-none mb-1 overflow-hidden text-[7px]">
-                                            <div className="truncate">{getFirstName(reg.name)}</div>
-                                          </div>
-                                          <div className="opacity-60 leading-none text-[5px]">
-                                            <div className="truncate">{reg.startTime}-{reg.endTime}</div>
-                                          </div>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  ) : (
-                                    /* More than 2: show button to open all */
+                                  {/* "More" button - top right corner for 3+ registrations */}
+                                  {regsStartingHere.length > 2 && (
                                     <button
                                       onClick={(e) => handleShowAllClick(regsStartingHere, e)}
-                                      className="w-full h-full flex flex-col items-center justify-center gap-1 hover:bg-cyan-500/10 transition-colors"
-                                      title={`${regsStartingHere.length} רשומים - לחץ לצפייה`}
+                                      className="absolute top-0.5 right-0.5 z-10 text-white hover:text-cyan-400 transition-colors"
+                                      title={`עוד ${regsStartingHere.length - 2} רשומים`}
                                     >
-                                      <div className="text-white text-[10px] font-bold">
-                                        {regsStartingHere.length} רשומים
-                                      </div>
-                                      <ChevronDown className="w-3 h-3 text-white" />
+                                      <ChevronDown className="w-2.5 h-2.5" />
                                     </button>
                                   )}
+                                  
+                                  {/* Display registrations vertically (one below the other) */}
+                                  <div className="flex flex-col gap-1 h-full p-1 overflow-hidden">
+                                    {regsStartingHere.slice(0, 2).map((reg) => (
+                                      <div
+                                        key={reg.id}
+                                        className={`relative px-1 py-1 rounded flex flex-col justify-center text-center group min-h-[32px] overflow-hidden ${
+                                          user?.email === reg.email
+                                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+                                            : 'bg-blue-500/20 text-blue-300'
+                                        }`}
+                                      >
+                                        {canDeleteRegistration(reg) && (
+                                          <button
+                                            onClick={(e) => handleDeleteRegistration(reg.id!, e)}
+                                            className="absolute -top-1 -right-1 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                                            title="מחק רישום"
+                                          >
+                                            <X className="w-2.5 h-2.5" />
+                                          </button>
+                                        )}
+                                        <div className="font-bold leading-none mb-1 overflow-hidden text-[7px]">
+                                          <div className="truncate">{getFirstName(reg.name)}</div>
+                                        </div>
+                                        <div className="opacity-60 leading-none text-[5px]">
+                                          <div className="truncate">{reg.startTime}-{reg.endTime}</div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
                                 </td>
                               )
                             }
