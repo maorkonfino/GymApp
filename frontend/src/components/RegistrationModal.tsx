@@ -3,7 +3,7 @@ import { X, Clock, Calendar } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { registrationAPI } from '../api'
 import { canRegisterAtTime, getAvailableTimeOptions } from '../utils/timeRestrictions'
-import { format } from 'date-fns'
+import { format, addDays } from 'date-fns'
 import { he } from 'date-fns/locale'
 
 interface RegistrationModalProps {
@@ -405,6 +405,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
               type="date"
               value={format(selectedDate, 'yyyy-MM-dd')}
               onChange={(e) => setSelectedDate(new Date(e.target.value))}
+              min={format(new Date(), 'yyyy-MM-dd')}
+              max={format(addDays(new Date(), 6), 'yyyy-MM-dd')}
               className="w-full bg-dark-hover border border-dark-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer"
               dir="ltr"
               style={{ textAlign: 'right' }}
