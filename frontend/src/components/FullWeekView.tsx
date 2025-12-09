@@ -296,7 +296,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                       className="absolute top-1 right-1 z-10 p-0.5 rounded bg-gray-500/40 hover:bg-gray-500/60 text-gray-300 hover:text-white border border-gray-500/60 transition-colors"
                                       title={`עוד ${regsStartingHere.length - 4} רשומים`}
                                     >
-                                      <ChevronDown className="w-3 h-3" />
+                                      <ChevronDown className="w-2 h-2" />
                                     </button>
                                   )}
                                   
