@@ -4,7 +4,7 @@ import { he } from 'date-fns/locale'
 import { Registration } from '../types'
 import { registrationAPI } from '../api'
 import { useAuth } from '../contexts/AuthContext'
-import { X, Calendar, ChevronLeft, ChevronRight, MoreHorizontal, Users } from 'lucide-react'
+import { X, Calendar, MoreHorizontal, Users } from 'lucide-react'
 import { generateTimeSlotRanges } from '../utils/timeSlotRanges'
 import { getRestrictionMessage } from '../utils/timeRestrictions'
 
@@ -12,7 +12,7 @@ interface FullWeekViewProps {
   isOpen: boolean
   onClose: () => void
   weekOffset: number
-  onWeekChange: (direction: 'prev' | 'next') => void
+  onWeekChange?: (direction: 'prev' | 'next') => void // Made optional as navigation is disabled
   refreshTrigger?: number
   onCellClick?: (date: Date, timeRange: string) => void
   embedded?: boolean
@@ -23,7 +23,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   isOpen, 
   onClose, 
   weekOffset, 
-  onWeekChange, 
   refreshTrigger,
   onCellClick,
   embedded = false,
@@ -46,49 +45,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const weekDates = getWeekDates()
   const timeSlotRanges = generateTimeSlotRanges()
 
-  // Swipe gesture support for mobile
-  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null)
-  const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null)
-
-  // Minimum swipe distance (in px) to trigger week change
-  const minSwipeDistance = 50
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null) // Reset touch end
-    setTouchStart({
-      x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY
-    })
-  }
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd({
-      x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY
-    })
-  }
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
-    
-    const distanceX = touchStart.x - touchEnd.x
-    const distanceY = touchStart.y - touchEnd.y
-    
-    // Check if it's a horizontal swipe (not vertical scroll)
-    const isHorizontalSwipe = Math.abs(distanceX) > Math.abs(distanceY)
-    
-    if (!isHorizontalSwipe) return // Ignore vertical scrolls
-    
-    const isLeftSwipe = distanceX > minSwipeDistance
-    const isRightSwipe = distanceX < -minSwipeDistance
-
-    // Reversed for RTL (Hebrew): left swipe = previous, right swipe = next
-    if (isLeftSwipe && weekOffset > 0) {
-      onWeekChange('prev')
-    } else if (isRightSwipe) {
-      onWeekChange('next')
-    }
-  }
+  // Week navigation disabled - only showing current 7 days
 
   useEffect(() => {
     if (isOpen || embedded) {
@@ -199,9 +156,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const content = (
     <div 
       className={embedded ? 'bg-dark-card border border-dark-border rounded-2xl px-2 sm:px-4 py-2 sm:py-4' : ''}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
     >
       {/* Title - Only in embedded mode */}
       {embedded && (
@@ -213,22 +167,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         </div>
       )}
       
-      {/* Week Navigation */}
+      {/* Week Display - No Navigation */}
       <div className="pb-2 sm:pb-4">
-        <div className="flex items-center justify-between bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
-          <button
-            onClick={() => weekOffset > 0 && onWeekChange('prev')}
-            disabled={weekOffset <= 0}
-            className={`p-1.5 sm:p-2 rounded-lg transition-colors flex items-center gap-1 sm:gap-2 ${
-              weekOffset <= 0 
-                ? 'opacity-30 cursor-not-allowed text-gray-600' 
-                : 'hover:bg-dark-card text-cyan-400'
-            }`}
-          >
-            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="text-xs sm:text-sm">שבוע קודם</span>
-          </button>
-          
+        <div className="flex items-center justify-center bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
           <div className="text-center">
             <div className="text-white font-medium text-xs sm:text-base">
               {format(weekDates[0], 'd.M')} - {format(weekDates[6], 'd.M.yyyy')}
@@ -247,14 +188,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
               })()}
             </div>
           </div>
-          
-          <button
-            onClick={() => onWeekChange('next')}
-            className="p-1.5 sm:p-2 hover:bg-dark-card rounded-lg transition-colors flex items-center gap-1 sm:gap-2 text-cyan-400"
-          >
-            <span className="text-xs sm:text-sm">שבוע הבא</span>
-            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
         </div>
       </div>
         

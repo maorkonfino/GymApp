@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { LogOut, UserCircle2, UserPlus, Users, Download, Edit2 } from 'lucide-react'
+import { UserCircle2, UserPlus, Download } from 'lucide-react'
 import BeastLogo from './BeastLogo'
 
 interface HeaderProps {
@@ -73,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
           {/* Right side - User Info and Actions */}
           <div className="flex items-center gap-1.5 sm:gap-3 flex-1 min-w-0">
             {user ? (
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+              <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1">
                 {/* PWA Install Button - Always visible */}
                 {showInstallButton ? (
                   <button
@@ -84,10 +84,18 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                     <Download className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </button>
                 ) : (
-                  <UserCircle2 className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400 flex-shrink-0" />
+                  <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
+                    <UserCircle2 className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400" />
+                    <button
+                      onClick={onProfileClick}
+                      className="text-cyan-400 hover:text-cyan-300 transition-colors whitespace-nowrap text-[9px] sm:text-[10px]"
+                    >
+                      ערוך פרופיל
+                    </button>
+                  </div>
                 )}
                 <div className="text-right min-w-0 flex-1">
-                  <p className="text-white font-medium text-xs sm:text-base flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
+                  <p className="text-white font-medium text-xs sm:text-base flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1 flex-wrap">
                     <span className="truncate">שלום, {user.name}</span>
                     {isAdmin ? (
                       <span className="text-[10px] sm:text-xs bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-1.5 sm:px-2 py-0.5 rounded font-bold flex-shrink-0">
@@ -111,31 +119,25 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                       </span>
                     ) : null}
                   </p>
-                  <div className="flex flex-col items-start gap-0.5 text-[10px] sm:text-xs">
-                    <button
-                      onClick={onProfileClick}
-                      className="text-cyan-400 hover:text-cyan-300 transition-colors whitespace-nowrap flex items-center gap-1"
-                    >
-                      <Edit2 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                      <span>ערוך פרופיל</span>
-                    </button>
+                  <div className="flex items-center gap-1 sm:gap-2 flex-wrap text-[10px] sm:text-xs">
                     <button 
                       onClick={logout}
-                      className="text-orange-400 hover:text-orange-300 transition-colors whitespace-nowrap flex items-center gap-1"
+                      className="text-orange-400 hover:text-orange-300 transition-colors whitespace-nowrap"
                       title="התנתק"
                     >
-                      <LogOut className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                      <span>התנתק</span>
+                      התנתק
                     </button>
                     {isAdmin && onManageUsersClick && (
-                      <button
-                        onClick={onManageUsersClick}
-                        className="text-green-400 hover:text-green-300 transition-colors whitespace-nowrap flex items-center gap-1"
-                        title="רשימת מנויים"
-                      >
-                        <Users className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                        <span>מנויים</span>
-                      </button>
+                      <>
+                        <span className="text-gray-600">|</span>
+                        <button
+                          onClick={onManageUsersClick}
+                          className="text-green-400 hover:text-green-300 transition-colors whitespace-nowrap"
+                          title="רשימת מנויים"
+                        >
+                          מנויים
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
