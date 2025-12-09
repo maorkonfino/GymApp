@@ -12,7 +12,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageUsersClick }) => {
   const { user, logout, isAdmin } = useAuth()
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
-  const [showInstallButton, setShowInstallButton] = useState(false)
+  const [showInstallButton, setShowInstallButton] = useState(true) // Always show by default
   const [showInstallModal, setShowInstallModal] = useState(false)
 
   useEffect(() => {
@@ -24,9 +24,12 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
 
     window.addEventListener('beforeinstallprompt', handler)
 
-    // Check if already installed
+    // Check if already installed - only hide if in standalone mode
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setShowInstallButton(false)
+    } else {
+      // Show button even if prompt not available yet
+      setShowInstallButton(true)
     }
 
     return () => window.removeEventListener('beforeinstallprompt', handler)
@@ -40,19 +43,31 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
     setShowInstallModal(false)
     
     if (!deferredPrompt) {
-      // For iOS Safari - show instructions
-      alert('📱 להתקנת האפליקציה:\n\n1. לחץ על כפתור השיתוף (⬆️)\n2. בחר "הוסף למסך הבית"\n3. לחץ "הוסף"')
+      // Detect iOS
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      
+      if (isIOS) {
+        // iOS Safari instructions
+        alert('📱 להתקנת האפליקציה באייפון:\n\n1. לחץ על כפתור השיתוף (⬆️) בתחתית המסך\n2. גלול למטה ובחר "הוסף למסך הבית"\n3. לחץ "הוסף" בפינה הימנית העליונה\n\n✅ האפליקציה תופיע במסך הבית שלך!')
+      } else {
+        // Android Chrome instructions
+        alert('📱 להתקנת האפליקציה באנדרואיד:\n\n1. לחץ על תפריט (⋮) בפינה הימנית העליונה\n2. בחר "התקן אפליקציה" או "הוסף למסך הבית"\n3. לחץ "התקן"\n\n✅ האפליקציה תופיע במגירת האפליקציות!')
+      }
       return
     }
 
-    deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
-    
-    if (outcome === 'accepted') {
-      setShowInstallButton(false)
+    try {
+      deferredPrompt.prompt()
+      const { outcome } = await deferredPrompt.userChoice
+      
+      if (outcome === 'accepted') {
+        console.log('✅ PWA installed successfully')
+      }
+      
+      setDeferredPrompt(null)
+    } catch (error) {
+      console.error('Error installing PWA:', error)
     }
-    
-    setDeferredPrompt(null)
   }
 
   return (
@@ -160,8 +175,9 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
               <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/50">
                 <Download className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">הוסף BEAST לדף הבית</h3>
-              <p className="text-gray-300 text-sm">התקן את האפליקציה לגישה מהירה ונוחה</p>
+              <h3 className="text-2xl font-bold text-white mb-2">🐺 הוסף BEAST לדף הבית</h3>
+              <p className="text-gray-300 text-sm">התקן את האפליקציה במכשיר שלך</p>
+              <p className="text-gray-400 text-xs mt-1">קיצור דרך מהיר לאימונים שלך</p>
             </div>
 
             <div className="space-y-3 mb-6 text-right">
