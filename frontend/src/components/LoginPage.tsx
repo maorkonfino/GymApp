@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Mail, Lock, User, UserPlus, LogIn, Phone } from 'lucide-react'
-import BeastLogo from './BeastLogo'
 
 interface LoginPageProps {
   onLogin: (email: string, password: string, rememberMe?: boolean) => Promise<void>
@@ -79,8 +78,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
       <div className="min-h-screen bg-gradient-to-br from-dark-bg via-dark-card to-dark-bg flex items-center justify-center p-4">
         <div className="max-w-md w-full">
           {/* Logo & Brand */}
-          <div className="text-center mb-12 animate-fade-in">
-            <BeastLogo size="large" showScratch={true} showWolf={true} showSlogan={true} />
+          <div className="text-center mb-12 animate-fade-in flex justify-center">
+            <img 
+              src="/header-logo.svg" 
+              alt="BEAST Logo" 
+              className="h-32 sm:h-40 w-auto"
+            />
           </div>
 
           {/* Action Buttons */}
@@ -136,8 +139,14 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
         <div className="bg-dark-card border border-dark-border rounded-2xl p-8 shadow-2xl animate-fade-in">
           {/* Logo */}
           <div className="text-center mb-8">
-            <BeastLogo size="small" showScratch={true} showWolf={true} showSlogan={false} />
-            <h2 className="text-3xl font-bold text-white mt-4 mb-2">
+            <div className="flex justify-center mb-4">
+              <img 
+                src="/header-logo.svg" 
+                alt="BEAST Logo" 
+                className="h-16 sm:h-20 w-auto"
+              />
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-2">
               {mode === 'register' ? 'הרשמה למערכת' : 'התחברות'}
             </h2>
             <p className="text-gray-400">

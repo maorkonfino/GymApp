@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { UserCircle2, UserPlus, Download } from 'lucide-react'
-import BeastLogo from './BeastLogo'
 
 interface HeaderProps {
   onLoginClick: () => void
@@ -155,7 +154,11 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
           
           {/* Left side - Logo */}
           <div className="flex-shrink-0">
-            <BeastLogo size="small" showScratch={true} showWolf={true} showSlogan={true} layout="horizontal" />
+            <img 
+              src="/header-logo.svg" 
+              alt="BEAST Logo" 
+              className="h-12 sm:h-16 w-auto"
+            />
           </div>
         </div>
       </div>
