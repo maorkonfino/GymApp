@@ -674,6 +674,8 @@ const NutritionTracking: React.FC = () => {
                   {getEntriesWithAverages().map((entry, displayIndex) => {
                     const isAverage = 'isAverage' in entry && entry.isAverage
                     const isToday = 'isToday' in entry && entry.isToday
+                    const today = format(new Date(), 'yyyy-MM-dd')
+                    const isPast = !isAverage && entry.date < today
                     const actualIndex = isAverage ? -1 : entries.findIndex(e => e.date === entry.date)
                     
                     return (
@@ -684,12 +686,15 @@ const NutritionTracking: React.FC = () => {
                             ? 'bg-cyan-500/10 hover:bg-cyan-500/20 font-bold' 
                             : isToday
                             ? 'bg-green-500/10 hover:bg-green-500/20'
+                            : isPast
+                            ? 'bg-orange-500/10 hover:bg-orange-500/20'
                             : 'hover:bg-dark-hover/30'
                         }`}
                       >
                         <td className={`p-0.5 sticky right-0 shadow-[2px_0_5px_rgba(0,0,0,0.3)] ${
                           isAverage ? 'bg-cyan-500/10' : 
                           isToday ? 'bg-green-500/10' : 
+                          isPast ? 'bg-orange-500/10' :
                           'bg-dark-card'
                         }`}>
                           {isAverage && 'weekKey' in entry && typeof entry.weekKey === 'string' ? (
