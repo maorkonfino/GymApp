@@ -222,7 +222,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       const [rangeStart] = timeRange.split('-')
                       
                       return (
-                        <tr key={timeIdx} className="hover:bg-dark-hover/30">
+                        <tr key={timeIdx} className="hover:bg-dark-hover/30 h-[60px]">
                           {/* Time Range Cell */}
                           <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[70px] sm:w-[100px]">
                             {timeRange}
@@ -284,7 +284,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 <td 
                                   key={dateIdx} 
                                   rowSpan={rowSpan}
-                                  className={`p-0 border border-dark-border relative bg-blue-500/15 ${
+                                  className={`p-0 border border-dark-border relative bg-blue-500/15 max-h-[60px] overflow-hidden ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
