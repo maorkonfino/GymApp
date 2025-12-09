@@ -253,10 +253,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   <td 
                                     key={dateIdx} 
                                     rowSpan={2}
-                                    className="p-0.5 sm:p-2 border border-dark-border align-middle bg-yellow-500/10"
+                                    className="p-0.5 sm:p-2 border border-dark-border align-middle bg-orange-500/10"
                                   >
-                                    <div className="text-center py-1 sm:py-4 text-yellow-400 font-medium text-[8px] sm:text-sm leading-tight">
-                                      🔒 סגור לגיל השלישי<br/>
+                                    <div className="text-center py-1 sm:py-4 text-orange-400 font-medium text-[8px] sm:text-sm leading-tight">
+                                      סגור לגיל השלישי<br/>
                                       <span className="text-[7px] sm:text-xs">09:00-10:00</span>
                                     </div>
                                   </td>

@@ -19,7 +19,7 @@ export const isRestrictedTimeSlot = (date: Date, time: string): boolean => {
 // Get restriction message for display
 export const getRestrictionMessage = (date: Date, time: string): string | null => {
   if (isRestrictedTimeSlot(date, time)) {
-    return '🔒 סגור לגיל השלישי';
+    return 'סגור לגיל השלישי';
   }
   return null;
 };
