@@ -319,10 +319,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                             <X className="w-2.5 h-2.5" />
                                           </button>
                                         )}
-                                        <div className="text-[10px] font-bold leading-tight w-full whitespace-nowrap overflow-hidden text-ellipsis">
+                                        <div className="text-[10px] font-bold leading-tight w-full whitespace-nowrap overflow-hidden text-ellipsis px-0.5">
                                           {getFirstName(reg.name)}
                                         </div>
-                                        <div className="text-[8px] opacity-70 mt-0.5 leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                                        <div className="text-[7px] opacity-70 mt-0.5 leading-tight whitespace-nowrap overflow-hidden text-ellipsis w-full px-0.5">
                                           {reg.startTime}-{reg.endTime}
                                         </div>
                                       </div>
