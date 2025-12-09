@@ -271,6 +271,33 @@ app.delete('/api/registrations/:id', (req: Request, res: Response) => {
   }
 });
 
+// Delete old registrations (past dates)
+app.delete('/api/registrations/cleanup/old', (req: Request, res: Response) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayString = today.toISOString().split('T')[0];
+    
+    const allRegistrations = db.getAllRegistrations();
+    let deletedCount = 0;
+    
+    allRegistrations.forEach((registration: any) => {
+      if (registration.date < todayString) {
+        db.deleteRegistration(registration.id);
+        deletedCount++;
+      }
+    });
+    
+    res.json({ 
+      message: `Deleted ${deletedCount} old registrations`,
+      deletedCount 
+    });
+  } catch (error) {
+    console.error('Error cleaning up old registrations:', error);
+    res.status(500).json({ error: 'Failed to cleanup old registrations' });
+  }
+});
+
 // ===== WORKOUT PLANS =====
 
 // Get workout plan for user

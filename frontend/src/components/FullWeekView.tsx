@@ -83,7 +83,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const isRightSwipe = distanceX < -minSwipeDistance
 
     // Reversed for RTL (Hebrew): left swipe = previous, right swipe = next
-    if (isLeftSwipe) {
+    if (isLeftSwipe && weekOffset > 0) {
       onWeekChange('prev')
     } else if (isRightSwipe) {
       onWeekChange('next')
@@ -217,8 +217,13 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       <div className="pb-2 sm:pb-4">
         <div className="flex items-center justify-between bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
           <button
-            onClick={() => onWeekChange('prev')}
-            className="p-1.5 sm:p-2 hover:bg-dark-card rounded-lg transition-colors flex items-center gap-1 sm:gap-2 text-cyan-400"
+            onClick={() => weekOffset > 0 && onWeekChange('prev')}
+            disabled={weekOffset <= 0}
+            className={`p-1.5 sm:p-2 rounded-lg transition-colors flex items-center gap-1 sm:gap-2 ${
+              weekOffset <= 0 
+                ? 'opacity-30 cursor-not-allowed text-gray-600' 
+                : 'hover:bg-dark-card text-cyan-400'
+            }`}
           >
             <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="text-xs sm:text-sm">שבוע קודם</span>
@@ -262,7 +267,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         <table className="w-full text-sm border-collapse table-fixed">
           <thead className="bg-dark-card shadow-lg sticky top-0 z-20">
                   <tr>
-                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-gray-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[70px] sm:w-[100px]">
+                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover text-orange-400 font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[70px] sm:w-[100px]">
                       שעות
                     </th>
                     {weekDates.map((date, idx) => (

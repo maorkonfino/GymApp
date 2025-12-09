@@ -14,6 +14,7 @@ import LoginPage from './components/LoginPage'
 import ManageUsers from './components/ManageUsers'
 import ForgotPasswordModal from './components/ForgotPasswordModal'
 import ResetPassword from './components/ResetPassword'
+import api from './api'
 
 function AppContent() {
   const { user, login, register } = useAuth()
@@ -30,6 +31,19 @@ function AppContent() {
   const [weekOffset, setWeekOffset] = useState(0)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
   const [editingRegistration, setEditingRegistration] = useState<any>(null)
+
+  // Cleanup old registrations on app load
+  useEffect(() => {
+    const cleanupOldRegistrations = async () => {
+      try {
+        await api.delete('/registrations/cleanup/old')
+        console.log('Old registrations cleaned up')
+      } catch (error) {
+        console.error('Error cleaning up old registrations:', error)
+      }
+    }
+    cleanupOldRegistrations()
+  }, [])
 
   // Reset weekOffset to 0 when switching to home/registration view
   useEffect(() => {

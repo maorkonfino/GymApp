@@ -123,7 +123,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                         <span className="text-gray-600 text-[8px] sm:text-xs">|</span>
                         <button
                           onClick={onManageUsersClick}
-                          className="text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-0.5 sm:gap-1 whitespace-nowrap"
+                          className="text-green-400 hover:text-green-300 transition-colors flex items-center gap-0.5 sm:gap-1 whitespace-nowrap"
                           title="רשימת מנויים"
                         >
                           <Users className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
@@ -135,7 +135,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                     <span className="text-gray-600 text-[8px] sm:text-xs">|</span>
                     <button 
                       onClick={logout}
-                      className="text-red-400 hover:text-red-300 transition-colors flex items-center gap-0.5 sm:gap-1 whitespace-nowrap"
+                      className="text-orange-400 hover:text-orange-300 transition-colors flex items-center gap-0.5 sm:gap-1 whitespace-nowrap"
                       title="התנתק"
                     >
                       <LogOut className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
