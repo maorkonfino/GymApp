@@ -289,25 +289,25 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
 
                   {/* Exercises Table */}
                   <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                      <thead>
+                    <table className="w-full border-collapse text-[7px] sm:text-[9px]">
+                      <thead className="sticky top-0 z-20">
                         <tr className="bg-dark-card">
-                          <th className="border border-dark-border px-3 py-2 text-gray-300 text-sm font-semibold text-right">תרגיל</th>
-                          <th className="border border-dark-border px-2 py-2 text-gray-300 text-sm font-semibold text-center w-16">סטים</th>
-                          <th className="border border-dark-border px-2 py-2 text-gray-300 text-sm font-semibold text-center w-24">טווח חזרות</th>
-                          <th className="border border-dark-border px-2 py-2 text-gray-300 text-sm font-semibold text-center w-24">מנוחה</th>
-                          <th className="border border-dark-border px-2 py-2 text-gray-300 text-sm font-semibold text-center w-16">RIR</th>
+                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-right w-[50px] sm:w-[70px]">תרגיל</th>
+                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">סטים</th>
+                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">חזרות</th>
+                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">מנוחה</th>
+                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">RIR</th>
                           {Array.from({ length: numberOfWeeks === 'flexible' ? 1 : numberOfWeeks }, (_, i) => i + 1).map(week => (
-                            <th key={week} className="border border-dark-border px-2 py-2 text-cyan-300 text-sm font-semibold text-center" colSpan={1}>
+                            <th key={week} className="border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center w-16 sm:w-20">
                               שבוע {week}
                             </th>
                           ))}
                           {numberOfWeeks === 'flexible' && (
-                            <th className="border border-dark-border px-2 py-2 text-purple-300 text-sm font-semibold text-center" colSpan={1}>
+                            <th className="border border-dark-border px-0.5 py-0.5 text-purple-300 font-semibold text-center w-16 sm:w-20">
                               ...גמיש
                             </th>
                           )}
-                          <th className="border border-dark-border px-2 py-2 w-12"></th>
+                          <th className="border border-dark-border px-0.5 py-0.5 w-8"></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -315,73 +315,72 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                           const numSets = parseInt(exercise.sets) || 3
                           return (
                             <tr key={exerciseIndex} className="hover:bg-dark-card/30">
-                              <td className="border border-dark-border px-3 py-2">
+                              <td className="border border-dark-border px-0.5 py-0.5">
                                 <input
                                   type="text"
                                   placeholder="שם התרגיל"
                                   value={exercise.name}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'name', e.target.value)}
-                                  className="w-full bg-transparent text-white text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
+                                  className="w-full bg-transparent text-white text-[7px] sm:text-[9px] focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
                                 />
                               </td>
-                              <td className="border border-dark-border px-2 py-2">
+                              <td className="border border-dark-border px-0.5 py-0.5">
                                 <input
                                   type="text"
                                   placeholder="3"
                                   value={exercise.sets}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'sets', e.target.value)}
-                                  className="w-full bg-dark-card text-white text-sm text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
+                                  className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
                                 />
                               </td>
-                              <td className="border border-dark-border px-2 py-2">
+                              <td className="border border-dark-border px-0.5 py-0.5">
                                 <input
                                   type="text"
                                   placeholder="8-12"
                                   value={exercise.repsRange}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'repsRange', e.target.value)}
-                                  className="w-full bg-dark-card text-white text-sm text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
+                                  className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
                                 />
                               </td>
-                              <td className="border border-dark-border px-2 py-2">
+                              <td className="border border-dark-border px-0.5 py-0.5">
                                 <input
                                   type="text"
                                   placeholder="90s"
                                   value={exercise.rest}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'rest', e.target.value)}
-                                  className="w-full bg-dark-card text-white text-sm text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
+                                  className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
                                 />
                               </td>
-                              <td className="border border-dark-border px-2 py-2">
+                              <td className="border border-dark-border px-0.5 py-0.5">
                                 <input
                                   type="text"
                                   placeholder="2"
                                   value={exercise.rir}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'rir', e.target.value)}
-                                  className="w-full bg-dark-card text-white text-sm text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
+                                  className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
                                 />
                               </td>
                               {Array.from({ length: numberOfWeeks === 'flexible' ? 1 : numberOfWeeks }, (_, i) => i + 1).map(week => (
-                                <td key={week} className="border border-dark-border px-1 py-1">
-                                  <div className="space-y-1">
+                                <td key={week} className="border border-dark-border px-0.5 py-0.5">
+                                  <div className="space-y-0.5">
                                     {Array.from({ length: numSets }, (_, setIdx) => {
                                       const data = getWeeklyData(exercise, week, setIdx)
                                       return (
-                                        <div key={setIdx} className="flex gap-1">
+                                        <div key={setIdx} className="flex gap-0.5">
                                           <input
                                             type="text"
                                             placeholder="R"
                                             value={data.reps}
                                             onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'reps', e.target.value)}
-                                            className="w-10 bg-dark-card text-white text-xs text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-1 py-0.5"
-                                            maxLength={3}
+                                            className="w-5 sm:w-6 bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
                                           />
                                           <input
-                                            type="text"
+                                            type="number"
+                                            step="0.1"
                                             placeholder="KG"
                                             value={data.weight}
                                             onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'weight', e.target.value)}
-                                            className="w-12 bg-dark-card text-white text-xs text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-1 py-0.5"
-                                            maxLength={3}
+                                            className="w-7 sm:w-8 bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
                                           />
                                         </div>
                                       )
@@ -389,11 +388,11 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                                   </div>
                                 </td>
                               ))}
-                              <td className="border border-dark-border px-2 py-2 text-center">
+                              <td className="border border-dark-border px-0.5 py-0.5 text-center">
                                 {workout.exercises.length > 1 && (
                                   <button
                                     onClick={() => removeExercise(workoutIndex, exerciseIndex)}
-                                    className="p-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded transition-all"
+                                    className="p-0.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded transition-all"
                                     title="מחק תרגיל"
                                   >
                                     <Trash2 className="w-3 h-3" />
