@@ -300,7 +300,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     </button>
                                   )}
                                   
-                                  <div className={`grid ${regsStartingHere.length <= 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
+                                    <div className={`grid ${regsStartingHere.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
                                     {regsStartingHere.slice(0, 4).map((reg) => (
                                       <div
                                         key={reg.id}
