@@ -284,7 +284,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 <td 
                                   key={dateIdx} 
                                   rowSpan={rowSpan}
-                                  className={`p-0 border border-dark-border relative bg-blue-500/15 ${
+                                  className={`p-0 border border-dark-border relative bg-blue-500/15 overflow-hidden ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
@@ -300,11 +300,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     </button>
                                   )}
                                   
-                                    <div className={`grid ${regsStartingHere.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-1 h-full p-1`}>
+                                    <div className={`grid ${regsStartingHere.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-1 h-full p-1 overflow-hidden`}>
                                     {regsStartingHere.slice(0, 4).map((reg) => (
                                       <div
                                         key={reg.id}
-                                        className={`relative px-1.5 py-1 rounded flex flex-col justify-center text-center group min-h-[32px] ${
+                                        className={`relative px-1.5 py-1 rounded flex flex-col justify-center text-center group min-h-[32px] overflow-hidden ${
                                           user?.email === reg.email
                                             ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                                             : 'bg-blue-500/20 text-blue-300'
@@ -319,10 +319,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                             <X className="w-2.5 h-2.5" />
                                           </button>
                                         )}
-                                        <div className="text-[10px] font-bold leading-tight w-full whitespace-nowrap overflow-hidden text-ellipsis px-0.5">
+                                        <div className="text-[10px] font-bold leading-tight w-full whitespace-nowrap overflow-hidden text-ellipsis">
                                           {getFirstName(reg.name)}
                                         </div>
-                                        <div className="text-[7px] opacity-70 mt-0.5 leading-tight whitespace-nowrap overflow-hidden text-ellipsis w-full px-0.5">
+                                        <div className="text-[7px] opacity-70 mt-0.5 leading-tight whitespace-nowrap overflow-hidden text-ellipsis w-full">
                                           {reg.startTime}-{reg.endTime}
                                         </div>
                                       </div>
