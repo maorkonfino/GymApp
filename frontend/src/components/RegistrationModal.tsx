@@ -397,78 +397,13 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
 
           {/* Time Selection */}
           <div className="flex items-end gap-3">
-            {/* Start Time */}
-            <div className="flex-1">
-              <label className="block text-white text-lg font-bold mb-3 text-center">
-                שעת התחלה
-              </label>
-              <div className="flex gap-2">
-                {/* Minutes - עכשיו מימין */}
-                <div className="relative flex-1">
-                  <select
-                    value={startMinute}
-                    onChange={(e) => handleStartTimeChange(startHour, e.target.value)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
-                    style={{
-                      appearance: 'none',
-                      WebkitAppearance: 'none',
-                      MozAppearance: 'none'
-                    }}
-                    required
-                  >
-                    {minutes.map((minute) => (
-                      <option key={minute} value={minute} className="bg-dark-card text-white">
-                        {minute}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="text-white text-2xl font-bold self-center">:</div>
-
-                {/* Hours - עכשיו משמאל */}
-                <div className="relative flex-1">
-                  <select
-                    value={startHour}
-                    onChange={(e) => handleStartTimeChange(e.target.value, startMinute)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
-                    style={{
-                      appearance: 'none',
-                      WebkitAppearance: 'none',
-                      MozAppearance: 'none'
-                    }}
-                    required
-                  >
-                    {hours.map((hour) => (
-                      <option key={hour} value={hour} className="bg-dark-card text-white">
-                        {hour}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Separator */}
-            <div className="text-white text-3xl font-bold pb-3">-</div>
-
-            {/* End Time */}
+            {/* End Time - משמאל */}
             <div className="flex-1">
               <label className="block text-white text-lg font-bold mb-3 text-center">
                 שעת סיום
               </label>
               <div className="flex gap-2">
-                {/* Minutes - עכשיו מימין */}
+                {/* Minutes */}
                 <div className="relative flex-1">
                   <select
                     value={endMinute}
@@ -496,11 +431,76 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
 
                 <div className="text-white text-2xl font-bold self-center">:</div>
 
-                {/* Hours - עכשיו משמאל */}
+                {/* Hours */}
                 <div className="relative flex-1">
                   <select
                     value={endHour}
                     onChange={(e) => handleEndTimeChange(e.target.value, endMinute)}
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    style={{
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none'
+                    }}
+                    required
+                  >
+                    {hours.map((hour) => (
+                      <option key={hour} value={hour} className="bg-dark-card text-white">
+                        {hour}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Separator */}
+            <div className="text-white text-3xl font-bold pb-3">-</div>
+
+            {/* Start Time - מימין */}
+            <div className="flex-1">
+              <label className="block text-white text-lg font-bold mb-3 text-center">
+                שעת התחלה
+              </label>
+              <div className="flex gap-2">
+                {/* Minutes */}
+                <div className="relative flex-1">
+                  <select
+                    value={startMinute}
+                    onChange={(e) => handleStartTimeChange(startHour, e.target.value)}
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    style={{
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none'
+                    }}
+                    required
+                  >
+                    {minutes.map((minute) => (
+                      <option key={minute} value={minute} className="bg-dark-card text-white">
+                        {minute}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="text-white text-2xl font-bold self-center">:</div>
+
+                {/* Hours */}
+                <div className="relative flex-1">
+                  <select
+                    value={startHour}
+                    onChange={(e) => handleStartTimeChange(e.target.value, startMinute)}
                     className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
