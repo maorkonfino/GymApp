@@ -352,7 +352,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   <select
                     value={startMinute}
                     onChange={(e) => handleStartTimeChange(startHour, e.target.value)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg px-3 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -380,7 +380,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   <select
                     value={startHour}
                     onChange={(e) => handleStartTimeChange(e.target.value, startMinute)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg px-3 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -414,7 +414,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   <select
                     value={endMinute}
                     onChange={(e) => handleEndTimeChange(endHour, e.target.value)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg px-3 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -442,7 +442,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   <select
                     value={endHour}
                     onChange={(e) => handleEndTimeChange(e.target.value, endMinute)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg px-3 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
