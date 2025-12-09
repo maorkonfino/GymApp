@@ -399,7 +399,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           <div className="flex items-end gap-3 justify-center">
             {/* End Time - משמאל */}
             <div className="flex-1">
-              <label className="block text-white text-lg font-bold mb-3 text-center">
+              <label className="block text-white text-base font-bold mb-2 text-center">
                 שעת סיום
               </label>
               <div className="flex gap-2">
@@ -408,7 +408,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   <select
                     value={endMinute}
                     onChange={(e) => handleEndTimeChange(endHour, e.target.value)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-2.5 text-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -429,14 +429,14 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   </div>
                 </div>
 
-                <div className="text-white text-2xl font-bold self-center">:</div>
+                <div className="text-white text-xl font-bold self-center">:</div>
 
                 {/* Hours */}
                 <div className="relative flex-1">
                   <select
                     value={endHour}
                     onChange={(e) => handleEndTimeChange(e.target.value, endMinute)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-2.5 text-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -460,11 +460,11 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
             </div>
 
             {/* Separator */}
-            <div className="text-white text-3xl font-bold pb-3">-</div>
+            <div className="text-white text-2xl font-bold pb-2.5">-</div>
 
             {/* Start Time - מימין */}
             <div className="flex-1">
-              <label className="block text-white text-lg font-bold mb-3 text-center">
+              <label className="block text-white text-base font-bold mb-2 text-center">
                 שעת התחלה
               </label>
               <div className="flex gap-2">
@@ -473,7 +473,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   <select
                     value={startMinute}
                     onChange={(e) => handleStartTimeChange(startHour, e.target.value)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-2.5 text-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -494,14 +494,14 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   </div>
                 </div>
 
-                <div className="text-white text-2xl font-bold self-center">:</div>
+                <div className="text-white text-xl font-bold self-center">:</div>
 
                 {/* Hours */}
                 <div className="relative flex-1">
                   <select
                     value={startHour}
                     onChange={(e) => handleStartTimeChange(e.target.value, startMinute)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-3 text-white text-lg font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-2.5 text-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
