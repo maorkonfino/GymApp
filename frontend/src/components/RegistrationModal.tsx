@@ -395,29 +395,11 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
             </div>
           )}
 
-          {/* Date Selector */}
-          <div>
-            <label className="block text-white text-sm font-medium mb-2 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-cyan-400" />
-              תאריך האימון
-            </label>
-            <input
-              type="date"
-              value={format(selectedDate, 'yyyy-MM-dd')}
-              onChange={(e) => setSelectedDate(new Date(e.target.value))}
-              min={format(new Date(), 'yyyy-MM-dd')}
-              max={format(addDays(new Date(), 6), 'yyyy-MM-dd')}
-              className="w-full bg-dark-hover border border-dark-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer"
-              dir="ltr"
-              style={{ textAlign: 'right' }}
-            />
-          </div>
-
           {/* Time Selection */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-white text-sm font-medium mb-2 flex items-center gap-2">
-                <Clock className="w-4 h-4" />
+          <div className="flex items-end gap-3">
+            {/* Start Time */}
+            <div className="flex-1">
+              <label className="block text-white text-lg font-bold mb-3 text-center">
                 שעת התחלה
               </label>
               <div className="flex gap-2">
@@ -477,9 +459,12 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
               </div>
             </div>
 
-            <div>
-              <label className="block text-white text-sm font-medium mb-2 flex items-center gap-2">
-                <Clock className="w-4 h-4" />
+            {/* Separator */}
+            <div className="text-white text-3xl font-bold pb-3">-</div>
+
+            {/* End Time */}
+            <div className="flex-1">
+              <label className="block text-white text-lg font-bold mb-3 text-center">
                 שעת סיום
               </label>
               <div className="flex gap-2">

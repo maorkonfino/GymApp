@@ -322,7 +322,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                         <div className="text-[10px] font-bold leading-tight w-full whitespace-nowrap overflow-hidden text-ellipsis">
                                           {getFirstName(reg.name)}
                                         </div>
-                                        <div className="text-[8px] opacity-70 mt-0.5 leading-tight whitespace-nowrap">
+                                        <div className="text-[8px] opacity-70 mt-0.5 leading-tight whitespace-nowrap overflow-hidden text-ellipsis">
                                           {reg.startTime}-{reg.endTime}
                                         </div>
                                       </div>
