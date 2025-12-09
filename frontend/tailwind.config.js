@@ -8,10 +8,10 @@ export default {
     extend: {
       colors: {
         dark: {
-          bg: '#313135',
-          card: '#3d3d42',
-          border: '#4a4a4f',
-          hover: '#47474c'
+          bg: '#020202',
+          card: '#1a1a1a',
+          border: '#2a2a2a',
+          hover: '#252525'
         },
         primary: {
           DEFAULT: '#0ea5e9',
