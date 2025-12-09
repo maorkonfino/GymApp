@@ -177,13 +177,13 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
       if (!registerForOther && !isEditing) {
         console.log('🔍 Checking for duplicate registrations...');
         try {
-          const response = await registrationAPI.get(`/registrations/range?start=${dateString}&end=${dateString}`)
-          const existingRegistrations = response.data || []
+          const existingRegistrations = await registrationAPI.getByRange(dateString, dateString)
           console.log('📋 Existing registrations:', existingRegistrations.length);
           
           // DEBUG: Show on mobile
           if (existingRegistrations.length > 0) {
             console.log('DEBUG: Found', existingRegistrations.length, 'existing registrations');
+          }
           
           // Parse time to minutes for comparison
           const parseTime = (timeStr: string) => {
@@ -196,8 +196,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           console.log('🕐 New registration time:', { startTime, endTime, newStartMinutes, newEndMinutes });
           
           // Check if user already has a registration with overlapping time
-          const hasDuplicate = existingRegistrations.some((reg: any) => {
-            console.log('  Checking against:', { email: reg.email, times: `${reg.start_time}-${reg.end_time}` });
+          const hasDuplicate = existingRegistrations.some((reg) => {
+            console.log('  Checking against:', { email: reg.email, times: `${reg.startTime}-${reg.endTime}` });
             
             if (reg.email !== user.email) {
               console.log('    ✗ Different user');
@@ -205,8 +205,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
             }
             
             console.log('    ✓ Same user! Checking overlap...');
-            const existingStartMinutes = parseTime(reg.start_time)
-            const existingEndMinutes = parseTime(reg.end_time)
+            const existingStartMinutes = parseTime(reg.startTime)
+            const existingEndMinutes = parseTime(reg.endTime)
             
             // Check overlap
             const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes)
@@ -221,15 +221,15 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           
           if (hasDuplicate) {
             console.log('❌ DUPLICATE FOUND! Blocking registration');
-            const duplicateReg = existingRegistrations.find((reg: any) => {
+            const duplicateReg = existingRegistrations.find((reg) => {
               if (reg.email !== user.email) return false;
-              const existingStartMinutes = parseTime(reg.start_time);
-              const existingEndMinutes = parseTime(reg.end_time);
+              const existingStartMinutes = parseTime(reg.startTime);
+              const existingEndMinutes = parseTime(reg.endTime);
               return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
             });
             
             const errorMsg = duplicateReg 
-              ? `כבר קיים רישום עבורך ב-${format(selectedDate, 'd.M.yyyy')} בשעות ${duplicateReg.start_time}-${duplicateReg.end_time}\n\nלא ניתן להירשם פעמיים לאותן שעות חופפות.`
+              ? `כבר קיים רישום עבורך ב-${format(selectedDate, 'd.M.yyyy')} בשעות ${duplicateReg.startTime}-${duplicateReg.endTime}\n\nלא ניתן להירשם פעמיים לאותן שעות חופפות.`
               : 'כבר קיים רישום עבורך באותו התאריך ושעות חופפות';
             
             setError(errorMsg);
