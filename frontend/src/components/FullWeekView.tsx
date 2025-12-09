@@ -304,7 +304,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     {regsStartingHere.slice(0, 4).map((reg) => (
                                       <div
                                         key={reg.id}
-                                        className={`relative px-1 py-1 rounded flex flex-col justify-center text-center group overflow-hidden min-h-[28px] ${
+                                        className={`relative px-1.5 py-1.5 rounded flex flex-col justify-center text-center group min-h-[36px] ${
                                           user?.email === reg.email
                                             ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                                             : 'bg-blue-500/20 text-blue-300'
@@ -319,10 +319,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                             <X className="w-2.5 h-2.5" />
                                           </button>
                                         )}
-                                        <div className="text-[8px] font-bold leading-tight w-full whitespace-nowrap overflow-hidden text-ellipsis" style={{ fontSize: 'clamp(7px, 2vw, 9px)' }}>
+                                        <div className="text-[9px] font-bold leading-snug w-full break-words hyphens-auto" style={{ fontSize: 'clamp(8px, 2.2vw, 10px)', wordBreak: 'break-word' }}>
                                           {getFirstName(reg.name)}
                                         </div>
-                                        <div className="text-[7px] opacity-70 mt-0.5 leading-tight whitespace-nowrap">
+                                        <div className="text-[7.5px] opacity-70 mt-0.5 leading-tight whitespace-nowrap">
                                           {reg.startTime}-{reg.endTime}
                                         </div>
                                       </div>
