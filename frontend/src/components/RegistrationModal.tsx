@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { X, Clock, Calendar } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { registrationAPI } from '../api'
 import { canRegisterAtTime, getAvailableTimeOptions } from '../utils/timeRestrictions'
-import { format, addDays } from 'date-fns'
+import { format } from 'date-fns'
 import { he } from 'date-fns/locale'
 
 interface RegistrationModalProps {
