@@ -52,7 +52,18 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
           <div className="flex items-center gap-1.5 sm:gap-3 flex-1 min-w-0">
             {user ? (
               <div className="flex items-start gap-1.5 sm:gap-2 min-w-0 flex-1">
-                <UserCircle2 className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-400 mt-0.5 flex-shrink-0" />
+                {/* PWA Install Button - Always visible */}
+                {showInstallButton ? (
+                  <button
+                    onClick={handleInstallClick}
+                    className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl flex items-center justify-center transition-all shadow-lg hover:shadow-green-500/50 flex-shrink-0 mt-0.5"
+                    title="הוסף לדף הבית"
+                  >
+                    <Download className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  </button>
+                ) : (
+                  <UserCircle2 className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-400 mt-0.5 flex-shrink-0" />
+                )}
                 <div className="text-right min-w-0 flex-1">
                   <p className="text-white font-medium text-xs sm:text-base flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1 flex-wrap">
                     <span className="truncate">שלום, {user.name}</span>
@@ -79,19 +90,6 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
                     ) : null}
                   </p>
                   <div className="flex items-center gap-1 sm:gap-2 flex-wrap text-[10px] sm:text-xs">
-                    {showInstallButton && (
-                      <>
-                        <button
-                          onClick={handleInstallClick}
-                          className="text-green-400 hover:text-green-300 transition-colors flex items-center gap-0.5 sm:gap-1 whitespace-nowrap"
-                          title="התקן אפליקציה"
-                        >
-                          <Download className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                          <span className="hidden sm:inline">התקן</span>
-                        </button>
-                        <span className="text-gray-600 text-[8px] sm:text-xs">|</span>
-                      </>
-                    )}
                     <button
                       onClick={onProfileClick}
                       className="text-cyan-400 hover:text-cyan-300 transition-colors whitespace-nowrap"

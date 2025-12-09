@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEAST PWA Icons Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .icon-container {
+            display: inline-block;
+            margin: 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 20%;
+            padding: 0;
+        }
+        #icon-192 {
+            width: 192px;
+            height: 192px;
+        }
+        #icon-512 {
+            width: 512px;
+            height: 512px;
+        }
+        .instructions {
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: right;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        button {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>🐺 BEAST PWA Icons</h1>
+    
+    <div class="instructions">
+        <h3>הוראות:</h3>
+        <ol>
+            <li>לחץ לחיצה ימנית על האייקון</li>
+            <li>בחר "Save Image As..." או "שמור תמונה בשם..."</li>
+            <li>שמור בשם: <code>icon-192.png</code> או <code>icon-512.png</code></li>
+            <li>העתק את הקבצים לתיקיית <code>frontend/public/</code></li>
+        </ol>
+    </div>
+
+    <h2>192x192 Icon</h2>
+    <div class="icon-container">
+        <svg id="icon-192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background gradient -->
+            <defs>
+                <linearGradient id="bg-gradient-192" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            
+            <!-- Background -->
+            <rect width="192" height="192" fill="url(#bg-gradient-192)" rx="38"/>
+            
+            <!-- Wolf head centered -->
+            <g transform="translate(96, 96) scale(1.6)">
+                <!-- Head shape -->
+                <path d="M 0 -30 Q -15 -30 -22 -20 Q -28 -10 -28 5 Q -28 20 -20 32 L -15 40 L -8 45 L 0 48 L 8 45 L 15 40 L 20 32 Q 28 20 28 5 Q 28 -10 22 -20 Q 15 -30 0 -30 Z" 
+                    fill="white" 
+                    stroke="white" 
+                    stroke-width="1"
+                />
+                
+                <!-- Left ear -->
+                <path d="M -22 -20 L -28 -35 L -20 -25 Z" fill="white" />
+                
+                <!-- Right ear -->
+                <path d="M 22 -20 L 28 -35 L 20 -25 Z" fill="white" />
+                
+                <!-- Snout/muzzle -->
+                <ellipse cx="0" cy="25" rx="18" ry="15" fill="white" />
+                <ellipse cx="0" cy="25" rx="14" ry="11" fill="#e0e0e0" />
+                
+                <!-- Nose -->
+                <path d="M 0 32 L -4 36 L 0 38 L 4 36 Z" fill="#333" />
+                
+                <!-- Eyes - RED -->
+                <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#DC2626" />
+                <ellipse cx="-12" cy="-2" rx="3" ry="4" fill="#EF4444" />
+                <circle cx="-13" cy="-3" r="1.5" fill="white" opacity="0.8" />
+                
+                <ellipse cx="12" cy="0" rx="6" ry="8" fill="#DC2626" />
+                <ellipse cx="12" cy="-2" rx="3" ry="4" fill="#EF4444" />
+                <circle cx="13" cy="-3" r="1.5" fill="white" opacity="0.8" />
+                
+                <!-- Facial fur details -->
+                <path d="M -15 -2 L -25 0" stroke="white" stroke-width="2" stroke-linecap="round" />
+                <path d="M -15 2 L -25 5" stroke="white" stroke-width="2" stroke-linecap="round" />
+                <path d="M -15 6 L -25 10" stroke="white" stroke-width="2" stroke-linecap="round" />
+                
+                <path d="M 15 -2 L 25 0" stroke="white" stroke-width="2" stroke-linecap="round" />
+                <path d="M 15 2 L 25 5" stroke="white" stroke-width="2" stroke-linecap="round" />
+                <path d="M 15 6 L 25 10" stroke="white" stroke-width="2" stroke-linecap="round" />
+                
+                <!-- Fangs -->
+                <path d="M -5 40 L -5 43 M 0 40 L 0 44 M 5 40 L 5 43" 
+                    stroke="white" 
+                    stroke-width="1.5" 
+                    opacity="0.6"
+                />
+            </g>
+        </svg>
+    </div>
+
+    <h2>512x512 Icon</h2>
+    <div class="icon-container">
+        <svg id="icon-512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background gradient -->
+            <defs>
+                <linearGradient id="bg-gradient-512" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            
+            <!-- Background -->
+            <rect width="512" height="512" fill="url(#bg-gradient-512)" rx="102"/>
+            
+            <!-- Wolf head centered and larger -->
+            <g transform="translate(256, 256) scale(4.2)">
+                <!-- Head shape -->
+                <path d="M 0 -30 Q -15 -30 -22 -20 Q -28 -10 -28 5 Q -28 20 -20 32 L -15 40 L -8 45 L 0 48 L 8 45 L 15 40 L 20 32 Q 28 20 28 5 Q 28 -10 22 -20 Q 15 -30 0 -30 Z" 
+                    fill="white" 
+                    stroke="white" 
+                    stroke-width="1"
+                />
+                
+                <!-- Left ear -->
+                <path d="M -22 -20 L -28 -35 L -20 -25 Z" fill="white" />
+                
+                <!-- Right ear -->
+                <path d="M 22 -20 L 28 -35 L 20 -25 Z" fill="white" />
+                
+                <!-- Snout/muzzle -->
+                <ellipse cx="0" cy="25" rx="18" ry="15" fill="white" />
+                <ellipse cx="0" cy="25" rx="14" ry="11" fill="#e0e0e0" />
+                
+                <!-- Nose -->
+                <path d="M 0 32 L -4 36 L 0 38 L 4 36 Z" fill="#333" />
+                
+                <!-- Eyes - RED -->
+                <ellipse cx="-12" cy="0" rx="6" ry="8" fill="#DC2626" />
+                <ellipse cx="-12" cy="-2" rx="3" ry="4" fill="#EF4444" />
+                <circle cx="-13" cy="-3" r="1.5" fill="white" opacity="0.8" />
+                
+                <ellipse cx="12" cy="0" rx="6" ry="8" fill="#DC2626" />
+                <ellipse cx="12" cy="-2" rx="3" ry="4" fill="#EF4444" />
+                <circle cx="13" cy="-3" r="1.5" fill="white" opacity="0.8" />
+                
+                <!-- Facial fur details -->
+                <path d="M -15 -2 L -25 0" stroke="white" stroke-width="2" stroke-linecap="round" />
+                <path d="M -15 2 L -25 5" stroke="white" stroke-width="2" stroke-linecap="round" />
+                <path d="M -15 6 L -25 10" stroke="white" stroke-width="2" stroke-linecap="round" />
+                
+                <path d="M 15 -2 L 25 0" stroke="white" stroke-width="2" stroke-linecap="round" />
+                <path d="M 15 2 L 25 5" stroke="white" stroke-width="2" stroke-linecap="round" />
+                <path d="M 15 6 L 25 10" stroke="white" stroke-width="2" stroke-linecap="round" />
+                
+                <!-- Fangs -->
+                <path d="M -5 40 L -5 43 M 0 40 L 0 44 M 5 40 L 5 43" 
+                    stroke="white" 
+                    stroke-width="1.5" 
+                    opacity="0.6"
+                />
+            </g>
+        </svg>
+    </div>
+
+    <div class="instructions">
+        <p><strong>טיפ:</strong> אם הדפדפן לא מאפשר שמירה, צלם צילום מסך (Screenshot) של האייקון ואז חתוך אותו לגודל המדויק.</p>
+    </div>
+</body>
+</html>
+
