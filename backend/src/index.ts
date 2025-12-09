@@ -184,13 +184,27 @@ app.post('/api/registrations', (req: Request, res: Response) => {
     
     const duplicateRegistration = existingRegistrations.find((reg: any) => {
       // Skip temp emails (admin quick registrations)
-      if (reg.email.includes('@temp.com') || email.includes('@temp.com')) {
+      if (reg.email && reg.email.includes('@temp.com')) {
+        console.log('  ⏭️  Skipping temp email:', reg.email);
         return false;
       }
       
-      console.log('Comparing with:', { regEmail: reg.email, regStart: reg.start_time, regEnd: reg.end_time });
+      if (email && email.includes('@temp.com')) {
+        console.log('  ⏭️  New registration is temp email:', email);
+        return false;
+      }
       
-      if (reg.email !== email) {
+      console.log(`Comparing with existing registration:`, {
+        existingEmail: `"${reg.email}"`,
+        newEmail: `"${email}"`,
+        existingTimes: `${reg.start_time}-${reg.end_time}`,
+        newTimes: `${startTime}-${endTime}`
+      });
+      
+      // Compare emails (case insensitive)
+      const emailMatch = reg.email && email && reg.email.toLowerCase() === email.toLowerCase();
+      
+      if (!emailMatch) {
         console.log('  ✗ Different email');
         return false;
       }
@@ -202,11 +216,11 @@ app.post('/api/registrations', (req: Request, res: Response) => {
       const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
       
       console.log('  ✓ Same email! Checking overlap:', {
-        newStart: newStartMinutes,
-        newEnd: newEndMinutes,
-        existingStart: existingStartMinutes,
-        existingEnd: existingEndMinutes,
-        hasOverlap
+        newStart: `${startTime} (${newStartMinutes}min)`,
+        newEnd: `${endTime} (${newEndMinutes}min)`,
+        existingStart: `${reg.start_time} (${existingStartMinutes}min)`,
+        existingEnd: `${reg.end_time} (${existingEndMinutes}min)`,
+        hasOverlap: hasOverlap ? '🔴 YES - DUPLICATE!' : '✅ NO'
       });
       
       return hasOverlap;

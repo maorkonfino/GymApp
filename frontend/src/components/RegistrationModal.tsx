@@ -171,6 +171,43 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
         return
       }
 
+      // Check for duplicate registration (only for regular users, not admin quick registration)
+      if (!registerForOther && !isEditing) {
+        try {
+          const response = await registrationAPI.get(`/registrations/range?start=${dateString}&end=${dateString}`)
+          const existingRegistrations = response.data || []
+          
+          // Parse time to minutes for comparison
+          const parseTime = (timeStr: string) => {
+            const [hours, minutes] = timeStr.split(':').map(Number)
+            return hours * 60 + minutes
+          }
+          
+          const newStartMinutes = parseTime(startTime)
+          const newEndMinutes = parseTime(endTime)
+          
+          // Check if user already has a registration with overlapping time
+          const hasDuplicate = existingRegistrations.some((reg: any) => {
+            if (reg.email !== user.email) return false
+            
+            const existingStartMinutes = parseTime(reg.start_time)
+            const existingEndMinutes = parseTime(reg.end_time)
+            
+            // Check overlap
+            return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes)
+          })
+          
+          if (hasDuplicate) {
+            setError('כבר קיים רישום עבורך באותו התאריך ושעות חופפות')
+            setLoading(false)
+            return
+          }
+        } catch (err) {
+          console.error('Error checking for duplicates:', err)
+          // Continue anyway - backend will catch it
+        }
+      }
+
       // Determine registration data
       let registrationData
       if (registerForOther && isAdmin) {
