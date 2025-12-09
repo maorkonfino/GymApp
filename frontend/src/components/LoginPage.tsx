@@ -82,7 +82,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
             <img 
               src="/header-logo.svg" 
               alt="BEAST Logo" 
-              className="h-32 sm:h-40 w-auto"
+              className="h-48 sm:h-56 w-auto"
             />
           </div>
 
@@ -143,7 +143,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
               <img 
                 src="/header-logo.svg" 
                 alt="BEAST Logo" 
-                className="h-16 sm:h-20 w-auto"
+                className="h-24 sm:h-28 w-auto"
               />
             </div>
             <h2 className="text-3xl font-bold text-white mb-2">
