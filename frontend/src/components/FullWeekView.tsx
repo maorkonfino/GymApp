@@ -293,10 +293,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   {regsStartingHere.length > 4 && (
                                     <button
                                       onClick={(e) => handleShowAllClick(regsStartingHere, e)}
-                                      className="absolute top-1 right-1 z-10 p-0.5 rounded bg-gray-500/40 hover:bg-gray-500/60 text-gray-300 hover:text-white border border-gray-500/60 transition-colors"
+                                      className="absolute top-0.5 right-0.5 z-10 text-white hover:text-cyan-400 transition-colors"
                                       title={`עוד ${regsStartingHere.length - 4} רשומים`}
                                     >
-                                      <ChevronDown className="w-2 h-2" />
+                                      <ChevronDown className="w-2.5 h-2.5" />
                                     </button>
                                   )}
                                   
