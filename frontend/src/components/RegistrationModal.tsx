@@ -173,9 +173,11 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
 
       // Check for duplicate registration (only for regular users, not admin quick registration)
       if (!registerForOther && !isEditing) {
+        console.log('🔍 Checking for duplicate registrations...');
         try {
           const response = await registrationAPI.get(`/registrations/range?start=${dateString}&end=${dateString}`)
           const existingRegistrations = response.data || []
+          console.log('📋 Existing registrations:', existingRegistrations.length);
           
           // Parse time to minutes for comparison
           const parseTime = (timeStr: string) => {
@@ -185,25 +187,42 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           
           const newStartMinutes = parseTime(startTime)
           const newEndMinutes = parseTime(endTime)
+          console.log('🕐 New registration time:', { startTime, endTime, newStartMinutes, newEndMinutes });
           
           // Check if user already has a registration with overlapping time
           const hasDuplicate = existingRegistrations.some((reg: any) => {
-            if (reg.email !== user.email) return false
+            console.log('  Checking against:', { email: reg.email, times: `${reg.start_time}-${reg.end_time}` });
             
+            if (reg.email !== user.email) {
+              console.log('    ✗ Different user');
+              return false
+            }
+            
+            console.log('    ✓ Same user! Checking overlap...');
             const existingStartMinutes = parseTime(reg.start_time)
             const existingEndMinutes = parseTime(reg.end_time)
             
             // Check overlap
-            return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes)
+            const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes)
+            console.log('    Overlap check:', {
+              existing: `${existingStartMinutes}-${existingEndMinutes}`,
+              new: `${newStartMinutes}-${newEndMinutes}`,
+              hasOverlap: hasOverlap ? '🔴 YES - DUPLICATE!' : '✅ NO'
+            });
+            
+            return hasOverlap
           })
           
           if (hasDuplicate) {
+            console.log('❌ DUPLICATE FOUND! Blocking registration');
             setError('כבר קיים רישום עבורך באותו התאריך ושעות חופפות')
             setLoading(false)
             return
           }
+          
+          console.log('✅ No duplicate found, proceeding...');
         } catch (err) {
-          console.error('Error checking for duplicates:', err)
+          console.error('❌ Error checking for duplicates:', err)
           // Continue anyway - backend will catch it
         }
       }
