@@ -306,8 +306,6 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
     }
   }
 
-  const formattedDate = format(selectedDate, 'EEEE, d בMMMM yyyy', { locale: he })
-
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-dark-card border border-dark-border rounded-2xl max-w-lg w-full p-6 relative animate-fade-in max-h-[90vh] overflow-y-auto">
@@ -321,13 +319,12 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
 
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Calendar className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-2">
+          <h2 className="text-3xl font-bold text-cyan-400 mb-3">
             {isEditing ? 'עריכת אימון' : 'הרשמה לאימון'}
           </h2>
-          <p className="text-cyan-400 text-sm">{formattedDate}</p>
+          <p className="text-white text-2xl font-medium">
+            {format(selectedDate, 'EEEE, d בMMMM', { locale: he })}
+          </p>
         </div>
 
         {/* No times available message */}
