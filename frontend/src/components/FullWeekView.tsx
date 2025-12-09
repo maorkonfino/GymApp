@@ -319,10 +319,24 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                             <X className="w-2.5 h-2.5" />
                                           </button>
                                         )}
-                                        <div className="text-xs sm:text-sm font-bold leading-snug w-full break-words hyphens-auto px-0.5" style={{ wordBreak: 'break-word', minWidth: 0 }}>
+                                        <div 
+                                          className="font-bold leading-tight w-full px-0.5" 
+                                          style={{ 
+                                            fontSize: `${Math.max(8, Math.min(14, 120 / getFirstName(reg.name).length))}px`,
+                                            wordBreak: 'break-word',
+                                            minWidth: 0,
+                                            whiteSpace: 'normal'
+                                          }}
+                                        >
                                           {getFirstName(reg.name)}
                                         </div>
-                                        <div className="text-[8px] sm:text-[9px] opacity-70 mt-0.5 leading-tight whitespace-nowrap">
+                                        <div 
+                                          className="opacity-70 mt-0.5 leading-tight font-medium"
+                                          style={{
+                                            fontSize: `${Math.max(7, Math.min(10, 80 / `${reg.startTime}-${reg.endTime}`.length))}px`,
+                                            whiteSpace: 'nowrap'
+                                          }}
+                                        >
                                           {reg.startTime}-{reg.endTime}
                                         </div>
                                       </div>
