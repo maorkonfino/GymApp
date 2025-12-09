@@ -165,19 +165,41 @@ app.post('/api/registrations', (req: Request, res: Response) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
+    // Helper function to parse time
+    const parseTime = (timeStr: string) => {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+
+    // Check for duplicate registration (same user, date, and overlapping time)
+    const existingRegistrations = db.getRegistrationsByDate(date);
+    const newStartMinutes = parseTime(startTime);
+    const newEndMinutes = parseTime(endTime);
+    
+    const duplicateRegistration = existingRegistrations.find((reg: any) => {
+      if (reg.email !== email) return false;
+      
+      const existingStartMinutes = parseTime(reg.start_time);
+      const existingEndMinutes = parseTime(reg.end_time);
+      
+      // Check if times overlap
+      const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
+      return hasOverlap;
+    });
+    
+    if (duplicateRegistration) {
+      return res.status(400).json({ 
+        error: 'כבר קיים רישום עבורך באותו התאריך ושעות חופפות' 
+      });
+    }
+
     // Check if registration overlaps with "Closed for Seniors" time
     const registrationDate = new Date(date);
     const dayOfWeek = registrationDate.getDay(); // 0 = Sunday, 4 = Thursday
     
     if (dayOfWeek === 0 || dayOfWeek === 4) {
-      // Parse times
-      const parseTime = (timeStr: string) => {
-        const [hours, minutes] = timeStr.split(':').map(Number);
-        return hours * 60 + minutes;
-      };
-      
-      const startMinutes = parseTime(startTime);
-      const endMinutes = parseTime(endTime);
+      const startMinutes = newStartMinutes;
+      const endMinutes = newEndMinutes;
       const closedStart = 9 * 60; // 9:00
       const closedEnd = 10 * 60; // 10:00
       
