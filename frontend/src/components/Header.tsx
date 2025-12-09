@@ -157,7 +157,7 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
             <img 
               src="/header-logo.svg" 
               alt="BEAST Logo" 
-              className="h-16 sm:h-20 w-auto"
+              className="h-20 sm:h-24 w-auto"
             />
           </div>
         </div>
