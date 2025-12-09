@@ -304,7 +304,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     {regsStartingHere.slice(0, 4).map((reg) => (
                                       <div
                                         key={reg.id}
-                                        className={`relative px-1.5 py-1 rounded flex flex-col justify-center text-center group min-h-[32px] overflow-hidden ${
+                                        className={`relative px-1 py-1 rounded flex flex-col justify-center text-center group min-h-[32px] overflow-hidden ${
                                           user?.email === reg.email
                                             ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                                             : 'bg-blue-500/20 text-blue-300'
