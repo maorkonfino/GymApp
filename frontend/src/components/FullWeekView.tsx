@@ -4,7 +4,7 @@ import { he } from 'date-fns/locale'
 import { Registration } from '../types'
 import { registrationAPI } from '../api'
 import { useAuth } from '../contexts/AuthContext'
-import { X, Calendar, MoreHorizontal, Users } from 'lucide-react'
+import { X, Calendar, ChevronDown, Users } from 'lucide-react'
 import { generateTimeSlotRanges } from '../utils/timeSlotRanges'
 import { getRestrictionMessage } from '../utils/timeRestrictions'
 
@@ -296,11 +296,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                       className="absolute top-1 right-1 z-10 p-0.5 rounded bg-gray-500/40 hover:bg-gray-500/60 text-gray-300 hover:text-white border border-gray-500/60 transition-colors"
                                       title={`עוד ${regsStartingHere.length - 4} רשומים`}
                                     >
-                                      <MoreHorizontal className="w-3 h-3" />
+                                      <ChevronDown className="w-3 h-3" />
                                     </button>
                                   )}
                                   
-                                  <div className={`grid ${regsStartingHere.length <= 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
+                                  <div className={`grid ${regsStartingHere.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
                                     {regsStartingHere.slice(0, 4).map((reg) => (
                                       <div
                                         key={reg.id}
