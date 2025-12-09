@@ -73,7 +73,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
         {/* Header */}
         <div className="p-6 border-b border-dark-border flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center">
               <Users className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -121,7 +121,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
               onClick={() => setRoleFilter('admin')}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 roleFilter === 'admin'
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
                   : 'bg-dark-hover text-gray-400 hover:bg-dark-border'
               }`}
             >
@@ -196,7 +196,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                         <h3 className="text-white font-semibold text-lg">{user.name}</h3>
                         <span className={`text-xs px-2 py-1 rounded font-semibold ${
                           user.role === 'admin' 
-                            ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white'
+                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
                             : user.role === 'vip'
                             ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
                             : user.role === 'teenbeast'
@@ -281,7 +281,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                   { value: 'vip', label: 'BEAST', desc: 'גישה לכל הכפתורים (לפי תוכנית)', gradient: 'from-cyan-500 to-blue-600' },
                   { value: 'teenbeast', label: 'TeenBEAST', desc: 'גישה מוגבלת לשעות נוער בלבד', gradient: 'from-orange-500 to-red-600' },
                   { value: 'onlinebeast', label: 'OnlineBEAST', desc: 'גישה מקוונת בלבד (ללא הרשמה לתורים)', gradient: 'from-indigo-500 to-purple-600' },
-                  { value: 'admin', label: 'מנהל', desc: 'גישת ניהול מלאה', gradient: 'from-purple-500 to-pink-600' }
+                  { value: 'admin', label: 'מנהל', desc: 'גישת ניהול מלאה', gradient: 'from-cyan-500 to-blue-600' }
                 ].map((role) => (
                   <button
                     key={role.value}
