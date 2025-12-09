@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import cron from 'node-cron';
+import { format } from 'date-fns';
 import * as db from './database-postgres';
 import { sendWorkoutReminderEmail, sendPasswordResetEmail } from './services/emailService';
 
