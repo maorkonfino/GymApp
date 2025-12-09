@@ -300,11 +300,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     </button>
                                   )}
                                   
-                                  <div className={`grid ${regsStartingHere.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
+                                  <div className={`grid ${regsStartingHere.length <= 2 ? 'grid-cols-1' : 'grid-cols-2'} gap-0.5 h-full p-0.5`}>
                                     {regsStartingHere.slice(0, 4).map((reg) => (
                                       <div
                                         key={reg.id}
-                                        className={`relative px-0.5 py-0.5 sm:px-1.5 sm:py-1 rounded flex flex-col justify-center text-center group overflow-hidden ${
+                                        className={`relative px-1.5 py-1 sm:px-2 sm:py-1.5 rounded flex flex-col justify-center text-center group overflow-hidden min-h-[32px] sm:min-h-[36px] ${
                                           user?.email === reg.email
                                             ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                                             : 'bg-blue-500/20 text-blue-300'
@@ -319,10 +319,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                             <X className="w-2.5 h-2.5" />
                                           </button>
                                         )}
-                                        <div className="text-[6px] sm:text-[9px] font-medium leading-tight truncate w-full">
+                                        <div className="text-[10px] sm:text-[11px] font-semibold leading-tight truncate w-full px-0.5">
                                           {getFirstName(reg.name)}
                                         </div>
-                                        <div className="text-[5px] sm:text-[7px] opacity-60 mt-0.5 leading-tight whitespace-nowrap">
+                                        <div className="text-[8px] sm:text-[9px] opacity-70 mt-0.5 leading-tight whitespace-nowrap">
                                           {reg.startTime}-{reg.endTime}
                                         </div>
                                       </div>

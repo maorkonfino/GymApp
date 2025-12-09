@@ -17,10 +17,15 @@ body {
   background-color: #232324;
   color: #fff;
   direction: rtl;
+  /* Enable pull-to-refresh on iPhone */
+  overscroll-behavior-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 #root {
   min-height: 100vh;
+  /* Enable pull-to-refresh on iPhone */
+  overscroll-behavior-y: auto;
 }
 
 /* Hide scrollbar but keep functionality */
