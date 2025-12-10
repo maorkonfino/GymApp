@@ -11,13 +11,13 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageUsersClick }) => {
   const { user, logout, isAdmin } = useAuth()
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
-  const [showInstallButton, setShowInstallButton] = useState(true) // Always show by default
+  const [showInstallButton, setShowInstallButton] = useState(false) // Hide by default until prompt is ready
 
   useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e)
-      setShowInstallButton(true)
+      setShowInstallButton(true) // Show button only when prompt is ready
     }
 
     window.addEventListener('beforeinstallprompt', handler)
@@ -25,27 +25,15 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
     // Check if already installed - only hide if in standalone mode
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setShowInstallButton(false)
-    } else {
-      // Show button even if prompt not available yet
-      setShowInstallButton(true)
     }
 
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
 
   const handleInstallClick = async () => {
-    // Start installation immediately
+    // Only proceed if prompt is available
     if (!deferredPrompt) {
-      // Detect iOS
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-      
-      if (isIOS) {
-        // iOS Safari instructions - minimal
-        alert('📱 להוספה למסך הבית:\n\n1. לחץ על ⬆️ (שיתוף)\n2. בחר "הוסף למסך הבית"\n3. לחץ "הוסף"')
-      } else {
-        // Android Chrome instructions - minimal
-        alert('📱 להתקנת האפליקציה:\n\n1. תפריט ⋮\n2. "התקן אפליקציה"\n3. "התקן"')
-      }
+      console.log('⚠️ Install prompt not ready yet')
       return
     }
 
