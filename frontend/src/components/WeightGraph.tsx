@@ -158,53 +158,58 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         {/* X Axis */}
         <div className="absolute left-12 right-8 bottom-16 h-0.5 bg-gray-600"></div>
         
-        {/* SVG for all connection lines */}
-        <svg className="absolute left-14 right-10 top-10 bottom-20 pointer-events-none">
-          {displayData.map((entry, idx) => {
-            if (idx === 0) return null
-            const prevEntry = displayData[idx - 1]
-            
-            const x1Percent = ((idx - 1) / (displayData.length - 1)) * 100
-            const x2Percent = (idx / (displayData.length - 1)) * 100
-            const y1Percent = 100 - ((prevEntry.weight - minWeight) / range) * 100
-            const y2Percent = 100 - ((entry.weight - minWeight) / range) * 100
-            
-            return (
-              <line
-                key={idx}
-                x1={`${x1Percent}%`}
-                y1={`${y1Percent}%`}
-                x2={`${x2Percent}%`}
-                y2={`${y2Percent}%`}
-                stroke="#10b981"
-                strokeWidth="2"
-              />
-            )
-          })}
-        </svg>
-        
-        {/* Graph Area - Data Points */}
-        <div className="absolute left-14 right-10 top-10 bottom-20 flex items-end justify-around">
-          {displayData.map((entry, idx) => {
-            const height = ((entry.weight - minWeight) / range) * 100
-            
-            return (
-              <div key={idx} className="relative flex-1 h-full flex items-end justify-center">
-                {/* Data Point */}
-                <div 
-                  className="absolute flex flex-col items-center"
-                  style={{ bottom: `${Math.max(height, 2)}%` }}
-                >
-                  {/* Weight Label */}
-                  <div className="text-[10px] text-green-400 font-semibold mb-1 bg-dark-hover px-1 rounded">
-                    {entry.weight.toFixed(1)}
+        {/* Graph Area - Data Points with Lines */}
+        <div className="absolute left-14 right-10 top-10 bottom-20">
+          {/* SVG overlay for lines */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none">
+            {displayData.map((entry, idx) => {
+              if (idx === 0) return null
+              const prevEntry = displayData[idx - 1]
+              
+              const totalPoints = displayData.length
+              const x1 = ((idx - 1) / (totalPoints - 1)) * 100
+              const x2 = (idx / (totalPoints - 1)) * 100
+              const y1 = 100 - ((prevEntry.weight - minWeight) / range) * 100
+              const y2 = 100 - ((entry.weight - minWeight) / range) * 100
+              
+              return (
+                <line
+                  key={idx}
+                  x1={`${x1}%`}
+                  y1={`${y1}%`}
+                  x2={`${x2}%`}
+                  y2={`${y2}%`}
+                  stroke="#10b981"
+                  strokeWidth="2"
+                  vectorEffect="non-scaling-stroke"
+                />
+              )
+            })}
+          </svg>
+          
+          {/* Data Points */}
+          <div className="absolute inset-0 flex items-end justify-around">
+            {displayData.map((entry, idx) => {
+              const height = ((entry.weight - minWeight) / range) * 100
+              
+              return (
+                <div key={idx} className="relative flex-1 h-full flex items-end justify-center">
+                  {/* Data Point */}
+                  <div 
+                    className="absolute flex flex-col items-center z-10"
+                    style={{ bottom: `${Math.max(height, 2)}%` }}
+                  >
+                    {/* Weight Label */}
+                    <div className="text-[10px] text-green-400 font-semibold mb-1 bg-dark-hover px-1 rounded">
+                      {entry.weight.toFixed(1)}
+                    </div>
+                    {/* Point Dot */}
+                    <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-lg hover:scale-125 transition-transform"></div>
                   </div>
-                  {/* Point Dot */}
-                  <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-lg hover:scale-125 transition-transform"></div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
         
         {/* X Axis Labels */}
