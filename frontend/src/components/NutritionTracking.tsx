@@ -174,16 +174,24 @@ const NutritionTracking: React.FC = () => {
           }))
         }
         
-        // Add current week's dates if they don't exist
+        // Add current week's dates if they don't exist (only up to today)
         const today = new Date()
+        today.setHours(0, 0, 0, 0) // Reset time for comparison
         const currentDayOfWeek = today.getDay() // 0 = Sunday, 1 = Monday, etc.
         const startOfWeek = new Date(today)
         startOfWeek.setDate(today.getDate() - currentDayOfWeek) // Go back to Sunday
         
-        // Create 7 days for the current week
+        // Create days for the current week (only up to today)
         for (let i = 0; i < 7; i++) {
           const date = new Date(startOfWeek)
           date.setDate(startOfWeek.getDate() + i)
+          date.setHours(0, 0, 0, 0) // Reset time for comparison
+          
+          // Skip future dates
+          if (date > today) {
+            continue
+          }
+          
           const dateStr = format(date, 'yyyy-MM-dd')
           
           // Check if this date already exists
@@ -209,8 +217,9 @@ const NutritionTracking: React.FC = () => {
         
       } catch (error) {
         console.error('Error loading daily tracking:', error)
-        // First time - create current week's entries
+        // First time - create current week's entries (only up to today)
         const today = new Date()
+        today.setHours(0, 0, 0, 0) // Reset time for comparison
         const currentDayOfWeek = today.getDay()
         const startOfWeek = new Date(today)
         startOfWeek.setDate(today.getDate() - currentDayOfWeek)
@@ -219,6 +228,13 @@ const NutritionTracking: React.FC = () => {
         for (let i = 0; i < 7; i++) {
           const date = new Date(startOfWeek)
           date.setDate(startOfWeek.getDate() + i)
+          date.setHours(0, 0, 0, 0) // Reset time for comparison
+          
+          // Skip future dates
+          if (date > today) {
+            continue
+          }
+          
           weekEntries.push({
             date: format(date, 'yyyy-MM-dd'),
             morningWeight: '',

@@ -408,7 +408,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   <select
                     value={endMinute}
                     onChange={(e) => handleEndTimeChange(endHour, e.target.value)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-2.5 text-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-2 pr-6 py-2 text-white text-sm sm:text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -422,21 +422,21 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                       </option>
                     ))}
                   </select>
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </div>
                 </div>
 
-                <div className="text-white text-xl font-bold self-center">:</div>
+                <div className="text-white text-lg sm:text-xl font-bold self-center">:</div>
 
                 {/* Hours */}
                 <div className="relative flex-1">
                   <select
                     value={endHour}
                     onChange={(e) => handleEndTimeChange(e.target.value, endMinute)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-2.5 text-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-2 pr-6 py-2 text-white text-sm sm:text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -450,8 +450,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                       </option>
                     ))}
                   </select>
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </div>
@@ -460,7 +460,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
             </div>
 
             {/* Separator */}
-            <div className="text-white text-2xl font-bold pb-2.5">-</div>
+            <div className="text-white text-lg sm:text-2xl font-bold pb-2.5">-</div>
 
             {/* Start Time - מימין */}
             <div className="flex-1">
@@ -473,7 +473,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                   <select
                     value={startMinute}
                     onChange={(e) => handleStartTimeChange(startHour, e.target.value)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-2.5 text-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-2 pr-6 py-2 text-white text-sm sm:text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -487,21 +487,21 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                       </option>
                     ))}
                   </select>
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </div>
                 </div>
 
-                <div className="text-white text-xl font-bold self-center">:</div>
+                <div className="text-white text-lg sm:text-xl font-bold self-center">:</div>
 
                 {/* Hours */}
                 <div className="relative flex-1">
                   <select
                     value={startHour}
                     onChange={(e) => handleStartTimeChange(e.target.value, startMinute)}
-                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-3 pr-8 py-2.5 text-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                    className="w-full bg-dark-hover border border-dark-border rounded-lg pl-2 pr-6 py-2 text-white text-sm sm:text-base font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
                     style={{
                       appearance: 'none',
                       WebkitAppearance: 'none',
@@ -515,8 +515,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
                       </option>
                     ))}
                   </select>
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </div>
