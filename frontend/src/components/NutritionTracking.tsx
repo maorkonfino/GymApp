@@ -348,9 +348,12 @@ const NutritionTracking: React.FC = () => {
     try {
       const today = format(new Date(), 'yyyy-MM-dd')
       
+      // Filter out future dates
+      const pastAndTodayEntries = entries.filter(entry => entry.date <= today)
+      
       // Group entries by week
       const weeks: { [key: string]: DailyEntry[] } = {}
-      entries.forEach(entry => {
+      pastAndTodayEntries.forEach(entry => {
         if (!entry || !entry.date) return
         const weekKey = getWeekKey(entry.date)
         if (!weeks[weekKey]) {

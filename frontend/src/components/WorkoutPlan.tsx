@@ -118,10 +118,9 @@ const WorkoutPlan: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[600px]">
         <div className="max-w-md text-center space-y-6 animate-fade-in">
-          <BeastLogo size="large" />
+          <BeastLogo size="large" showScratch={true} showWolf={true} showSlogan={true} />
           
           <div className="space-y-2">
-            <p className="text-cyan-400 text-lg">בית לאימון מבוסס מדע</p>
             <h2 className="text-3xl font-bold text-white">תוכנית האימון שלי</h2>
           </div>
 
