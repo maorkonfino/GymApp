@@ -11,39 +11,37 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageUsersClick }) => {
   const { user, logout, isAdmin } = useAuth()
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
-  const [showInstallButton, setShowInstallButton] = useState(false) // Hide by default until prompt is ready
 
   useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e)
-      setShowInstallButton(true) // Show button only when prompt is ready
     }
 
     window.addEventListener('beforeinstallprompt', handler)
 
-    // Check if already installed - only hide if in standalone mode
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setShowInstallButton(false)
-    }
-
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
 
-  // Update button visibility when user logs in
-  useEffect(() => {
-    if (user && deferredPrompt) {
-      // User is logged in and prompt is ready
-      if (!window.matchMedia('(display-mode: standalone)').matches) {
-        setShowInstallButton(true)
-      }
-    }
-  }, [user, deferredPrompt])
+  // Show button if:
+  // 1. User is logged in
+  // 2. NOT already installed (not in standalone mode)
+  const isInstalled = window.matchMedia('(display-mode: standalone)').matches
+  const shouldShowInstallButton = Boolean(user && !isInstalled)
 
   const handleInstallClick = async () => {
-    // Only proceed if prompt is available
     if (!deferredPrompt) {
-      console.log('⚠️ Install prompt not ready yet')
+      // No prompt available - show instructions
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      const isAndroid = /Android/.test(navigator.userAgent)
+      
+      if (isIOS) {
+        alert('📱 להוספה למסך הבית:\n\n1. לחץ על כפתור השיתוף ⬆️\n2. גלול למטה ובחר "הוסף למסך הבית"\n3. לחץ "הוסף"')
+      } else if (isAndroid) {
+        alert('📱 להתקנת האפליקציה:\n\n1. לחץ על תפריט ⋮ בדפדפן\n2. בחר "התקן אפליקציה" או "הוסף למסך הבית"\n3. לחץ "התקן"')
+      } else {
+        alert('📱 להתקנת האפליקציה:\n\nבתפריט הדפדפן, בחר באפשרות "התקן אפליקציה" או "הוסף למסך הבית"')
+      }
       return
     }
 
@@ -54,7 +52,6 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
       
       if (outcome === 'accepted') {
         console.log('✅ PWA installed successfully')
-        setShowInstallButton(false) // Hide button after successful install
       }
       
       setDeferredPrompt(null)
@@ -71,8 +68,8 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
           <div className="flex items-center gap-1.5 sm:gap-3 flex-1 min-w-0">
             {user ? (
               <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1">
-                {/* PWA Install Button - Always visible */}
-                {showInstallButton && (
+                {/* PWA Install Button - Show when logged in and not installed */}
+                {shouldShowInstallButton && (
                   <button
                     onClick={handleInstallClick}
                     className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl flex items-center justify-center transition-all shadow-lg hover:shadow-green-500/50 flex-shrink-0"
