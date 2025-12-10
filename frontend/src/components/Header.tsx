@@ -30,6 +30,16 @@ const Header: React.FC<HeaderProps> = ({ onLoginClick, onProfileClick, onManageU
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
 
+  // Update button visibility when user logs in
+  useEffect(() => {
+    if (user && deferredPrompt) {
+      // User is logged in and prompt is ready
+      if (!window.matchMedia('(display-mode: standalone)').matches) {
+        setShowInstallButton(true)
+      }
+    }
+  }, [user, deferredPrompt])
+
   const handleInstallClick = async () => {
     // Only proceed if prompt is available
     if (!deferredPrompt) {
