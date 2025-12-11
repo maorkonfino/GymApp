@@ -100,6 +100,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       const endDate = format(weekDates[6], 'yyyy-MM-dd')
       
       console.log('🔍 Fetching full week registrations:', startDate, 'to', endDate)
+      console.log('📅 Week dates being displayed:', weekDates.map(d => format(d, 'yyyy-MM-dd')))
       const data = await registrationAPI.getByRange(startDate, endDate)
       console.log('📊 Received full week data:', data)
       
@@ -116,6 +117,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       })) : []
       
       console.log('✅ Transformed full week registrations:', transformedData)
+      console.log('📊 Number of registrations:', transformedData.length)
       setRegistrations(transformedData)
     } catch (error) {
       console.error('❌ Error fetching registrations:', error)
@@ -130,9 +132,16 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const dateStr = format(date, 'yyyy-MM-dd')
     const [rangeStart] = timeRange.split('-')
     
-    return registrations.filter((reg) => 
+    const filtered = registrations.filter((reg) => 
       reg.date === dateStr && reg.startTime === rangeStart
     )
+    
+    // Debug log for first few cells
+    if (filtered.length > 0) {
+      console.log(`✅ Found ${filtered.length} registration(s) for ${dateStr} at ${rangeStart}:`, filtered)
+    }
+    
+    return filtered
   }
 
   // Calculate how many rows a registration should span
@@ -319,6 +328,15 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                             
                             // Get registrations that START in this time slot
                             const regsStartingHere = getRegistrationsStartingInSlot(date, timeRange)
+                            
+                            // Debug - log what we're checking
+                            if (dateIdx === 0 && timeIdx === 0) {
+                              console.log('🔍 First cell check:')
+                              console.log('  Date:', format(date, 'yyyy-MM-dd'))
+                              console.log('  Time range:', timeRange)
+                              console.log('  Total registrations in state:', registrations.length)
+                              console.log('  Registrations found for this cell:', regsStartingHere.length)
+                            }
                             
                             // Render cells for registrations starting here
                             if (regsStartingHere.length > 0) {
