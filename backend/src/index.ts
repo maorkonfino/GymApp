@@ -432,6 +432,113 @@ app.post('/api/workout-plans', (req: Request, res: Response) => {
   }
 });
 
+// ===== WORKOUT ARCHIVE & FOLDERS =====
+
+// Get archived workout plans for user
+app.get('/api/workout-plans/archive/:email', (req: Request, res: Response) => {
+  try {
+    const { email } = req.params;
+    
+    // Get folders with their plans
+    const folders = db.getWorkoutFolders(email);
+    const foldersWithPlans = folders.map(folder => ({
+      ...folder,
+      plans: db.getArchivedWorkoutPlansByFolder(email, folder.id!)
+    }));
+    
+    // Get unorganized plans
+    const unorganized = db.getUnorganizedArchivedPlans(email);
+    
+    res.json({
+      folders: foldersWithPlans,
+      unorganized
+    });
+  } catch (error) {
+    console.error('Error getting archived plans:', error);
+    res.status(500).json({ error: 'Failed to get archived plans' });
+  }
+});
+
+// Create workout folder
+app.post('/api/workout-plans/folders', (req: Request, res: Response) => {
+  try {
+    const { name, userEmail } = req.body;
+    
+    if (!name || !userEmail) {
+      return res.status(400).json({ error: 'Name and userEmail are required' });
+    }
+    
+    const folderId = db.createWorkoutFolder({ user_email: userEmail, name });
+    res.json({ id: folderId, message: 'Folder created successfully' });
+  } catch (error) {
+    console.error('Error creating folder:', error);
+    res.status(500).json({ error: 'Failed to create folder' });
+  }
+});
+
+// Archive workout plan
+app.post('/api/workout-plans/archive', (req: Request, res: Response) => {
+  try {
+    const { userEmail, name, planContent, folderId } = req.body;
+    
+    if (!userEmail || !name || !planContent) {
+      return res.status(400).json({ error: 'userEmail, name, and planContent are required' });
+    }
+    
+    const planId = db.archiveWorkoutPlan({
+      user_email: userEmail,
+      name,
+      plan_content: planContent,
+      folder_id: folderId || null
+    });
+    
+    res.json({ id: planId, message: 'Plan archived successfully' });
+  } catch (error) {
+    console.error('Error archiving plan:', error);
+    res.status(500).json({ error: 'Failed to archive plan' });
+  }
+});
+
+// Unarchive workout plan (restore to main view)
+app.post('/api/workout-plans/unarchive/:planId', (req: Request, res: Response) => {
+  try {
+    const planId = parseInt(req.params.planId);
+    
+    db.unarchiveWorkoutPlan(planId);
+    res.json({ message: 'Plan unarchived successfully' });
+  } catch (error) {
+    console.error('Error unarchiving plan:', error);
+    res.status(500).json({ error: 'Failed to unarchive plan' });
+  }
+});
+
+// Move plan to folder
+app.post('/api/workout-plans/move/:planId', (req: Request, res: Response) => {
+  try {
+    const planId = parseInt(req.params.planId);
+    const { folderId } = req.body;
+    
+    db.movePlanToFolder(planId, folderId || null);
+    res.json({ message: 'Plan moved successfully' });
+  } catch (error) {
+    console.error('Error moving plan:', error);
+    res.status(500).json({ error: 'Failed to move plan' });
+  }
+});
+
+// Delete workout folder
+app.delete('/api/workout-plans/folders/:folderId', (req: Request, res: Response) => {
+  try {
+    const folderId = parseInt(req.params.folderId);
+    
+    db.deleteWorkoutFolder(folderId);
+    res.json({ message: 'Folder deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting folder:', error);
+    res.status(500).json({ error: 'Failed to delete folder' });
+  }
+});
+
 // ===== NUTRITION GOALS =====
 
 // Get nutrition goals for user

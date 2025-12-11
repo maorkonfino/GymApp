@@ -14,6 +14,7 @@ import LoginPage from './components/LoginPage'
 import ManageUsers from './components/ManageUsers'
 import ForgotPasswordModal from './components/ForgotPasswordModal'
 import ResetPassword from './components/ResetPassword'
+import WorkoutArchive from './components/WorkoutArchive'
 import api from './api'
 
 function AppContent() {
@@ -182,6 +183,13 @@ function AppContent() {
                   onDataChange={handleDataChange}
                 />
               </div>
+            </div>
+          } />
+
+          {/* Workout Archive page */}
+          <Route path="/workout-archive" element={
+            <div className="h-full overflow-auto px-4 sm:px-6 lg:px-8 pb-4">
+              <WorkoutArchive />
             </div>
           } />
         </Routes>

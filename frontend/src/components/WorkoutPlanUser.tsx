@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Dumbbell, ChevronDown, ChevronUp } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Dumbbell, ChevronDown, ChevronUp, Archive, FolderOpen } from 'lucide-react'
 import BeastLogo from './BeastLogo'
 import api from '../api'
 
@@ -32,6 +33,7 @@ interface WorkoutPlan {
 
 const WorkoutPlanUser: React.FC = () => {
   const { user, isAdmin } = useAuth()
+  const navigate = useNavigate()
   const [plan, setPlan] = useState<WorkoutPlan | null>(null)
   const [loading, setLoading] = useState(true)
   const [hasWorkoutPlan, setHasWorkoutPlan] = useState<boolean | null>(null)
@@ -149,6 +151,39 @@ const WorkoutPlanUser: React.FC = () => {
     }
   }
 
+  const handleArchiveWorkout = async (workoutIndex: number) => {
+    if (!plan || !user) return
+
+    const workout = plan.workouts[workoutIndex]
+    const confirmed = window.confirm(`האם אתה בטוח שברצונך להעביר את "${workout.name}" לארכיון?`)
+    
+    if (!confirmed) return
+
+    try {
+      // Create a minimal plan with just this workout
+      const workoutPlan = {
+        numberOfWeeks: plan.numberOfWeeks,
+        workouts: [workout]
+      }
+
+      await api.post('/workout-plans/archive', {
+        userEmail: user.email,
+        name: workout.name,
+        planContent: JSON.stringify(workoutPlan),
+        folderId: null
+      })
+
+      // Remove workout from current plan
+      const newWorkouts = plan.workouts.filter((_, idx) => idx !== workoutIndex)
+      setPlan({ ...plan, workouts: newWorkouts })
+      
+      alert('האימון הועבר לארכיון בהצלחה!')
+    } catch (error) {
+      console.error('Error archiving workout:', error)
+      alert('שגיאה בהעברה לארכיון')
+    }
+  }
+
   const getActualWeeks = () => {
     if (!plan) return 0
     if (plan.numberOfWeeks === 'flexible') {
@@ -237,10 +272,17 @@ const WorkoutPlanUser: React.FC = () => {
   return (
     <div className="w-full p-4 space-y-6">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-white mb-2">תוכנית האימון שלי</h1>
-        <p className="text-cyan-400 mb-2">
-          מעקב אחר התקדמות - {plan.numberOfWeeks === 'flexible' ? `${userAddedWeeks} שבועות (גמיש)` : `${plan.numberOfWeeks} שבועות`}
-        </p>
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <h1 className="text-4xl font-bold text-white">תוכנית האימון שלי</h1>
+          <button
+            onClick={() => navigate('/workout-archive')}
+            className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all flex items-center gap-2 font-semibold"
+            title="עבור לארכיון"
+          >
+            <Archive className="w-5 h-5" />
+            ארכיון
+          </button>
+        </div>
         {isSaving ? (
           <div className="text-cyan-400 flex items-center gap-2 justify-center text-sm">
             <div className="w-4 h-4 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin"></div>
@@ -257,16 +299,33 @@ const WorkoutPlanUser: React.FC = () => {
         return (
         <div key={workoutIndex} className="bg-dark-card border border-dark-border rounded-xl p-6 shadow-xl">
           <div 
-            className="flex items-center justify-between mb-6 cursor-pointer hover:bg-dark-hover/30 -m-2 p-2 rounded-lg transition-colors"
-            onClick={() => toggleWorkoutCollapse(workoutIndex)}
+            className="flex items-center justify-between mb-6 -m-2 p-2 rounded-lg"
           >
-            <div className="flex items-center gap-3">
+            <div 
+              className="flex items-center gap-3 flex-1 cursor-pointer hover:bg-dark-hover/30 rounded-lg p-2 -m-2 transition-colors"
+              onClick={() => toggleWorkoutCollapse(workoutIndex)}
+            >
               <Dumbbell className="w-8 h-8 text-cyan-400" />
               <h2 className="text-2xl font-bold text-white">{workout.name}</h2>
             </div>
-            <button className="text-cyan-400 hover:text-cyan-300 transition-colors">
-              {isCollapsed ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
-            </button>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleArchiveWorkout(workoutIndex)
+                }}
+                className="p-2 text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 rounded-lg transition-colors"
+                title="העבר לארכיון"
+              >
+                <FolderOpen className="w-6 h-6" />
+              </button>
+              <button 
+                onClick={() => toggleWorkoutCollapse(workoutIndex)}
+                className="text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                {isCollapsed ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
 
           {!isCollapsed && (

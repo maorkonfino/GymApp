@@ -34,12 +34,44 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const [selectedCellRegistrations, setSelectedCellRegistrations] = useState<Registration[]>([])
   const { user, isAdmin } = useAuth()
 
-  // Get week dates - start from today
+  // Get week dates - smart rolling week logic
   const getWeekDates = () => {
     const today = new Date()
     today.setHours(0, 0, 0, 0) // Reset to start of day
-    const baseDate = addDays(today, weekOffset * 7)
-    return Array.from({ length: 7 }, (_, i) => addDays(baseDate, i))
+    const currentDayOfWeek = today.getDay() // 0=Sunday, 1=Monday, ..., 6=Saturday
+    
+    // Calculate the Sunday of current week
+    const currentSunday = addDays(today, -currentDayOfWeek)
+    
+    const dates = []
+    
+    for (let dayOfWeek = 0; dayOfWeek <= 6; dayOfWeek++) {
+      let date = addDays(currentSunday, dayOfWeek)
+      
+      if (currentDayOfWeek >= 3 && currentDayOfWeek <= 5) {
+        // Today is Wed (3), Thu (4), or Fri (5)
+        // Days 0,1,2 (Sun,Mon,Tue) -> next week
+        if (dayOfWeek <= 2) {
+          date = addDays(date, 7)
+        }
+      } else if (currentDayOfWeek === 6) {
+        // Today is Saturday (6)
+        // Days 0,1,2,3,4,5 (Sun-Fri) -> next week
+        if (dayOfWeek <= 5) {
+          date = addDays(date, 7)
+        }
+      } else {
+        // Today is Sun (0), Mon (1), or Tue (2)
+        // Saturday (6) -> next week
+        if (dayOfWeek === 6) {
+          date = addDays(date, 7)
+        }
+      }
+      
+      dates.push(date)
+    }
+    
+    return dates
   }
 
   const weekDates = getWeekDates()
@@ -205,12 +237,25 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       <span className="text-gray-500 mx-0.5">|</span>
                       <span className="text-cyan-400">יום</span>
                     </th>
-                    {weekDates.map((date, idx) => (
-                      <th key={idx} className="p-0.5 sm:p-2 text-center border border-dark-border bg-dark-hover font-medium">
-                        <div className="text-[10px] sm:text-base leading-tight text-cyan-400 font-bold">{format(date, 'EEE', { locale: he })}</div>
-                        <div className="text-[7px] sm:text-xs text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
-                      </th>
-                    ))}
+                    {weekDates.map((date, idx) => {
+                      const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
+                      const isEvenColumn = idx % 2 === 1 // Alternate coloring: column 1,3,5 lighter
+                      return (
+                        <th 
+                          key={idx} 
+                          className={`p-0.5 sm:p-2 text-center border border-dark-border font-medium ${
+                            isToday 
+                              ? 'bg-cyan-500/20' 
+                              : isEvenColumn 
+                                ? 'bg-dark-hover/70' 
+                                : 'bg-dark-hover'
+                          }`}
+                        >
+                          <div className="text-[10px] sm:text-base leading-tight text-cyan-400 font-bold">{format(date, 'EEE', { locale: he })}</div>
+                          <div className="text-[7px] sm:text-xs text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
+                        </th>
+                      )
+                    })}
                   </tr>
                 </thead>
                 <tbody>
@@ -232,6 +277,13 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                           {weekDates.map((date, dateIdx) => {
                             const dateStr = format(date, 'yyyy-MM-dd')
                             const cellKey = `${dateStr}-${timeRange}`
+                            const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
+                            const isEvenColumn = dateIdx % 2 === 1 // Alternate coloring
+                            const columnBgClass = isToday 
+                              ? 'bg-cyan-500/10' 
+                              : isEvenColumn 
+                                ? 'bg-dark-bg/50' 
+                                : 'bg-dark-bg'
                             
                             // Skip if this cell was already rendered by a rowSpan
                             if (skipCells.has(cellKey)) {
@@ -253,7 +305,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   <td 
                                     key={dateIdx} 
                                     rowSpan={2}
-                                    className="p-0.5 sm:p-2 border border-dark-border align-middle bg-orange-500/10"
+                                    className={`p-0.5 sm:p-2 border border-dark-border align-middle bg-orange-500/10 ${columnBgClass}`}
                                   >
                                     <div className="text-center py-1 sm:py-4 text-orange-400 font-medium text-[8px] sm:text-sm leading-tight">
                                       סגור לגיל השלישי<br/>
@@ -284,7 +336,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 <td 
                                   key={dateIdx} 
                                   rowSpan={rowSpan}
-                                  className={`p-0 border border-dark-border relative bg-blue-500/15 overflow-hidden ${
+                                  className={`p-0 border border-dark-border relative overflow-hidden ${columnBgClass} ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
@@ -331,11 +383,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                               )
                             }
                             
-                            // Empty cell - clickable for registration (dark background)
+                            // Empty cell - clickable for registration
                             return (
                               <td 
                                 key={dateIdx} 
-                                className={`p-0.5 border border-dark-border align-top bg-dark-bg ${
+                                className={`p-0.5 border border-dark-border align-top ${columnBgClass} ${
                                   onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
                                 }`}
                                 onClick={() => onCellClick && onCellClick(date, timeRange)}

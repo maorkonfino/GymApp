@@ -68,3 +68,4 @@ git push
 Railway ו-Vercel יעדכנו את האפליקציה אוטומטית! 🎉
 
 
+

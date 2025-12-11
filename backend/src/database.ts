@@ -63,6 +63,23 @@ db.exec(`
     role TEXT DEFAULT 'kibbutz',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
+
+  CREATE TABLE IF NOT EXISTS workout_folders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT NOT NULL,
+    name TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS archived_workout_plans (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_email TEXT NOT NULL,
+    name TEXT NOT NULL,
+    plan_content TEXT NOT NULL,
+    folder_id INTEGER,
+    archived_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (folder_id) REFERENCES workout_folders(id) ON DELETE SET NULL
+  );
 `);
 
 // Add password column to existing users table if it doesn't exist
@@ -389,6 +406,77 @@ export const updateUser = (id: number, updates: Partial<Omit<User, 'id' | 'creat
   values.push(id);
   const stmt = db.prepare(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`);
   return stmt.run(...values);
+};
+
+// Workout Archive & Folders
+export interface WorkoutFolder {
+  id?: number;
+  user_email: string;
+  name: string;
+  created_at?: string;
+}
+
+export interface ArchivedWorkoutPlan {
+  id?: number;
+  user_email: string;
+  name: string;
+  plan_content: string;
+  folder_id?: number;
+  archived_at?: string;
+}
+
+export const createWorkoutFolder = (folder: Omit<WorkoutFolder, 'id' | 'created_at'>) => {
+  const stmt = db.prepare(`
+    INSERT INTO workout_folders (user_email, name)
+    VALUES (?, ?)
+  `);
+  const result = stmt.run(folder.user_email, folder.name);
+  return result.lastInsertRowid;
+};
+
+export const getWorkoutFolders = (userEmail: string): WorkoutFolder[] => {
+  const stmt = db.prepare('SELECT * FROM workout_folders WHERE user_email = ? ORDER BY created_at DESC');
+  return stmt.all(userEmail) as WorkoutFolder[];
+};
+
+export const archiveWorkoutPlan = (plan: Omit<ArchivedWorkoutPlan, 'id' | 'archived_at'>) => {
+  const stmt = db.prepare(`
+    INSERT INTO archived_workout_plans (user_email, name, plan_content, folder_id)
+    VALUES (?, ?, ?, ?)
+  `);
+  const result = stmt.run(plan.user_email, plan.name, plan.plan_content, plan.folder_id || null);
+  return result.lastInsertRowid;
+};
+
+export const getArchivedWorkoutPlans = (userEmail: string): ArchivedWorkoutPlan[] => {
+  const stmt = db.prepare('SELECT * FROM archived_workout_plans WHERE user_email = ? ORDER BY archived_at DESC');
+  return stmt.all(userEmail) as ArchivedWorkoutPlan[];
+};
+
+export const getArchivedWorkoutPlansByFolder = (userEmail: string, folderId: number): ArchivedWorkoutPlan[] => {
+  const stmt = db.prepare('SELECT * FROM archived_workout_plans WHERE user_email = ? AND folder_id = ? ORDER BY archived_at DESC');
+  return stmt.all(userEmail, folderId) as ArchivedWorkoutPlan[];
+};
+
+export const getUnorganizedArchivedPlans = (userEmail: string): ArchivedWorkoutPlan[] => {
+  const stmt = db.prepare('SELECT * FROM archived_workout_plans WHERE user_email = ? AND folder_id IS NULL ORDER BY archived_at DESC');
+  return stmt.all(userEmail) as ArchivedWorkoutPlan[];
+};
+
+export const unarchiveWorkoutPlan = (id: number) => {
+  const stmt = db.prepare('DELETE FROM archived_workout_plans WHERE id = ?');
+  return stmt.run(id);
+};
+
+export const movePlanToFolder = (planId: number, folderId: number | null) => {
+  const stmt = db.prepare('UPDATE archived_workout_plans SET folder_id = ? WHERE id = ?');
+  return stmt.run(folderId, planId);
+};
+
+export const deleteWorkoutFolder = (id: number) => {
+  // This will set folder_id to NULL for all plans in this folder (due to ON DELETE SET NULL)
+  const stmt = db.prepare('DELETE FROM workout_folders WHERE id = ?');
+  return stmt.run(id);
 };
 
 export default db;
