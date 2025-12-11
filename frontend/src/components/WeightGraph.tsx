@@ -133,21 +133,21 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
       {/* Graph with X and Y axes */}
       <div className="relative h-80 bg-dark-hover rounded-lg p-8">
         {/* Y Axis Label - LEFT SIDE */}
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 rotate-90 text-xs font-bold text-cyan-400">
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-90 text-xs font-bold text-cyan-400 whitespace-nowrap">
           משקל (KG)
         </div>
         
         {/* Y Axis - LEFT SIDE */}
-        <div className="absolute left-12 top-8 bottom-16 w-0.5 bg-gray-600"></div>
+        <div className="absolute left-16 top-8 bottom-16 w-0.5 bg-gray-600"></div>
         
         {/* Y Axis Ticks - LEFT SIDE */}
-        <div className="absolute left-12 top-8 bottom-16 flex flex-col justify-between">
+        <div className="absolute left-16 top-8 bottom-16 flex flex-col justify-between">
           {[...Array(5)].map((_, i) => {
             const value = maxWeight - (range * i / 4)
             return (
               <div key={i} className="relative">
                 <div className="absolute left-0 top-0 w-2 h-0.5 bg-gray-600"></div>
-                <div className="absolute left-4 top-0 -translate-y-1/2 text-[10px] text-gray-400">
+                <div className="absolute left-4 top-0 -translate-y-1/2 text-[10px] text-gray-400 whitespace-nowrap">
                   {value.toFixed(1)}
                 </div>
               </div>
@@ -156,10 +156,10 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         </div>
         
         {/* X Axis */}
-        <div className="absolute left-12 right-8 bottom-16 h-0.5 bg-gray-600"></div>
+        <div className="absolute left-16 right-8 bottom-16 h-0.5 bg-gray-600"></div>
         
         {/* Graph Area - Data Points with Lines */}
-        <div className="absolute left-14 right-10 top-10 bottom-20">
+        <div className="absolute left-16 right-8 top-8 bottom-16">
           {/* SVG overlay for lines */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none">
             {displayData.map((entry, idx) => {
@@ -213,7 +213,7 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         </div>
         
         {/* X Axis Labels */}
-        <div className="absolute left-14 right-10 bottom-10 flex justify-around">
+        <div className="absolute left-16 right-8 bottom-10 flex justify-around">
           {displayData.map((entry, idx) => (
             <div key={idx} className="flex-1 text-center">
               <div className="text-[9px] text-gray-400 font-medium">
@@ -226,7 +226,7 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         </div>
         
         {/* X Axis Label */}
-        <div className="absolute left-0 right-0 bottom-2 text-center text-xs font-bold text-cyan-400">
+        <div className="absolute left-16 right-8 bottom-2 text-center text-xs font-bold text-cyan-400">
           תאריך
         </div>
       </div>

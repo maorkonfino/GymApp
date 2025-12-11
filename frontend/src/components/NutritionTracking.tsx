@@ -368,26 +368,28 @@ const NutritionTracking: React.FC = () => {
       Object.keys(weeks).sort((a, b) => new Date(b).getTime() - new Date(a).getTime()).forEach(weekKey => {
         const weekEntries = weeks[weekKey].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         
-        // Calculate weekly average
-        const validWeights = weekEntries
-          .filter(e => e && e.morningWeight && parseFloat(e.morningWeight) > 0)
-          .map(e => parseFloat(e.morningWeight))
-        
-        const avgWeight = validWeights.length > 0
-          ? (validWeights.reduce((a, b) => a + b, 0) / validWeights.length).toFixed(1)
-          : ''
+        // Calculate weekly averages for all fields
+        const calculateAverage = (field: keyof DailyEntry) => {
+          const validValues = weekEntries
+            .filter(e => e && e[field] && parseFloat(e[field] as string) > 0)
+            .map(e => parseFloat(e[field] as string))
+          
+          return validValues.length > 0
+            ? (validValues.reduce((a, b) => a + b, 0) / validValues.length).toFixed(1)
+            : ''
+        }
 
         const isCollapsed = collapsedWeeks.has(weekKey)
 
         // Add average row at the top of the week
         result.push({
           date: weekKey,
-          morningWeight: avgWeight,
-          calories: '',
-          protein: '',
-          fat: '',
-          carbs: '',
-          steps: '',
+          morningWeight: calculateAverage('morningWeight'),
+          calories: calculateAverage('calories'),
+          protein: calculateAverage('protein'),
+          fat: calculateAverage('fat'),
+          carbs: calculateAverage('carbs'),
+          steps: calculateAverage('steps'),
           notes: `ממוצע שבועי`,
           isAverage: true,
           weekKey: weekKey
@@ -743,12 +745,10 @@ const NutritionTracking: React.FC = () => {
                         </td>
                         {(['morningWeight', 'calories', 'protein', 'fat', 'carbs', 'steps'] as const).map((field) => (
                           <td key={field} className="p-0.5 text-center">
-                            {isAverage && field === 'morningWeight' ? (
+                            {isAverage ? (
                               <div className="text-cyan-300 font-bold text-[8px] sm:text-[10px]">
-                                {entry[field]}
+                                {entry[field] || '-'}
                               </div>
-                            ) : isAverage ? (
-                              <div className="text-gray-600">-</div>
                             ) : actualIndex >= 0 ? (
                               <input
                                 type="number"
