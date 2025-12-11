@@ -336,7 +336,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 <td 
                                   key={dateIdx} 
                                   rowSpan={rowSpan}
-                                  className={`p-0 border border-dark-border relative overflow-hidden ${columnBgClass} ${
+                                  className={`p-0 border border-dark-border relative overflow-hidden bg-blue-500/15 ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
