@@ -751,8 +751,7 @@ const NutritionTracking: React.FC = () => {
                               </div>
                             ) : actualIndex >= 0 ? (
                               <input
-                                type="number"
-                                step="0.1"
+                                type="text"
                                 value={entry[field]}
                                 onChange={(e) => updateEntry(actualIndex, field, e.target.value)}
                                 className="w-9 sm:w-11 bg-dark-hover border border-dark-border rounded px-0.5 py-0.5 text-white text-center text-[7px] sm:text-[9px] font-bold focus:outline-none focus:ring-1 focus:ring-green-500"
