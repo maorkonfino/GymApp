@@ -456,7 +456,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                         <p className={`font-medium ${
                           user?.email === reg.email ? 'text-cyan-300' : 'text-blue-300'
                         }`}>
-                          {getFirstName(reg.name)}
+                          {reg.name}
                         </p>
                         <div className="flex items-center gap-2">
                           <div className={`text-sm font-medium ${
@@ -547,7 +547,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       <p className={`font-medium ${
                         user?.email === reg.email ? 'text-cyan-300' : 'text-blue-300'
                       }`}>
-                        {getFirstName(reg.name)}
+                        {reg.name}
                       </p>
                       <div className="flex items-center gap-2">
                         <div className={`text-sm font-medium ${
