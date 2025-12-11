@@ -34,7 +34,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const [selectedCellRegistrations, setSelectedCellRegistrations] = useState<Registration[]>([])
   const { user, isAdmin } = useAuth()
 
-  // Get week dates - smart rolling week logic
+  // Get week dates - start from Sunday of current week
   const getWeekDates = () => {
     const today = new Date()
     today.setHours(0, 0, 0, 0) // Reset to start of day
@@ -43,35 +43,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     // Calculate the Sunday of current week
     const currentSunday = addDays(today, -currentDayOfWeek)
     
-    const dates = []
-    
-    for (let dayOfWeek = 0; dayOfWeek <= 6; dayOfWeek++) {
-      let date = addDays(currentSunday, dayOfWeek)
-      
-      if (currentDayOfWeek >= 3 && currentDayOfWeek <= 5) {
-        // Today is Wed (3), Thu (4), or Fri (5)
-        // Days 0,1,2 (Sun,Mon,Tue) -> next week
-        if (dayOfWeek <= 2) {
-          date = addDays(date, 7)
-        }
-      } else if (currentDayOfWeek === 6) {
-        // Today is Saturday (6)
-        // Days 0,1,2,3,4,5 (Sun-Fri) -> next week
-        if (dayOfWeek <= 5) {
-          date = addDays(date, 7)
-        }
-      } else {
-        // Today is Sun (0), Mon (1), or Tue (2)
-        // Saturday (6) -> next week
-        if (dayOfWeek === 6) {
-          date = addDays(date, 7)
-        }
-      }
-      
-      dates.push(date)
-    }
-    
-    return dates
+    // Generate 7 days starting from Sunday
+    return Array.from({ length: 7 }, (_, i) => addDays(currentSunday, i))
   }
 
   const weekDates = getWeekDates()
