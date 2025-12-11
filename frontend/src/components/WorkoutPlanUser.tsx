@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { Dumbbell, ChevronDown, ChevronUp, Archive, FolderOpen } from 'lucide-react'
+import { Dumbbell, ChevronDown, ChevronUp, Archive, FolderOpen, StickyNote, X } from 'lucide-react'
 import BeastLogo from './BeastLogo'
 import api from '../api'
 
@@ -10,6 +10,12 @@ interface WeeklyTracking {
     weight: string
     reps: string
   }[]
+}
+
+interface WeekNotes {
+  [workoutIndex: number]: {
+    [week: number]: string
+  }
 }
 
 interface Exercise {
@@ -50,6 +56,9 @@ const WorkoutPlanUser: React.FC = () => {
     const saved = localStorage.getItem('workout-collapsed-weeks')
     return saved ? new Set(JSON.parse(saved)) : new Set()
   })
+  const [weekNotes, setWeekNotes] = useState<WeekNotes>({})
+  const [notesModalOpen, setNotesModalOpen] = useState(false)
+  const [currentNotesKey, setCurrentNotesKey] = useState<{workoutIdx: number, week: number} | null>(null)
 
   useEffect(() => {
     fetchWorkoutPlan()
@@ -79,7 +88,12 @@ const WorkoutPlanUser: React.FC = () => {
       if (response.data && response.data.plan_content) {
         const parsedPlan = JSON.parse(response.data.plan_content)
         if (parsedPlan.workouts && parsedPlan.workouts.length > 0) {
-          setPlan(parsedPlan)
+          // Extract notes if they exist
+          const { weekNotes: savedNotes, ...planData } = parsedPlan
+          setPlan(planData)
+          if (savedNotes) {
+            setWeekNotes(savedNotes)
+          }
           setHasWorkoutPlan(true)
         } else {
           setHasWorkoutPlan(false)
@@ -201,9 +215,13 @@ const WorkoutPlanUser: React.FC = () => {
 
     setIsSaving(true)
     try {
+      const dataToSave = {
+        ...plan,
+        weekNotes
+      }
       await api.post('/workout-plans', {
         userId: user.id,
-        planData: JSON.stringify(plan),
+        planData: JSON.stringify(dataToSave),
         created_by: user.email
       })
       console.log('✅ תוכנית אימון נשמרה אוטומטית')
@@ -212,6 +230,24 @@ const WorkoutPlanUser: React.FC = () => {
     } finally {
       setTimeout(() => setIsSaving(false), 1000)
     }
+  }
+
+  const openNotesModal = (workoutIdx: number, week: number) => {
+    setCurrentNotesKey({ workoutIdx, week })
+    setNotesModalOpen(true)
+  }
+
+  const saveNotes = (notes: string) => {
+    if (!currentNotesKey) return
+    
+    setWeekNotes(prev => ({
+      ...prev,
+      [currentNotesKey.workoutIdx]: {
+        ...prev[currentNotesKey.workoutIdx],
+        [currentNotesKey.week]: notes
+      }
+    }))
+    setNotesModalOpen(false)
   }
 
   // Auto-save when plan changes (with debounce)
@@ -428,20 +464,29 @@ const WorkoutPlanUser: React.FC = () => {
                                     <div key={setIdx} className="flex gap-0.5">
                                       <input
                                         type="text"
-                                        placeholder="R"
+                                        placeholder="Rep"
                                         value={data.reps}
                                         onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'reps', e.target.value)}
-                                        className="w-5 sm:w-6 bg-dark-hover text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
+                                        className="w-7 sm:w-8 bg-dark-hover text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
                                         maxLength={3}
                                       />
                                       <input
-                                        type="number"
-                                        step="0.1"
+                                        type="text"
                                         placeholder="KG"
                                         value={data.weight}
                                         onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'weight', e.target.value)}
                                         className="w-7 sm:w-8 bg-dark-hover text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5 border border-dark-border"
+                                        maxLength={5}
                                       />
+                                      {setIdx === 0 && (
+                                        <button
+                                          onClick={() => openNotesModal(workoutIndex, week)}
+                                          className="w-3 h-3 flex items-center justify-center bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 rounded text-[6px] transition-all"
+                                          title="הערות"
+                                        >
+                                          <StickyNote className="w-2 h-2" />
+                                        </button>
+                                      )}
                                     </div>
                                   )
                                 })}
@@ -460,6 +505,49 @@ const WorkoutPlanUser: React.FC = () => {
         </div>
         )
       })}
+
+      {/* Notes Modal */}
+      {notesModalOpen && currentNotesKey && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
+          <div className="bg-dark-card border border-dark-border rounded-2xl max-w-md w-full">
+            <div className="p-4 border-b border-dark-border flex items-center justify-between">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <StickyNote className="w-5 h-5 text-yellow-400" />
+                הערות - שבוע {currentNotesKey.week}
+              </h3>
+              <button
+                onClick={() => setNotesModalOpen(false)}
+                className="p-2 hover:bg-dark-hover rounded-lg transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-400" />
+              </button>
+            </div>
+            <div className="p-4">
+              <textarea
+                value={weekNotes[currentNotesKey.workoutIdx]?.[currentNotesKey.week] || ''}
+                onChange={(e) => {
+                  const newNotes = e.target.value
+                  setWeekNotes(prev => ({
+                    ...prev,
+                    [currentNotesKey.workoutIdx]: {
+                      ...prev[currentNotesKey.workoutIdx],
+                      [currentNotesKey.week]: newNotes
+                    }
+                  }))
+                }}
+                placeholder="הכנס הערות לשבוע זה..."
+                className="w-full h-40 bg-dark-hover border border-dark-border rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-none"
+              />
+              <button
+                onClick={() => saveNotes(weekNotes[currentNotesKey.workoutIdx]?.[currentNotesKey.week] || '')}
+                className="w-full mt-3 px-4 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 rounded-lg transition-all font-semibold"
+              >
+                שמור
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-center">
         {isSaving ? (

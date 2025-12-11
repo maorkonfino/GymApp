@@ -132,9 +132,19 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const dateStr = format(date, 'yyyy-MM-dd')
     const [rangeStart] = timeRange.split('-')
     
-    return registrations.filter((reg) => 
+    const filtered = registrations.filter((reg) => 
       reg.date === dateStr && reg.startTime === rangeStart
     )
+    
+    // Sort: admins first, then others
+    return filtered.sort((a, b) => {
+      const aIsAdmin = user?.email && a.email === user.email && isAdmin
+      const bIsAdmin = user?.email && b.email === user.email && isAdmin
+      
+      if (aIsAdmin && !bIsAdmin) return -1
+      if (!aIsAdmin && bIsAdmin) return 1
+      return 0
+    })
   }
 
   // Calculate how many rows a registration should span
@@ -285,7 +295,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                             const columnBgClass = isToday 
                               ? 'bg-cyan-500/10' 
                               : isEvenColumn 
-                                ? 'bg-dark-bg/50' 
+                                ? 'bg-dark-hover/30' 
                                 : 'bg-dark-bg'
                             
                             // Skip if this cell was already rendered by a rowSpan
@@ -339,7 +349,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 <td 
                                   key={dateIdx} 
                                   rowSpan={rowSpan}
-                                  className={`p-0 border border-dark-border relative overflow-hidden bg-blue-500/15 ${
+                                  className={`p-0 border border-dark-border relative overflow-hidden bg-green-500/10 ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}

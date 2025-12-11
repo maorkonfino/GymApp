@@ -369,18 +369,19 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                                         <div key={setIdx} className="flex gap-0.5">
                                           <input
                                             type="text"
-                                            placeholder="R"
+                                            placeholder="Rep"
                                             value={data.reps}
                                             onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'reps', e.target.value)}
-                                            className="w-5 sm:w-6 bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
+                                            className="w-7 sm:w-8 bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
+                                            maxLength={3}
                                           />
                                           <input
-                                            type="number"
-                                            step="0.1"
+                                            type="text"
                                             placeholder="KG"
                                             value={data.weight}
                                             onChange={(e) => updateWeeklyData(workoutIndex, exerciseIndex, week, setIdx, 'weight', e.target.value)}
                                             className="w-7 sm:w-8 bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
+                                            maxLength={5}
                                           />
                                         </div>
                                       )
