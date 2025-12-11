@@ -235,7 +235,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         <table className="w-full text-sm border-collapse table-fixed">
           <thead className="bg-dark-card shadow-lg sticky top-0 z-20">
                   <tr>
-                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[70px] sm:w-[100px]">
+                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[55px] sm:w-[80px]">
                       <span className="text-white">שעות</span>
                       <span className="text-gray-500 mx-0.5">|</span>
                       <span className="text-cyan-400">יום</span>
@@ -272,7 +272,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       return (
                         <tr key={timeIdx} className="hover:bg-dark-hover/30">
                           {/* Time Range Cell */}
-                          <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[70px] sm:w-[100px]">
+                          <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[55px] sm:w-[80px]">
                             {timeRange}
                           </td>
                           
@@ -373,7 +373,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                             <X className="w-3 h-3" />
                                           </button>
                                         )}
-                                        <div className="font-bold leading-tight mb-0.5 text-[8px]">
+                                        <div className="font-bold leading-tight mb-0.5 text-[6px]">
                                           <div className="truncate">{getFirstName(reg.name)}</div>
                                         </div>
                                         <div className="opacity-80 leading-tight text-[5px]">
