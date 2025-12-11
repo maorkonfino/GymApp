@@ -351,29 +351,29 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   </button>
                                   
                                   {/* Display registrations vertically (one below the other) */}
-                                  <div className="flex flex-col gap-0.5 h-full p-0.5 overflow-hidden">
+                                  <div className="flex flex-col gap-1 h-full p-1">
                                     {regsStartingHere.slice(0, 2).map((reg) => (
                                       <div
                                         key={reg.id}
-                                        className={`relative px-1 py-0.5 rounded flex flex-col justify-center text-center group min-h-[24px] overflow-hidden ${
+                                        className={`relative px-2 py-1 rounded flex flex-col justify-center text-center group min-h-[30px] ${
                                           user?.email === reg.email
-                                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                                            : 'bg-blue-500/20 text-blue-300'
+                                            ? 'bg-cyan-500/30 text-cyan-200 border border-cyan-500/50'
+                                            : 'bg-blue-500/30 text-blue-200 border border-blue-500/30'
                                         }`}
                                       >
                                         {canDeleteRegistration(reg) && (
                                           <button
                                             onClick={(e) => handleDeleteRegistration(reg.id!, e)}
-                                            className="absolute -top-0.5 -right-0.5 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                                            className="absolute -top-1 -right-1 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
                                             title="מחק רישום"
                                           >
-                                            <X className="w-2 h-2" />
+                                            <X className="w-3 h-3" />
                                           </button>
                                         )}
-                                        <div className="font-bold leading-tight mb-0.5 overflow-hidden text-[7px]">
+                                        <div className="font-bold leading-tight mb-0.5 text-[10px] sm:text-xs">
                                           <div className="truncate">{getFirstName(reg.name)}</div>
                                         </div>
-                                        <div className="opacity-60 leading-tight text-[5px]">
+                                        <div className="opacity-80 leading-tight text-[8px] sm:text-[10px]">
                                           <div className="truncate">{reg.startTime}-{reg.endTime}</div>
                                         </div>
                                       </div>
