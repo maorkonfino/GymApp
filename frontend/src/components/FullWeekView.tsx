@@ -79,6 +79,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const timeSlotRanges = generateTimeSlotRanges()
 
   // Week navigation disabled - only showing current 7 days
+  
+  // Log displayed dates once
+  useEffect(() => {
+    console.log('📅 Week dates in table:', weekDates.map(d => format(d, 'yyyy-MM-dd')))
+  }, [])
 
   useEffect(() => {
     if (isOpen || embedded) {
@@ -119,7 +124,12 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         createdAt: reg.created_at || reg.createdAt
       })) : []
       
+      console.log(`📊 Fetched ${transformedData.length} registrations`)
+      console.log('📋 Registrations:', transformedData.map(r => `${r.name} - ${r.date} ${r.startTime}`))
+      
       setRegistrations(transformedData)
+      
+      console.log('✅ setRegistrations completed')
     } catch (error) {
       console.error('❌ Error fetching registrations:', error)
       setRegistrations([])
@@ -136,6 +146,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const filtered = registrations.filter((reg) =>
       reg.date === dateStr && reg.startTime === rangeStart
     )
+    
+    // Log when we find registrations
+    if (filtered.length > 0) {
+      console.log(`✅ Found ${filtered.length} regs for ${dateStr} at ${rangeStart}:`, filtered.map(r => r.name))
+    }
     
     // Sort: admins first, then others
     return filtered.sort((a, b) => {
