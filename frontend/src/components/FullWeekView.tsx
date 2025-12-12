@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { format, addDays } from 'date-fns'
 import { he } from 'date-fns/locale'
 import { Registration } from '../types'
@@ -75,12 +75,13 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     return dates
   }
 
-  const weekDates = getWeekDates()
-  const timeSlotRanges = generateTimeSlotRanges()
+  const weekDates = useMemo(() => getWeekDates(), [])
+  const timeSlotRanges = useMemo(() => generateTimeSlotRanges(), [])
 
   // Week navigation disabled - only showing current 7 days
 
   useEffect(() => {
+    console.log('🔄 useEffect triggered - fetching registrations', { isOpen, embedded })
     if (isOpen || embedded) {
       fetchRegistrations()
     }
@@ -125,8 +126,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       })) : []
       
       console.log('✅ Transformed registrations:', transformedData)
+      console.log('💾 About to setRegistrations with', transformedData.length, 'items')
       
       setRegistrations(transformedData)
+      
+      console.log('✔️ setRegistrations called')
     } catch (error) {
       console.error('❌ Error fetching registrations:', error)
       setRegistrations([])
@@ -140,14 +144,18 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const dateStr = format(date, 'yyyy-MM-dd')
     const [rangeStart] = timeRange.split('-')
     
+    // Debug specific cases - log registrations state
+    if (dateStr === '2025-12-14' && rangeStart === '16:00') {
+      console.log('🔍 Looking for registrations at 2025-12-14 16:00')
+      console.log('📊 Total registrations in state:', registrations.length)
+      console.log('📊 All registrations:', registrations.map(r => ({ date: r.date, time: r.startTime, name: r.name })))
+    }
+    
     const filtered = registrations.filter((reg) =>
       reg.date === dateStr && reg.startTime === rangeStart
     )
     
-    // Debug specific cases
     if (dateStr === '2025-12-14' && rangeStart === '16:00') {
-      console.log('🔍 Looking for registrations at 2025-12-14 16:00')
-      console.log('📊 All registrations:', registrations.map(r => ({ date: r.date, time: r.startTime, name: r.name })))
       console.log('✅ Filtered results:', filtered.map(r => ({ date: r.date, time: r.startTime, name: r.name })))
     }
     
