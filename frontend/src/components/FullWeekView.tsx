@@ -140,24 +140,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const dateStr = format(date, 'yyyy-MM-dd')
     const [rangeStart] = timeRange.split('-')
     
-    const filtered = registrations.filter((reg) => {
-      const dateMatch = reg.date === dateStr
-      const timeMatch = reg.startTime === rangeStart
-      
-      // Log ALL checks for 14.12
-      if (dateStr === '2025-12-14') {
-        console.log(`🔍 ${dateStr} at ${rangeStart}: Checking ${reg.name} (date: ${reg.date}, time: ${reg.startTime}) - Match: ${dateMatch && timeMatch}`)
-      }
-      
-      return dateMatch && timeMatch
-    })
-    
-    // Log results for 14.12
-    if (dateStr === '2025-12-14' && filtered.length > 0) {
-      console.log(`✅ Found ${filtered.length} registrations for ${dateStr} at ${rangeStart}:`, filtered.map(r => r.name))
-    } else if (dateStr === '2025-12-14') {
-      console.log(`❌ No registrations found for ${dateStr} at ${rangeStart}`)
-    }
+    const filtered = registrations.filter((reg) =>
+      reg.date === dateStr && reg.startTime === rangeStart
+    )
     
     // Sort: admins first, then others
     return filtered.sort((a, b) => {
@@ -388,7 +373,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   
                                   {/* Display registrations vertically (one below the other) */}
                                   <div className="flex flex-col gap-1 h-full p-1">
-                                    {regsStartingHere.slice(0, 2).map((reg) => (
+                                    {regsStartingHere.slice(0, 4).map((reg) => (
                                       <div
                                         key={reg.id}
                                         className={`relative px-2 py-1 rounded flex flex-col justify-center text-center group min-h-[30px] ${
