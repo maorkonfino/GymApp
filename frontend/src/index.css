@@ -119,28 +119,6 @@ input::-ms-clear {
   display: none !important;
 }
 
-/* iOS PWA - Prevent zoom on input focus */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-textarea,
-select {
-  font-size: 16px !important;
-  /* Prevent iOS from zooming on input focus */
-  touch-action: manipulation;
-  -webkit-user-select: text;
-  user-select: text;
-}
-
-/* Ensure inputs are always interactive in iOS PWA */
-input, textarea, select {
-  -webkit-appearance: none;
-  appearance: none;
-  pointer-events: auto;
-  cursor: text;
-}
-
 /* Auto-deploy test */
 /* Test auto-deploy Sun Dec  7 14:23:24 IST 2025 */
 /* Auto-deploy fixed! */
