@@ -169,13 +169,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                     שם פרטי
                   </label>
                   <div className="relative">
-                    <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                    <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="text"
                       name="first-name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      onTouchStart={(e) => e.currentTarget.focus()}
                       className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="הכנס שם פרטי"
                       autoComplete="given-name"
@@ -190,13 +189,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                     שם משפחה
                   </label>
                   <div className="relative">
-                    <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                    <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="text"
                       name="last-name"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                      onTouchStart={(e) => e.currentTarget.focus()}
                       className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="הכנס שם משפחה"
                       autoComplete="family-name"
@@ -211,13 +209,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                     מספר נייד
                   </label>
                   <div className="relative">
-                    <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                    <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="tel"
                       name="mobile"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      onTouchStart={(e) => e.currentTarget.focus()}
                       className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="הכנס מספר נייד"
                       autoComplete="tel"
@@ -234,13 +231,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                 אימייל
               </label>
               <div className="relative">
-                <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  onTouchStart={(e) => e.currentTarget.focus()}
                   className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 text-right"
                   placeholder="example@email.com"
                   autoComplete="email"
@@ -256,13 +252,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                 סיסמה
               </label>
               <div className="relative">
-                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  onTouchStart={(e) => e.currentTarget.focus()}
                   className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   placeholder="••••••••"
                   autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
@@ -282,13 +277,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                   אימות סיסמה
                 </label>
                 <div className="relative">
-                  <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                  <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="password"
                     name="confirm-password"
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                    onTouchStart={(e) => e.currentTarget.focus()}
                     className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                     placeholder="••••••••"
                     autoComplete="new-password"
