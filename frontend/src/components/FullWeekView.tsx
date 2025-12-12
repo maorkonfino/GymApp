@@ -94,6 +94,14 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     }
   }, [embedded, weekOffset])
 
+  // Debug: Track registrations state changes
+  useEffect(() => {
+    console.log('🔔 Registrations state changed:', registrations.length, 'items')
+    if (registrations.length > 0) {
+      console.log('📋 Sample registration:', registrations[0])
+    }
+  }, [registrations])
+
   const fetchRegistrations = async () => {
     setLoading(true)
     try {
