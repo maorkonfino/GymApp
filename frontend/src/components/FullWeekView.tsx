@@ -143,6 +143,17 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const dateStr = format(date, 'yyyy-MM-dd')
     const [rangeStart] = timeRange.split('-')
     
+    // Debug 16:00 specifically
+    if (dateStr === '2025-12-14' && rangeStart === '16:00') {
+      console.log('🔍 Checking 2025-12-14 at 16:00')
+      console.log('All regs:', registrations.map(r => ({ date: r.date, time: r.startTime, name: r.name })))
+      registrations.forEach(reg => {
+        const dateMatch = reg.date === dateStr
+        const timeMatch = reg.startTime === rangeStart
+        console.log(`  ${reg.name}: date=${reg.date} (match: ${dateMatch}), time=${reg.startTime} (match: ${timeMatch})`)
+      })
+    }
+    
     const filtered = registrations.filter((reg) =>
       reg.date === dateStr && reg.startTime === rangeStart
     )
