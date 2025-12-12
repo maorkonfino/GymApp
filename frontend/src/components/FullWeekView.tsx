@@ -335,12 +335,39 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                             
                             // Render cells for registrations starting here
                             if (regsStartingHere.length > 0) {
-                              // Don't use rowSpan - display each registration in its start time slot only
-                              // This prevents hiding other registrations that start at later times
+                              const firstReg = regsStartingHere[0]
+                              let rowSpan = calculateRowSpan(firstReg)
+                              
+                              // Check if there are other registrations in the slots this would span
+                              // If yes, don't use rowSpan to avoid hiding them
+                              let hasConflicts = false
+                              for (let i = 1; i < rowSpan; i++) {
+                                const futureTimeRange = timeSlotRanges[timeIdx + i]
+                                if (futureTimeRange) {
+                                  const futureRegs = getRegistrationsStartingInSlot(date, futureTimeRange)
+                                  if (futureRegs.length > 0) {
+                                    hasConflicts = true
+                                    break
+                                  }
+                                }
+                              }
+                              
+                              // If conflicts, use rowSpan=1, otherwise mark future cells as skip
+                              if (!hasConflicts && rowSpan > 1) {
+                                for (let i = 1; i < rowSpan; i++) {
+                                  const futureTimeRange = timeSlotRanges[timeIdx + i]
+                                  if (futureTimeRange) {
+                                    skipCells.add(`${dateStr}-${futureTimeRange}`)
+                                  }
+                                }
+                              } else {
+                                rowSpan = 1
+                              }
                               
                               return (
                                 <td 
-                                  key={dateIdx} 
+                                  key={dateIdx}
+                                  rowSpan={rowSpan}
                                   className={`p-0 border border-dark-border relative overflow-hidden bg-green-500/15 ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
                                   }`}
