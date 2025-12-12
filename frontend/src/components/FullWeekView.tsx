@@ -144,6 +144,13 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       reg.date === dateStr && reg.startTime === rangeStart
     )
     
+    // Debug specific cases
+    if (dateStr === '2025-12-14' && rangeStart === '16:00') {
+      console.log('🔍 Looking for registrations at 2025-12-14 16:00')
+      console.log('📊 All registrations:', registrations.map(r => ({ date: r.date, time: r.startTime, name: r.name })))
+      console.log('✅ Filtered results:', filtered.map(r => ({ date: r.date, time: r.startTime, name: r.name })))
+    }
+    
     // Sort: admins first, then others
     return filtered.sort((a, b) => {
       const aIsAdmin = user?.email && a.email === user.email && isAdmin
