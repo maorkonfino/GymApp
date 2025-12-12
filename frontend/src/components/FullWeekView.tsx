@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { format, addDays } from 'date-fns'
 import { he } from 'date-fns/locale'
 import { Registration } from '../types'
@@ -75,13 +75,12 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     return dates
   }
 
-  const weekDates = useMemo(() => getWeekDates(), [])
-  const timeSlotRanges = useMemo(() => generateTimeSlotRanges(), [])
+  const weekDates = getWeekDates()
+  const timeSlotRanges = generateTimeSlotRanges()
 
   // Week navigation disabled - only showing current 7 days
 
   useEffect(() => {
-    console.log('🔄 useEffect triggered - fetching registrations', { isOpen, embedded })
     if (isOpen || embedded) {
       fetchRegistrations()
     }
@@ -93,14 +92,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [embedded, weekOffset])
-
-  // Debug: Track registrations state changes
-  useEffect(() => {
-    console.log('🔔 Registrations state changed:', registrations.length, 'items')
-    if (registrations.length > 0) {
-      console.log('📋 Sample registration:', registrations[0])
-    }
-  }, [registrations])
 
   const fetchRegistrations = async () => {
     setLoading(true)
@@ -114,12 +105,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       const startDate = format(minDate, 'yyyy-MM-dd')
       const endDate = format(maxDate, 'yyyy-MM-dd')
       
-      console.log('📅 Fetching registrations for date range:', startDate, 'to', endDate)
-      console.log('🗓️ Week dates being displayed:', weekDates.map(d => format(d, 'yyyy-MM-dd')))
-      
       const data = await registrationAPI.getByRange(startDate, endDate)
-      
-      console.log('📊 Raw data from server:', data)
       
       // Transform data
       const transformedData = Array.isArray(data) ? data.map((reg: any) => ({
@@ -133,12 +119,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         createdAt: reg.created_at || reg.createdAt
       })) : []
       
-      console.log('✅ Transformed registrations:', transformedData)
-      console.log('💾 About to setRegistrations with', transformedData.length, 'items')
-      
       setRegistrations(transformedData)
-      
-      console.log('✔️ setRegistrations called')
     } catch (error) {
       console.error('❌ Error fetching registrations:', error)
       setRegistrations([])
@@ -152,20 +133,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const dateStr = format(date, 'yyyy-MM-dd')
     const [rangeStart] = timeRange.split('-')
     
-    // Debug specific cases - log registrations state
-    if (dateStr === '2025-12-14' && rangeStart === '16:00') {
-      console.log('🔍 Looking for registrations at 2025-12-14 16:00')
-      console.log('📊 Total registrations in state:', registrations.length)
-      console.log('📊 All registrations:', registrations.map(r => ({ date: r.date, time: r.startTime, name: r.name })))
-    }
-    
     const filtered = registrations.filter((reg) =>
       reg.date === dateStr && reg.startTime === rangeStart
     )
-    
-    if (dateStr === '2025-12-14' && rangeStart === '16:00') {
-      console.log('✅ Filtered results:', filtered.map(r => ({ date: r.date, time: r.startTime, name: r.name })))
-    }
     
     // Sort: admins first, then others
     return filtered.sort((a, b) => {
