@@ -79,11 +79,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const timeSlotRanges = generateTimeSlotRanges()
 
   // Week navigation disabled - only showing current 7 days
-  
-  // Log displayed dates once
-  useEffect(() => {
-    console.log('📅 Week dates in table:', weekDates.map(d => format(d, 'yyyy-MM-dd')))
-  }, [])
 
   useEffect(() => {
     if (isOpen || embedded) {
@@ -124,12 +119,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         createdAt: reg.created_at || reg.createdAt
       })) : []
       
-      console.log(`📊 Fetched ${transformedData.length} registrations`)
-      console.log('📋 Registrations:', transformedData.map(r => `${r.name} - ${r.date} ${r.startTime}`))
-      
       setRegistrations(transformedData)
-      
-      console.log('✅ setRegistrations completed')
     } catch (error) {
       console.error('❌ Error fetching registrations:', error)
       setRegistrations([])
@@ -143,25 +133,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const dateStr = format(date, 'yyyy-MM-dd')
     const [rangeStart] = timeRange.split('-')
     
-    // Debug 16:00 specifically
-    if (dateStr === '2025-12-14' && rangeStart === '16:00') {
-      console.log('🔍 Checking 2025-12-14 at 16:00')
-      console.log('All regs:', registrations.map(r => ({ date: r.date, time: r.startTime, name: r.name })))
-      registrations.forEach(reg => {
-        const dateMatch = reg.date === dateStr
-        const timeMatch = reg.startTime === rangeStart
-        console.log(`  ${reg.name}: date=${reg.date} (match: ${dateMatch}), time=${reg.startTime} (match: ${timeMatch})`)
-      })
-    }
-    
     const filtered = registrations.filter((reg) =>
       reg.date === dateStr && reg.startTime === rangeStart
     )
-    
-    // Log when we find registrations
-    if (filtered.length > 0) {
-      console.log(`✅ Found ${filtered.length} regs for ${dateStr} at ${rangeStart}:`, filtered.map(r => r.name))
-    }
     
     // Sort: admins first, then others
     return filtered.sort((a, b) => {
@@ -361,22 +335,13 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                             
                             // Render cells for registrations starting here
                             if (regsStartingHere.length > 0) {
-                              const firstReg = regsStartingHere[0]
-                              const rowSpan = calculateRowSpan(firstReg)
-                              
-                              // Mark future cells as rendered
-                              for (let i = 1; i < rowSpan; i++) {
-                                const futureTimeRange = timeSlotRanges[timeIdx + i]
-                                if (futureTimeRange) {
-                                  skipCells.add(`${dateStr}-${futureTimeRange}`)
-                                }
-                              }
+                              // Don't use rowSpan - display each registration in its start time slot only
+                              // This prevents hiding other registrations that start at later times
                               
                               return (
                                 <td 
                                   key={dateIdx} 
-                                  rowSpan={rowSpan}
-                                  className={`p-0 border border-dark-border relative overflow-hidden bg-green-500/10 ${
+                                  className={`p-0 border border-dark-border relative overflow-hidden bg-green-500/15 ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
                                   }`}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
