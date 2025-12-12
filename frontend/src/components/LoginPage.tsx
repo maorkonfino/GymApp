@@ -156,9 +156,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
-            {/* Hidden fields to confuse password managers */}
-            <input type="text" name="fakeUsername" style={{ display: 'none' }} tabIndex={-1} />
-            <input type="password" name="fakePassword" style={{ display: 'none' }} tabIndex={-1} />
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-300 text-sm text-center">
                 {error}
@@ -180,9 +177,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="הכנס שם פרטי"
-                      autoComplete="off"
-                      data-lpignore="true"
-                      data-form-type="other"
+                      autoComplete="given-name"
+                      inputMode="text"
                       required
                     />
                   </div>
@@ -201,9 +197,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                       className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="הכנס שם משפחה"
-                      autoComplete="off"
-                      data-lpignore="true"
-                      data-form-type="other"
+                      autoComplete="family-name"
+                      inputMode="text"
                       required
                     />
                   </div>
@@ -222,9 +217,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                       placeholder="הכנס מספר נייד"
-                      autoComplete="off"
-                      data-lpignore="true"
-                      data-form-type="other"
+                      autoComplete="tel"
+                      inputMode="tel"
                       required
                     />
                   </div>
@@ -245,9 +239,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 text-right"
                   placeholder="example@email.com"
-                  autoComplete="off"
-                  data-lpignore="true"
-                  data-form-type="other"
+                  autoComplete="email"
+                  inputMode="email"
+                  enterKeyHint="next"
                   required
                 />
               </div>
@@ -266,9 +260,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                   placeholder="••••••••"
-                  autoComplete="off"
-                  data-lpignore="true"
-                  data-form-type="other"
+                  autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
+                  enterKeyHint={mode === 'register' ? 'next' : 'done'}
                   required
                   minLength={6}
                 />
@@ -292,9 +285,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin, onRegister, onForgotPass
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                     className="w-full bg-dark-hover border border-dark-border rounded-lg pl-4 pr-11 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                     placeholder="••••••••"
-                    autoComplete="off"
-                    data-lpignore="true"
-                    data-form-type="other"
+                    autoComplete="new-password"
+                    enterKeyHint="done"
                     required
                     minLength={6}
                   />
