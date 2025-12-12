@@ -96,7 +96,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const fetchRegistrations = async () => {
     setLoading(true)
     try {
-      // Find min and max dates (since weekDates might not be in order due to rolling week logic)
+      // For smart rolling week, we need to fetch data for potentially 2 separate weeks
+      // So we get min and max dates which covers both weeks
       const allDates = weekDates.map(d => d.getTime())
       const minDate = new Date(Math.min(...allDates))
       const maxDate = new Date(Math.max(...allDates))
@@ -104,7 +105,12 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       const startDate = format(minDate, 'yyyy-MM-dd')
       const endDate = format(maxDate, 'yyyy-MM-dd')
       
+      console.log('📅 Fetching registrations for date range:', startDate, 'to', endDate)
+      console.log('🗓️ Week dates being displayed:', weekDates.map(d => format(d, 'yyyy-MM-dd')))
+      
       const data = await registrationAPI.getByRange(startDate, endDate)
+      
+      console.log('📊 Raw data from server:', data)
       
       // Transform data
       const transformedData = Array.isArray(data) ? data.map((reg: any) => ({
@@ -117,6 +123,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         endTime: reg.end_time || reg.endTime,
         createdAt: reg.created_at || reg.createdAt
       })) : []
+      
+      console.log('✅ Transformed registrations:', transformedData)
       
       setRegistrations(transformedData)
     } catch (error) {
