@@ -140,20 +140,13 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const dateStr = format(date, 'yyyy-MM-dd')
     const [rangeStart] = timeRange.split('-')
     
-    // Debug: Log what we're looking for
     const filtered = registrations.filter((reg) => {
       const dateMatch = reg.date === dateStr
       const timeMatch = reg.startTime === rangeStart
       
-      // Log for 14.12 specifically to debug
-      if (dateStr === '2025-12-14' && rangeStart === '07:00') {
-        console.log(`🔍 Checking reg for ${dateStr} at ${rangeStart}:`, {
-          regDate: reg.date,
-          regStartTime: reg.startTime,
-          dateMatch,
-          timeMatch,
-          regName: reg.name
-        })
+      // Log ALL checks for 14.12
+      if (dateStr === '2025-12-14') {
+        console.log(`🔍 ${dateStr} at ${rangeStart}: Checking ${reg.name} (date: ${reg.date}, time: ${reg.startTime}) - Match: ${dateMatch && timeMatch}`)
       }
       
       return dateMatch && timeMatch
@@ -161,7 +154,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     
     // Log results for 14.12
     if (dateStr === '2025-12-14' && filtered.length > 0) {
-      console.log(`✅ Found ${filtered.length} registrations for ${dateStr} at ${rangeStart}`)
+      console.log(`✅ Found ${filtered.length} registrations for ${dateStr} at ${rangeStart}:`, filtered.map(r => r.name))
+    } else if (dateStr === '2025-12-14') {
+      console.log(`❌ No registrations found for ${dateStr} at ${rangeStart}`)
     }
     
     // Sort: admins first, then others
