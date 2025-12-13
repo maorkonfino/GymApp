@@ -209,16 +209,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     })
   }
   
-  // Get registrations that start exactly in this time slot
-  const getRegistrationsStartingInSlot = (date: Date, timeRange: string): Registration[] => {
-    const dateStr = format(date, 'yyyy-MM-dd')
-    const [rangeStart] = timeRange.split('-')
-    
-    return registrations.filter((reg) =>
-      reg.date === dateStr && reg.startTime === rangeStart
-    )
-  }
-
   // Get first name only
   const getFirstName = (fullName: string): string => {
     return fullName.split(' ')[0]
