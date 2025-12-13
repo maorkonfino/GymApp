@@ -142,18 +142,19 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     const slotStartMin = timeToMinutes(slotStart)
     const slotEndMin = timeToMinutes(slotEnd)
     
-    // Find all registrations that overlap with this slot
+    // Find all registrations that overlap with this slot (even partially)
     const overlapping = registrations.filter((reg) => {
       if (reg.date !== dateStr) return false
       
       const regStartMin = timeToMinutes(reg.startTime)
       const regEndMin = timeToMinutes(reg.endTime)
       
-      // Check if there's any overlap
+      // Check if there's ANY overlap (even partial)
+      // True if: registration starts before slot ends AND registration ends after slot starts
       return regStartMin < slotEndMin && regEndMin > slotStartMin
     })
     
-    // Sort: admins first, then by start time
+    // Sort: admins first, then by registration order (createdAt)
     return overlapping.sort((a, b) => {
       const aIsAdmin = user?.email && a.email === user.email && isAdmin
       const bIsAdmin = user?.email && b.email === user.email && isAdmin
@@ -161,7 +162,12 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       if (aIsAdmin && !bIsAdmin) return -1
       if (!aIsAdmin && bIsAdmin) return 1
       
-      // Both admin or both not admin - sort by start time
+      // Both admin or both not admin - sort by registration time (who registered first)
+      if (a.createdAt && b.createdAt) {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      }
+      
+      // Fallback to start time if createdAt is missing
       return a.startTime.localeCompare(b.startTime)
     })
   }
