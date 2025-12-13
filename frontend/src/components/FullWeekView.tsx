@@ -128,33 +128,52 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     }
   }
 
-  // Get registrations that start in this time slot
-  const getRegistrationsStartingInSlot = (date: Date, timeRange: string): Registration[] => {
+  // Get all registrations that overlap with this time slot (even partially)
+  const getOverlappingRegistrations = (date: Date, timeRange: string): Registration[] => {
     const dateStr = format(date, 'yyyy-MM-dd')
-    const [rangeStart] = timeRange.split('-')
+    const [slotStart, slotEnd] = timeRange.split('-')
     
-    const filtered = registrations.filter((reg) =>
-      reg.date === dateStr && reg.startTime === rangeStart
-    )
+    // Convert time to minutes for comparison
+    const timeToMinutes = (time: string) => {
+      const [h, m] = time.split(':').map(Number)
+      return h * 60 + m
+    }
     
-    // Sort: admins first, then others
-    return filtered.sort((a, b) => {
+    const slotStartMin = timeToMinutes(slotStart)
+    const slotEndMin = timeToMinutes(slotEnd)
+    
+    // Find all registrations that overlap with this slot
+    const overlapping = registrations.filter((reg) => {
+      if (reg.date !== dateStr) return false
+      
+      const regStartMin = timeToMinutes(reg.startTime)
+      const regEndMin = timeToMinutes(reg.endTime)
+      
+      // Check if there's any overlap
+      return regStartMin < slotEndMin && regEndMin > slotStartMin
+    })
+    
+    // Sort: admins first, then by start time
+    return overlapping.sort((a, b) => {
       const aIsAdmin = user?.email && a.email === user.email && isAdmin
       const bIsAdmin = user?.email && b.email === user.email && isAdmin
       
       if (aIsAdmin && !bIsAdmin) return -1
       if (!aIsAdmin && bIsAdmin) return 1
-      return 0
+      
+      // Both admin or both not admin - sort by start time
+      return a.startTime.localeCompare(b.startTime)
     })
   }
-
-  // Calculate how many rows a registration should span
-  const calculateRowSpan = (reg: Registration): number => {
-    const startMinutes = parseInt(reg.startTime.split(':')[0]) * 60 + parseInt(reg.startTime.split(':')[1])
-    const endMinutes = parseInt(reg.endTime.split(':')[0]) * 60 + parseInt(reg.endTime.split(':')[1])
-    const durationMinutes = endMinutes - startMinutes
+  
+  // Get registrations that start exactly in this time slot
+  const getRegistrationsStartingInSlot = (date: Date, timeRange: string): Registration[] => {
+    const dateStr = format(date, 'yyyy-MM-dd')
+    const [rangeStart] = timeRange.split('-')
     
-    return Math.ceil(durationMinutes / 30)
+    return registrations.filter((reg) =>
+      reg.date === dateStr && reg.startTime === rangeStart
+    )
   }
 
   // Get first name only
@@ -330,38 +349,39 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                               }
                             }
                             
-                            // Get registrations that START in this time slot
-                            const regsStartingHere = getRegistrationsStartingInSlot(date, timeRange)
+                            // Get all registrations that overlap with this time slot
+                            const overlappingRegs = getOverlappingRegistrations(date, timeRange)
                             
-                            // Render cells for registrations starting here
-                            if (regsStartingHere.length > 0) {
-                              const firstReg = regsStartingHere[0]
-                              let rowSpan = calculateRowSpan(firstReg)
+                            // Only render if there are registrations AND this is the first slot they appear in
+                            if (overlappingRegs.length > 0) {
+                              // Check if this is the earliest time slot for these registrations
+                              const timeToMinutes = (time: string) => {
+                                const [h, m] = time.split(':').map(Number)
+                                return h * 60 + m
+                              }
                               
-                              // Check if there are other registrations in the slots this would span
-                              // If yes, don't use rowSpan to avoid hiding them
-                              let hasConflicts = false
+                              const [slotStart] = timeRange.split('-')
+                              const slotStartMin = timeToMinutes(slotStart)
+                              
+                              // Find the earliest start time among overlapping registrations
+                              const earliestStartMin = Math.min(...overlappingRegs.map(r => timeToMinutes(r.startTime)))
+                              
+                              // Only render if this slot matches the earliest start time
+                              if (slotStartMin !== earliestStartMin) {
+                                return null // Skip this cell, will be rendered from earlier slot
+                              }
+                              
+                              // Calculate rowSpan: from earliest start to latest end
+                              const latestEndMin = Math.max(...overlappingRegs.map(r => timeToMinutes(r.endTime)))
+                              const durationMinutes = latestEndMin - earliestStartMin
+                              const rowSpan = Math.ceil(durationMinutes / 30)
+                              
+                              // Mark future cells as skip
                               for (let i = 1; i < rowSpan; i++) {
                                 const futureTimeRange = timeSlotRanges[timeIdx + i]
                                 if (futureTimeRange) {
-                                  const futureRegs = getRegistrationsStartingInSlot(date, futureTimeRange)
-                                  if (futureRegs.length > 0) {
-                                    hasConflicts = true
-                                    break
-                                  }
+                                  skipCells.add(`${dateStr}-${futureTimeRange}`)
                                 }
-                              }
-                              
-                              // If conflicts, use rowSpan=1, otherwise mark future cells as skip
-                              if (!hasConflicts && rowSpan > 1) {
-                                for (let i = 1; i < rowSpan; i++) {
-                                  const futureTimeRange = timeSlotRanges[timeIdx + i]
-                                  if (futureTimeRange) {
-                                    skipCells.add(`${dateStr}-${futureTimeRange}`)
-                                  }
-                                }
-                              } else {
-                                rowSpan = 1
                               }
                               
                               return (
@@ -375,16 +395,16 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 >
                                   {/* "More" button - top left corner - always shown */}
                                   <button
-                                    onClick={(e) => handleShowAllClick(regsStartingHere, e)}
+                                    onClick={(e) => handleShowAllClick(overlappingRegs, e)}
                                     className="absolute top-0 left-0 z-10 text-white hover:text-cyan-400 transition-colors p-0.5"
-                                    title={`צפה בכל הרשומים (${regsStartingHere.length})`}
+                                    title={`צפה בכל הרשומים (${overlappingRegs.length})`}
                                   >
                                     <ChevronDown className="w-2 h-2" />
                                   </button>
                                   
                                   {/* Display registrations vertically (one below the other) */}
                                   <div className="flex flex-col gap-1 h-full p-1">
-                                    {regsStartingHere.slice(0, 4).map((reg) => (
+                                    {overlappingRegs.slice(0, 3).map((reg) => (
                                       <div
                                         key={reg.id}
                                         className={`relative px-2 py-1 rounded flex flex-col justify-center text-center group min-h-[30px] ${
