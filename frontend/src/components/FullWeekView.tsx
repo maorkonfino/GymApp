@@ -128,46 +128,83 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     }
   }
 
-  // Get all registrations that overlap with this time slot (even partially)
-  const getOverlappingRegistrations = (date: Date, timeRange: string): Registration[] => {
-    const dateStr = format(date, 'yyyy-MM-dd')
-    const [slotStart, slotEnd] = timeRange.split('-')
+  // Helper: Check if two registrations overlap
+  const doRegistrationsOverlap = (reg1: Registration, reg2: Registration): boolean => {
+    if (reg1.date !== reg2.date) return false
     
-    // Convert time to minutes for comparison
     const timeToMinutes = (time: string) => {
       const [h, m] = time.split(':').map(Number)
       return h * 60 + m
     }
     
+    const r1Start = timeToMinutes(reg1.startTime)
+    const r1End = timeToMinutes(reg1.endTime)
+    const r2Start = timeToMinutes(reg2.startTime)
+    const r2End = timeToMinutes(reg2.endTime)
+    
+    // Check if there's ANY overlap
+    return r1Start < r2End && r1End > r2Start
+  }
+  
+  // Get all registrations that are connected through overlaps (transitively)
+  const getConnectedRegistrations = (date: Date, timeRange: string): Registration[] => {
+    const dateStr = format(date, 'yyyy-MM-dd')
+    
+    // Get all registrations for this date
+    const dateRegs = registrations.filter(reg => reg.date === dateStr)
+    
+    if (dateRegs.length === 0) return []
+    
+    // Find which registrations overlap with the current time slot
+    const timeToMinutes = (time: string) => {
+      const [h, m] = time.split(':').map(Number)
+      return h * 60 + m
+    }
+    
+    const [slotStart, slotEnd] = timeRange.split('-')
     const slotStartMin = timeToMinutes(slotStart)
     const slotEndMin = timeToMinutes(slotEnd)
     
-    // Find all registrations that overlap with this slot (even partially)
-    const overlapping = registrations.filter((reg) => {
-      if (reg.date !== dateStr) return false
-      
+    // Find registrations that touch this slot
+    const slotRegs = dateRegs.filter((reg) => {
       const regStartMin = timeToMinutes(reg.startTime)
       const regEndMin = timeToMinutes(reg.endTime)
-      
-      // Check if there's ANY overlap (even partial)
-      // True if: registration starts before slot ends AND registration ends after slot starts
       return regStartMin < slotEndMin && regEndMin > slotStartMin
     })
     
-    // Sort: admins first, then by registration order (createdAt)
-    return overlapping.sort((a, b) => {
+    if (slotRegs.length === 0) return []
+    
+    // Now find ALL registrations connected to these through overlaps (BFS)
+    const connected = new Set<Registration>(slotRegs)
+    const queue = [...slotRegs]
+    
+    while (queue.length > 0) {
+      const current = queue.shift()!
+      
+      // Find all registrations that overlap with current
+      for (const reg of dateRegs) {
+        if (!connected.has(reg) && doRegistrationsOverlap(current, reg)) {
+          connected.add(reg)
+          queue.push(reg)
+        }
+      }
+    }
+    
+    // Convert to array and sort
+    const result = Array.from(connected)
+    
+    return result.sort((a, b) => {
       const aIsAdmin = user?.email && a.email === user.email && isAdmin
       const bIsAdmin = user?.email && b.email === user.email && isAdmin
       
       if (aIsAdmin && !bIsAdmin) return -1
       if (!aIsAdmin && bIsAdmin) return 1
       
-      // Both admin or both not admin - sort by registration time (who registered first)
+      // Sort by registration order
       if (a.createdAt && b.createdAt) {
         return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       }
       
-      // Fallback to start time if createdAt is missing
       return a.startTime.localeCompare(b.startTime)
     })
   }
@@ -355,8 +392,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                               }
                             }
                             
-                            // Get all registrations that overlap with this time slot
-                            const overlappingRegs = getOverlappingRegistrations(date, timeRange)
+                            // Get all registrations that are connected through overlaps
+                            const overlappingRegs = getConnectedRegistrations(date, timeRange)
                             
                             // Only render if there are registrations AND this is the first slot they appear in
                             if (overlappingRegs.length > 0) {
