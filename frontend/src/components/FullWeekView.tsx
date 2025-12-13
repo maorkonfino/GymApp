@@ -197,14 +197,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       const aIsAdmin = user?.email && a.email === user.email && isAdmin
       const bIsAdmin = user?.email && b.email === user.email && isAdmin
       
+      // Admin always first
       if (aIsAdmin && !bIsAdmin) return -1
       if (!aIsAdmin && bIsAdmin) return 1
       
-      // Sort by registration order
-      if (a.createdAt && b.createdAt) {
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      }
-      
+      // Then by start time (who starts earlier)
       return a.startTime.localeCompare(b.startTime)
     })
   }
