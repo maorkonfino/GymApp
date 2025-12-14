@@ -286,7 +286,7 @@ const WorkoutPlanUser: React.FC = () => {
   if (!hasWorkoutPlan && !isAdmin) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-250px)] text-center p-4">
-        <BeastLogo size="large" showScratch={true} showWolf={true} showSlogan={true} />
+        <img src="/header-logo.svg" alt="BEAST Logo" className="w-64 sm:w-80 h-auto mb-6" />
         <h2 className="text-3xl font-bold text-white mt-6 mb-4">תוכנית האימון שלי</h2>
         <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6 max-w-md w-full">
           <p className="text-red-300 text-lg font-medium mb-2">⚠️ אין לך תוכנית אימון</p>

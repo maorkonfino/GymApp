@@ -118,7 +118,7 @@ const WorkoutPlan: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-[600px]">
         <div className="max-w-md text-center space-y-6 animate-fade-in">
-          <BeastLogo size="large" showScratch={true} showWolf={true} showSlogan={true} />
+          <img src="/header-logo.svg" alt="BEAST Logo" className="w-64 sm:w-80 h-auto mx-auto" />
           
           <div className="space-y-2">
             <h2 className="text-3xl font-bold text-white">תוכנית האימון שלי</h2>
