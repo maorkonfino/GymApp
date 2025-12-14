@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { format, addDays } from 'date-fns'
 import { he } from 'date-fns/locale'
 import { Registration } from '../types'
@@ -661,25 +661,19 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       const dateStr = format(workoutDate, 'd.M.yyyy')
                       const isEditing = editingWorkoutId === reg.id
                       
-                      // Get available times for this date
-                      const availableTimes = useMemo(() => {
-                        return getAvailableTimeOptions(workoutDate, user?.role)
-                      }, [workoutDate, user?.role])
+                      // Get available times for this date (can't use useMemo inside map)
+                      const availableTimes = getAvailableTimeOptions(workoutDate, user?.role)
                       
                       // Extract unique hours and minutes from available times
-                      const hours = useMemo(() => {
-                        const hoursSet = new Set(availableTimes.map(time => time.split(':')[0]))
-                        return Array.from(hoursSet).sort()
-                      }, [availableTimes])
+                      const hoursSet = new Set(availableTimes.map(time => time.split(':')[0]))
+                      const hours = Array.from(hoursSet).sort()
                       
-                      const minutes = useMemo(() => {
-                        const minutesSet = new Set(availableTimes.map(time => time.split(':')[1]))
-                        return Array.from(minutesSet).sort()
-                      }, [availableTimes])
+                      const minutesSet = new Set(availableTimes.map(time => time.split(':')[1]))
+                      const minutes = Array.from(minutesSet).sort()
                       
                       // Parse time into hours and minutes
-                      const [startHour, startMinute] = editFormData.startTime.split(':')
-                      const [endHour, endMinute] = editFormData.endTime.split(':')
+                      const [startHour, startMinute] = editFormData.startTime ? editFormData.startTime.split(':') : ['06', '00']
+                      const [endHour, endMinute] = editFormData.endTime ? editFormData.endTime.split(':') : ['07', '00']
                       
                       const handleStartTimeChange = (hour: string, minute: string) => {
                         setEditFormData(prev => ({ ...prev, startTime: `${hour}:${minute}` }))
