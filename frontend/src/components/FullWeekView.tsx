@@ -664,77 +664,79 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       return (
                         <div
                           key={reg.id}
-                          className="p-4 rounded-lg bg-cyan-500/20 border border-cyan-500/40 relative group"
+                          className="p-3 rounded-lg bg-cyan-500/30 border border-cyan-500/50 relative group"
                         >
                           {isEditing ? (
                             // Edit Mode
                             <div className="space-y-3">
-                              <div className="grid grid-cols-1 gap-3">
+                              {/* Display date (not editable) */}
+                              <div className="flex items-center gap-2 pb-2 border-b border-cyan-500/30">
+                                <span className="text-cyan-400 font-bold text-sm">{dayName}</span>
+                                <span className="text-gray-400 text-sm">{dateStr}</span>
+                              </div>
+                              
+                              {/* Edit times only */}
+                              <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                  <label className="block text-cyan-400 text-sm mb-1">תאריך</label>
+                                  <label className="block text-cyan-400 text-xs mb-1">שעת התחלה</label>
                                   <input
-                                    type="date"
-                                    value={editFormData.date}
-                                    onChange={(e) => setEditFormData(prev => ({ ...prev, date: e.target.value }))}
-                                    className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    type="time"
+                                    value={editFormData.startTime}
+                                    onChange={(e) => setEditFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                                    className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm"
                                   />
                                 </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div>
-                                    <label className="block text-cyan-400 text-sm mb-1">שעת התחלה</label>
-                                    <input
-                                      type="time"
-                                      value={editFormData.startTime}
-                                      onChange={(e) => setEditFormData(prev => ({ ...prev, startTime: e.target.value }))}
-                                      className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="block text-cyan-400 text-sm mb-1">שעת סיום</label>
-                                    <input
-                                      type="time"
-                                      value={editFormData.endTime}
-                                      onChange={(e) => setEditFormData(prev => ({ ...prev, endTime: e.target.value }))}
-                                      className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                    />
-                                  </div>
+                                <div>
+                                  <label className="block text-cyan-400 text-xs mb-1">שעת סיום</label>
+                                  <input
+                                    type="time"
+                                    value={editFormData.endTime}
+                                    onChange={(e) => setEditFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                                    className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm"
+                                  />
                                 </div>
                               </div>
-                              <div className="flex gap-2 justify-end">
+                              
+                              <div className="flex gap-2 justify-end pt-2">
                                 <button
                                   onClick={() => handleCancelEdit()}
-                                  className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                                  className="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors text-sm"
                                 >
                                   ביטול
                                 </button>
                                 <button
                                   onClick={() => handleSaveWorkout(reg.id!)}
-                                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors flex items-center gap-2"
+                                  className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors flex items-center gap-1 text-sm"
                                 >
-                                  <Save className="w-4 h-4" />
+                                  <Save className="w-3 h-3" />
                                   שמור
                                 </button>
                               </div>
                             </div>
                           ) : (
-                            // View Mode
+                            // View Mode - Similar to table cell
                             <div className="flex items-center justify-between">
                               <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="text-cyan-400 font-bold">{dayName}</span>
-                                  <span className="text-gray-400 text-sm">{dateStr}</span>
+                                {/* Date - like table header */}
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-cyan-400 font-bold text-sm">{dayName}</span>
+                                  <span className="text-gray-400 text-xs">{dateStr}</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-white font-medium">{reg.startTime} - {reg.endTime}</span>
+                                {/* Name and Time - like table cell */}
+                                <div className="text-cyan-100 font-bold text-sm mb-0.5">
+                                  {reg.name ? reg.name.split(' ')[0] : user?.displayName || 'אתה'}
+                                </div>
+                                <div className="text-cyan-200 text-xs opacity-90">
+                                  {reg.startTime} - {reg.endTime}
                                 </div>
                               </div>
-                              <div className="flex gap-2">
+                              <div className="flex gap-1">
                                 <button
                                   onClick={() => handleEditWorkout(reg)}
-                                  className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
-                                  title="ערוך אימון"
+                                  className="p-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors"
+                                  title="ערוך שעות"
                                 >
-                                  <Edit2 className="w-4 h-4" />
+                                  <Edit2 className="w-3.5 h-3.5" />
                                 </button>
                                 <button
                                   onClick={async (e) => {
@@ -758,10 +760,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                       alert('שגיאה במחיקת האימון')
                                     }
                                   }}
-                                  className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                                  className="p-1.5 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
                                   title="מחק אימון"
                                 >
-                                  <X className="w-4 h-4" />
+                                  <X className="w-3.5 h-3.5" />
                                 </button>
                               </div>
                             </div>
