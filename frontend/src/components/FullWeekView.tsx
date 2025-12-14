@@ -724,7 +724,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 </div>
                                 {/* Name and Time - like table cell */}
                                 <div className="text-cyan-100 font-bold text-sm mb-0.5">
-                                  {reg.name ? reg.name.split(' ')[0] : user?.displayName || 'אתה'}
+                                  {reg.name ? reg.name.split(' ')[0] : user?.name || 'אתה'}
                                 </div>
                                 <div className="text-cyan-200 text-xs opacity-90">
                                   {reg.startTime} - {reg.endTime}
