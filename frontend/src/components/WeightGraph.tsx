@@ -33,30 +33,35 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
   // Calculate averages
   const getAverages = () => {
     if (viewMode === 'daily') {
-      return validEntries
+      // Sort oldest to newest (left to right)
+      return [...validEntries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     } else if (viewMode === 'weekly') {
-      // Group by weeks
+      // Group by weeks and sort oldest to newest
       const weeks: { [key: number]: number[] } = {}
-      validEntries.forEach((entry, idx) => {
+      const sortedEntries = [...validEntries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      
+      sortedEntries.forEach((entry, idx) => {
         const weekNum = Math.floor(idx / 7)
         if (!weeks[weekNum]) weeks[weekNum] = []
         weeks[weekNum].push(entry.weight)
       })
-      return Object.values(weeks).map((weights, idx) => ({
-        date: `שבוע ${idx + 1}`,
-        weight: weights.reduce((a, b) => a + b, 0) / weights.length
+      
+      return Object.keys(weeks).sort((a, b) => Number(a) - Number(b)).map((weekNum) => ({
+        date: `שבוע ${Number(weekNum) + 1}`,
+        weight: weeks[Number(weekNum)].reduce((a, b) => a + b, 0) / weeks[Number(weekNum)].length
       }))
     } else {
-      // Monthly average
+      // Monthly average - sort oldest to newest
       const months: { [key: string]: number[] } = {}
       validEntries.forEach(entry => {
         const month = entry.date.substring(0, 7)
         if (!months[month]) months[month] = []
         months[month].push(entry.weight)
       })
-      return Object.entries(months).map(([month, weights]) => ({
+      
+      return Object.keys(months).sort().map((month) => ({
         date: month,
-        weight: weights.reduce((a, b) => a + b, 0) / weights.length
+        weight: months[month].reduce((a, b) => a + b, 0) / months[month].length
       }))
     }
   }
@@ -64,7 +69,11 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
   const displayData = getAverages()
   const maxWeight = Math.max(...displayData.map(e => e.weight))
   const minWeight = Math.min(...displayData.map(e => e.weight))
-  const range = maxWeight - minWeight || 1
+  
+  // Add padding of 10 to min and max
+  const yMin = minWeight - 10
+  const yMax = maxWeight + 10
+  const range = yMax - yMin
 
   return (
     <div className="bg-dark-card border border-dark-border rounded-xl p-6">
@@ -143,7 +152,7 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         {/* Y Axis Ticks - LEFT SIDE */}
         <div className="absolute left-16 top-8 bottom-16 flex flex-col justify-between">
           {[...Array(5)].map((_, i) => {
-            const value = maxWeight - (range * i / 4)
+            const value = yMax - (range * i / 4)
             return (
               <div key={i} className="relative">
                 <div className="absolute left-0 top-0 w-2 h-0.5 bg-gray-600"></div>
@@ -169,8 +178,8 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
               const totalPoints = displayData.length
               const x1 = ((idx - 1) / (totalPoints - 1)) * 100
               const x2 = (idx / (totalPoints - 1)) * 100
-              const y1 = 100 - ((prevEntry.weight - minWeight) / range) * 100
-              const y2 = 100 - ((entry.weight - minWeight) / range) * 100
+              const y1 = 100 - ((prevEntry.weight - yMin) / range) * 100
+              const y2 = 100 - ((entry.weight - yMin) / range) * 100
               
               return (
                 <line
@@ -190,7 +199,7 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
           {/* Data Points */}
           <div className="absolute inset-0 flex items-end justify-around">
             {displayData.map((entry, idx) => {
-              const height = ((entry.weight - minWeight) / range) * 100
+              const height = ((entry.weight - yMin) / range) * 100
               
               return (
                 <div key={idx} className="relative flex-1 h-full flex items-end justify-center">
@@ -214,15 +223,27 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         
         {/* X Axis Labels */}
         <div className="absolute left-16 right-8 bottom-10 flex justify-around">
-          {displayData.map((entry, idx) => (
-            <div key={idx} className="flex-1 text-center">
-              <div className="text-[9px] text-gray-400 font-medium">
-                {typeof entry.date === 'string' && entry.date.includes('שבוע') 
-                  ? entry.date 
-                  : entry.date.substring(8, 10) + '/' + entry.date.substring(5, 7)}
+          {displayData.map((entry, idx) => {
+            // Format date label based on view mode
+            let label = ''
+            if (viewMode === 'daily') {
+              label = entry.date.substring(8, 10) + '/' + entry.date.substring(5, 7)
+            } else if (viewMode === 'weekly') {
+              label = entry.date // Already formatted as "שבוע X"
+            } else {
+              // Monthly: show month/year
+              const [year, month] = entry.date.split('-')
+              label = `${month}/${year.substring(2)}`
+            }
+            
+            return (
+              <div key={idx} className="flex-1 text-center">
+                <div className="text-[9px] text-gray-400 font-medium">
+                  {label}
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
         
         {/* X Axis Label */}
