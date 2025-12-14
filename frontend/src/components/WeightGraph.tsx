@@ -33,10 +33,10 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
   // Calculate averages
   const getAverages = () => {
     if (viewMode === 'daily') {
-      // Sort oldest to newest (left to right)
-      return [...validEntries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      // Sort newest to oldest (left to right for RTL)
+      return [...validEntries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     } else if (viewMode === 'weekly') {
-      // Group by weeks and sort oldest to newest
+      // Group by weeks and sort newest to oldest
       const weeks: { [key: number]: number[] } = {}
       const sortedEntries = [...validEntries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       
@@ -46,12 +46,13 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         weeks[weekNum].push(entry.weight)
       })
       
-      return Object.keys(weeks).sort((a, b) => Number(a) - Number(b)).map((weekNum) => ({
+      // Reverse order for RTL display (newest first)
+      return Object.keys(weeks).sort((a, b) => Number(b) - Number(a)).map((weekNum) => ({
         date: `שבוע ${Number(weekNum) + 1}`,
         weight: weeks[Number(weekNum)].reduce((a, b) => a + b, 0) / weeks[Number(weekNum)].length
       }))
     } else {
-      // Monthly average - sort oldest to newest
+      // Monthly average - sort newest to oldest
       const months: { [key: string]: number[] } = {}
       validEntries.forEach(entry => {
         const month = entry.date.substring(0, 7)
@@ -59,7 +60,8 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         months[month].push(entry.weight)
       })
       
-      return Object.keys(months).sort().map((month) => ({
+      // Reverse sort for RTL display (newest first)
+      return Object.keys(months).sort().reverse().map((month) => ({
         date: month,
         weight: months[month].reduce((a, b) => a + b, 0) / months[month].length
       }))
