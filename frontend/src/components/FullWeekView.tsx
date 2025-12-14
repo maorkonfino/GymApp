@@ -32,6 +32,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const [loading, setLoading] = useState(false)
   const [showAllModal, setShowAllModal] = useState(false)
   const [selectedCellRegistrations, setSelectedCellRegistrations] = useState<Registration[]>([])
+  const [showMyWorkoutsModal, setShowMyWorkoutsModal] = useState(false)
+  const [myWorkouts, setMyWorkouts] = useState<Registration[]>([])
   const { user, isAdmin } = useAuth()
 
   // Get week dates - smart rolling week logic
@@ -245,6 +247,36 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     return false
   }
 
+  // Load all user's workouts
+  const loadMyWorkouts = async () => {
+    if (!user?.email) return
+    
+    try {
+      setLoading(true)
+      // Fetch all registrations for this user (no date range limit)
+      const data = await registrationAPI.getAll()
+      
+      // Filter only current user's registrations and sort by date
+      const userRegs = data
+        .filter(reg => reg.email === user.email)
+        .sort((a, b) => {
+          // Sort by date first
+          const dateCompare = a.date.localeCompare(b.date)
+          if (dateCompare !== 0) return dateCompare
+          // Then by start time
+          return a.startTime.localeCompare(b.startTime)
+        })
+      
+      setMyWorkouts(userRegs)
+      setShowMyWorkoutsModal(true)
+    } catch (error) {
+      console.error('Error loading user workouts:', error)
+      alert('שגיאה בטעינת האימונים')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   if (!isOpen && !embedded) return null
 
   const content = (
@@ -261,27 +293,16 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         </div>
       )}
       
-      {/* Week Display - No Navigation */}
+      {/* Week Display - My Workouts Button */}
       <div className="pb-2 sm:pb-4">
         <div className="flex items-center justify-center bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
-          <div className="text-center">
-            <div className="text-white font-medium text-xs sm:text-base">
-              {format(weekDates[0], 'd.M')} - {format(weekDates[6], 'd.M.yyyy')}
-            </div>
-            <div className="text-[10px] sm:text-sm text-cyan-400 mt-0.5 sm:mt-1">
-              {(() => {
-                const startMonth = format(weekDates[0], 'MMMM', { locale: he })
-                const endMonth = format(weekDates[6], 'MMMM', { locale: he })
-                const year = format(weekDates[6], 'yyyy')
-                
-                if (startMonth === endMonth) {
-                  return `${startMonth} ${year}`
-                } else {
-                  return `${startMonth} - ${endMonth} ${year}`
-                }
-              })()}
-            </div>
-          </div>
+          <button
+            onClick={loadMyWorkouts}
+            className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors font-medium text-sm sm:text-base"
+          >
+            <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
+            כל האימונים שלי
+          </button>
         </div>
       </div>
         
@@ -645,6 +666,91 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for showing all user's workouts */}
+      {showMyWorkoutsModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
+          <div className="bg-dark-card border border-dark-border rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-dark-border flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-cyan-400" />
+                <h3 className="text-lg font-bold text-white">כל האימונים שלי ({myWorkouts.length})</h3>
+              </div>
+              <button
+                onClick={() => setShowMyWorkoutsModal(false)}
+                className="p-2 hover:bg-dark-hover rounded-lg transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-400" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              {myWorkouts.length === 0 ? (
+                <div className="text-center py-8">
+                  <Calendar className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                  <p className="text-gray-400 text-lg">אין אימונים רשומים</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {myWorkouts.map((reg) => {
+                    const workoutDate = new Date(reg.date)
+                    const dayName = format(workoutDate, 'EEEE', { locale: he })
+                    const dateStr = format(workoutDate, 'd.M.yyyy')
+                    
+                    return (
+                      <div
+                        key={reg.id}
+                        className="p-4 rounded-lg bg-cyan-500/20 border border-cyan-500/40 relative group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-cyan-400 font-bold">{dayName}</span>
+                              <span className="text-gray-400 text-sm">{dateStr}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-white font-medium">{reg.startTime} - {reg.endTime}</span>
+                            </div>
+                          </div>
+                          <button
+                            onClick={async (e) => {
+                              e.stopPropagation()
+                              if (!window.confirm('האם אתה בטוח שברצונך למחוק את האימון?')) {
+                                return
+                              }
+                              
+                              try {
+                                await registrationAPI.delete(reg.id!)
+                                // Remove from list
+                                setMyWorkouts(prev => prev.filter(r => r.id !== reg.id))
+                                // Refresh main data
+                                await fetchRegistrations()
+                                if (onDataChange) {
+                                  onDataChange()
+                                }
+                                // Close modal if no workouts left
+                                if (myWorkouts.length <= 1) {
+                                  setShowMyWorkoutsModal(false)
+                                }
+                              } catch (error) {
+                                console.error('Error deleting workout:', error)
+                                alert('שגיאה במחיקת האימון')
+                              }
+                            }}
+                            className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                            title="מחק אימון"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>
