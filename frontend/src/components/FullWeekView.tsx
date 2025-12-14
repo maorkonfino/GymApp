@@ -438,7 +438,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                         key={reg.id}
                                         className={`relative px-2 py-1 rounded flex flex-col justify-center text-center group min-h-[30px] ${
                                           user?.email === reg.email
-                                            ? 'bg-yellow-500/30 text-yellow-100 border border-yellow-500/50'
+                                            ? 'bg-cyan-500/30 text-cyan-100 border border-cyan-500/50'
                                             : 'bg-green-500/20 text-green-200 border border-green-500/30'
                                         }`}
                                       >
@@ -516,19 +516,19 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       key={reg.id}
                       className={`p-3 rounded-lg relative group ${
                         user?.email === reg.email
-                          ? 'bg-yellow-500/20 border border-yellow-500/40'
+                          ? 'bg-cyan-500/20 border border-cyan-500/40'
                           : 'bg-green-500/15 border border-green-500/20'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <p className={`font-medium ${
-                          user?.email === reg.email ? 'text-yellow-300' : 'text-green-300'
+                          user?.email === reg.email ? 'text-cyan-300' : 'text-green-300'
                         }`}>
                           {reg.name}
                         </p>
                         <div className="flex items-center gap-2">
                           <div className={`text-sm font-medium ${
-                            user?.email === reg.email ? 'text-yellow-300' : 'text-green-300'
+                            user?.email === reg.email ? 'text-cyan-300' : 'text-green-300'
                           }`}>
                             {reg.startTime}-{reg.endTime}
                           </div>
