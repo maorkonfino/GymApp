@@ -57,6 +57,11 @@ export const registrationAPI = {
     return response.data.count
   },
 
+  // Update registration
+  update: async (id: number, date: string, startTime: string, endTime: string): Promise<void> => {
+    await api.put(`/registrations/${id}`, { date, startTime, endTime })
+  },
+
   // Delete registration
   delete: async (id: number): Promise<void> => {
     await api.delete(`/registrations/${id}`)

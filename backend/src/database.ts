@@ -164,6 +164,16 @@ export const deleteRegistration = (id: number) => {
   return stmt.run(id);
 };
 
+export const updateRegistration = (id: number, date: string, startTime: string, endTime: string) => {
+  const stmt = db.prepare(`
+    UPDATE registrations 
+    SET date = ?, start_time = ?, end_time = ?,
+        reminder_24h_sent = 0, reminder_4h_sent = 0
+    WHERE id = ?
+  `);
+  return stmt.run(date, startTime, endTime, id);
+};
+
 export const getRegistrationsByUser = (email: string): Registration[] => {
   const stmt = db.prepare(`
     SELECT * FROM registrations 

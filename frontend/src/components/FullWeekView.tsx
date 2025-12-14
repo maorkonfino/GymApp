@@ -4,7 +4,7 @@ import { he } from 'date-fns/locale'
 import { Registration } from '../types'
 import { registrationAPI } from '../api'
 import { useAuth } from '../contexts/AuthContext'
-import { X, Calendar, ChevronDown, Users } from 'lucide-react'
+import { X, Calendar, ChevronDown, Users, Edit2, Save } from 'lucide-react'
 import { generateTimeSlotRanges } from '../utils/timeSlotRanges'
 import { getRestrictionMessage } from '../utils/timeRestrictions'
 
@@ -34,6 +34,12 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const [selectedCellRegistrations, setSelectedCellRegistrations] = useState<Registration[]>([])
   const [showMyWorkoutsModal, setShowMyWorkoutsModal] = useState(false)
   const [myWorkouts, setMyWorkouts] = useState<Registration[]>([])
+  const [editingWorkoutId, setEditingWorkoutId] = useState<number | null>(null)
+  const [editFormData, setEditFormData] = useState<{date: string, startTime: string, endTime: string}>({
+    date: '',
+    startTime: '',
+    endTime: ''
+  })
   const { user, isAdmin } = useAuth()
 
   // Get week dates - smart rolling week logic
@@ -273,6 +279,53 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     } finally {
       setLoading(false)
     }
+  }
+
+  // Start editing a workout
+  const handleEditWorkout = (workout: Registration) => {
+    setEditingWorkoutId(workout.id!)
+    setEditFormData({
+      date: workout.date,
+      startTime: workout.startTime,
+      endTime: workout.endTime
+    })
+  }
+
+  // Save edited workout
+  const handleSaveWorkout = async (workoutId: number) => {
+    try {
+      await registrationAPI.update(
+        workoutId,
+        editFormData.date,
+        editFormData.startTime,
+        editFormData.endTime
+      )
+      
+      // Update local state
+      setMyWorkouts(prev => prev.map(w => 
+        w.id === workoutId 
+          ? { ...w, date: editFormData.date, startTime: editFormData.startTime, endTime: editFormData.endTime }
+          : w
+      ))
+      
+      // Reset editing state
+      setEditingWorkoutId(null)
+      
+      // Refresh main table
+      await fetchRegistrations()
+      if (onDataChange) {
+        onDataChange()
+      }
+    } catch (error) {
+      console.error('Error updating workout:', error)
+      alert('שגיאה בעדכון האימון')
+    }
+  }
+
+  // Cancel editing
+  const handleCancelEdit = () => {
+    setEditingWorkoutId(null)
+    setEditFormData({ date: '', startTime: '', endTime: '' })
   }
 
   if (!isOpen && !embedded) return null
@@ -697,53 +750,116 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                     const workoutDate = new Date(reg.date)
                     const dayName = format(workoutDate, 'EEEE', { locale: he })
                     const dateStr = format(workoutDate, 'd.M.yyyy')
+                    const isEditing = editingWorkoutId === reg.id
                     
                     return (
                       <div
                         key={reg.id}
                         className="p-4 rounded-lg bg-cyan-500/20 border border-cyan-500/40 relative group"
                       >
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="text-cyan-400 font-bold">{dayName}</span>
-                              <span className="text-gray-400 text-sm">{dateStr}</span>
+                        {isEditing ? (
+                          // Edit Mode
+                          <div className="space-y-3">
+                            <div className="grid grid-cols-1 gap-3">
+                              <div>
+                                <label className="block text-cyan-400 text-sm mb-1">תאריך</label>
+                                <input
+                                  type="date"
+                                  value={editFormData.date}
+                                  onChange={(e) => setEditFormData(prev => ({ ...prev, date: e.target.value }))}
+                                  className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                />
+                              </div>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <label className="block text-cyan-400 text-sm mb-1">שעת התחלה</label>
+                                  <input
+                                    type="time"
+                                    value={editFormData.startTime}
+                                    onChange={(e) => setEditFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                                    className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-cyan-400 text-sm mb-1">שעת סיום</label>
+                                  <input
+                                    type="time"
+                                    value={editFormData.endTime}
+                                    onChange={(e) => setEditFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                                    className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                  />
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-white font-medium">{reg.startTime} - {reg.endTime}</span>
+                            <div className="flex gap-2 justify-end">
+                              <button
+                                onClick={() => handleCancelEdit()}
+                                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                              >
+                                ביטול
+                              </button>
+                              <button
+                                onClick={() => handleSaveWorkout(reg.id!)}
+                                className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors flex items-center gap-2"
+                              >
+                                <Save className="w-4 h-4" />
+                                שמור
+                              </button>
                             </div>
                           </div>
-                          <button
-                            onClick={async (e) => {
-                              e.stopPropagation()
-                              if (!window.confirm('האם אתה בטוח שברצונך למחוק את האימון?')) {
-                                return
-                              }
-                              
-                              try {
-                                await registrationAPI.delete(reg.id!)
-                                // Remove from list
-                                setMyWorkouts(prev => prev.filter(r => r.id !== reg.id))
-                                // Refresh main data
-                                await fetchRegistrations()
-                                if (onDataChange) {
-                                  onDataChange()
-                                }
-                                // Close modal if no workouts left
-                                if (myWorkouts.length <= 1) {
-                                  setShowMyWorkoutsModal(false)
-                                }
-                              } catch (error) {
-                                console.error('Error deleting workout:', error)
-                                alert('שגיאה במחיקת האימון')
-                              }
-                            }}
-                            className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
-                            title="מחק אימון"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
+                        ) : (
+                          // View Mode
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-cyan-400 font-bold">{dayName}</span>
+                                <span className="text-gray-400 text-sm">{dateStr}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-white font-medium">{reg.startTime} - {reg.endTime}</span>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleEditWorkout(reg)}
+                                className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                                title="ערוך אימון"
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={async (e) => {
+                                  e.stopPropagation()
+                                  if (!window.confirm('האם אתה בטוח שברצונך למחוק את האימון?')) {
+                                    return
+                                  }
+                                  
+                                  try {
+                                    await registrationAPI.delete(reg.id!)
+                                    // Remove from list
+                                    setMyWorkouts(prev => prev.filter(r => r.id !== reg.id))
+                                    // Refresh main data
+                                    await fetchRegistrations()
+                                    if (onDataChange) {
+                                      onDataChange()
+                                    }
+                                    // Close modal if no workouts left
+                                    if (myWorkouts.length <= 1) {
+                                      setShowMyWorkoutsModal(false)
+                                    }
+                                  } catch (error) {
+                                    console.error('Error deleting workout:', error)
+                                    alert('שגיאה במחיקת האימון')
+                                  }
+                                }}
+                                className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                                title="מחק אימון"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )
                   })}
