@@ -59,13 +59,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         // Today is Saturday (6)
         // ALL days (Sun-Sat, 0-6) -> show next week
         date = addDays(date, 7)
-      } else {
-        // Today is Sun (0), Mon (1), or Tue (2)
-        // Saturday (6) -> show next week
-        if (dayOfWeek === 6) {
-          date = addDays(date, 7)
-        }
       }
+      // If today is Sun-Tue (0-2): show all days of current week (no changes)
       
       dates.push(date)
     }

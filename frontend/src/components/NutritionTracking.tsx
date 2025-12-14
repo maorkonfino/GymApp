@@ -381,17 +381,7 @@ const NutritionTracking: React.FC = () => {
 
         const isCollapsed = collapsedWeeks.has(weekKey)
 
-        // Add week entries first (if not collapsed)
-        if (!isCollapsed) {
-          // Mark today's entry
-          const entriesWithToday = weekEntries.map(entry => ({
-            ...entry,
-            isToday: entry.date === today
-          }))
-          result.push(...entriesWithToday)
-        }
-
-        // Add average row at the end of the week
+        // Add average row at the top of the week
         result.push({
           date: weekKey,
           morningWeight: calculateAverage('morningWeight'),
@@ -404,6 +394,15 @@ const NutritionTracking: React.FC = () => {
           isAverage: true,
           weekKey: weekKey
         })
+
+        // Add week entries BELOW the average (if not collapsed)
+        if (!isCollapsed) {
+          const entriesWithToday = weekEntries.map(entry => ({
+            ...entry,
+            isToday: entry.date === today
+          }))
+          result.push(...entriesWithToday)
+        }
       })
 
       return result
