@@ -4,7 +4,6 @@ import { Apple, Trash2, LineChart, ChevronDown, ChevronUp } from 'lucide-react'
 import { format } from 'date-fns'
 import { he } from 'date-fns/locale'
 import WeightGraph from './WeightGraph'
-import BeastLogo from './BeastLogo'
 import NotesModal from './NotesModal'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'

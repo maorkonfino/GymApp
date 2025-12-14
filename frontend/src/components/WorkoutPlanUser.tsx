@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { Dumbbell, ChevronDown, ChevronUp, Archive, FolderOpen, StickyNote, X } from 'lucide-react'
-import BeastLogo from './BeastLogo'
 import api from '../api'
 
 interface WeeklyTracking {

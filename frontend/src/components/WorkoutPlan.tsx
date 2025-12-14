@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { Dumbbell, Plus, Save } from 'lucide-react'
-import BeastLogo from './BeastLogo'
 
 interface Exercise {
   name: string
