@@ -19,14 +19,14 @@ const api = axios.create({
 export const registrationAPI = {
   // Create new registration
   create: async (data: Omit<Registration, 'id' | 'createdAt'>) => {
-    // Convert camelCase to snake_case for backend
+    // Note: Create endpoint expects mixed case - name for full name but camelCase for times
     const backendData = {
-      full_name: data.name,
+      name: data.name,
       phone: data.phone,
       email: data.email,
       date: data.date,
-      start_time: data.startTime,
-      end_time: data.endTime
+      startTime: data.startTime,
+      endTime: data.endTime
     }
     const response = await api.post('/registrations', backendData)
     return response.data
@@ -96,11 +96,11 @@ export const registrationAPI = {
 
   // Update registration
   update: async (id: number, date: string, startTime: string, endTime: string): Promise<void> => {
-    // Convert camelCase to snake_case for backend
+    // Note: Update endpoint expects camelCase (different from other endpoints)
     await api.put(`/registrations/${id}`, { 
       date, 
-      start_time: startTime, 
-      end_time: endTime 
+      startTime, 
+      endTime 
     })
   },
 
