@@ -505,6 +505,24 @@ app.get('/api/registrations/range', async (req: Request, res: Response) => {
   }
 });
 
+// Update registration
+app.put('/api/registrations/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { date, startTime, endTime } = req.body;
+    
+    if (!date || !startTime || !endTime) {
+      return res.status(400).json({ error: 'Date, start time, and end time are required' });
+    }
+    
+    await db.updateRegistration(parseInt(id), date, startTime, endTime);
+    res.json({ message: 'Registration updated successfully' });
+  } catch (error) {
+    console.error('Error updating registration:', error);
+    res.status(500).json({ error: 'Failed to update registration' });
+  }
+});
+
 // Delete registration
 app.delete('/api/registrations/:id', async (req: Request, res: Response) => {
   try {
