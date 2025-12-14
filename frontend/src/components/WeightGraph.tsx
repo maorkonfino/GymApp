@@ -199,24 +199,28 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
           </svg>
           
           {/* Data Points */}
-          <div className="absolute inset-0 flex items-end justify-around">
+          <div className="absolute inset-0">
             {displayData.map((entry, idx) => {
-              const height = ((entry.weight - yMin) / range) * 100
+              const totalPoints = displayData.length
+              const xPercent = (idx / (totalPoints - 1)) * 100
+              const yPercent = ((entry.weight - yMin) / range) * 100
               
               return (
-                <div key={idx} className="relative flex-1 h-full flex items-end justify-center">
-                  {/* Data Point */}
-                  <div 
-                    className="absolute flex flex-col items-center z-10"
-                    style={{ bottom: `${Math.max(height, 2)}%` }}
-                  >
-                    {/* Weight Label */}
-                    <div className="text-[10px] text-green-400 font-semibold mb-1 bg-dark-hover px-1 rounded">
-                      {entry.weight.toFixed(1)}
-                    </div>
-                    {/* Point Dot */}
-                    <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-lg hover:scale-125 transition-transform"></div>
+                <div 
+                  key={idx}
+                  className="absolute flex flex-col items-center z-10"
+                  style={{ 
+                    left: `${xPercent}%`,
+                    bottom: `${yPercent}%`,
+                    transform: 'translate(-50%, 0)'
+                  }}
+                >
+                  {/* Weight Label */}
+                  <div className="text-[9px] text-green-400 font-semibold mb-1 bg-dark-hover px-1 rounded">
+                    {entry.weight.toFixed(1)}
                   </div>
+                  {/* Point Dot - Smaller */}
+                  <div className="w-2 h-2 bg-green-500 rounded-full border border-white shadow-lg hover:scale-150 transition-transform"></div>
                 </div>
               )
             })}
