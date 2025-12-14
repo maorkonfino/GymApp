@@ -29,6 +29,12 @@ export const registrationAPI = {
     return response.data
   },
 
+  // Get registrations for a specific user
+  getByUser: async (email: string): Promise<Registration[]> => {
+    const response = await api.get(`/registrations/user/${email}`)
+    return response.data
+  },
+
   // Get registrations by date
   getByDate: async (date: string): Promise<Registration[]> => {
     const response = await api.get(`/registrations/date/${date}`)

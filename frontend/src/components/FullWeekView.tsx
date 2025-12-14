@@ -253,21 +253,19 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     
     try {
       setLoading(true)
-      // Fetch all registrations for this user (no date range limit)
-      const data = await registrationAPI.getAll()
+      // Fetch all registrations for this user
+      const userRegs = await registrationAPI.getByUser(user.email)
       
-      // Filter only current user's registrations and sort by date
-      const userRegs = data
-        .filter(reg => reg.email === user.email)
-        .sort((a, b) => {
-          // Sort by date first
-          const dateCompare = a.date.localeCompare(b.date)
-          if (dateCompare !== 0) return dateCompare
-          // Then by start time
-          return a.startTime.localeCompare(b.startTime)
-        })
+      // Sort by date and time
+      const sortedRegs = userRegs.sort((a, b) => {
+        // Sort by date first
+        const dateCompare = a.date.localeCompare(b.date)
+        if (dateCompare !== 0) return dateCompare
+        // Then by start time
+        return a.startTime.localeCompare(b.startTime)
+      })
       
-      setMyWorkouts(userRegs)
+      setMyWorkouts(sortedRegs)
       setShowMyWorkoutsModal(true)
     } catch (error) {
       console.error('Error loading user workouts:', error)
