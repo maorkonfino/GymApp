@@ -173,17 +173,21 @@ const NutritionTracking: React.FC = () => {
           }))
         }
         
-        // Add current week's dates if they don't exist (only up to today)
+        // Add current week and last week's dates if they don't exist (only up to today)
         const today = new Date()
         today.setHours(0, 0, 0, 0) // Reset time for comparison
         const currentDayOfWeek = today.getDay() // 0 = Sunday, 1 = Monday, etc.
         const startOfWeek = new Date(today)
-        startOfWeek.setDate(today.getDate() - currentDayOfWeek) // Go back to Sunday
+        startOfWeek.setDate(today.getDate() - currentDayOfWeek) // Go back to Sunday of current week
         
-        // Create days for the current week (only up to today)
-        for (let i = 0; i < 7; i++) {
-          const date = new Date(startOfWeek)
-          date.setDate(startOfWeek.getDate() + i)
+        // Go back one more week to include last week
+        const startOfLastWeek = new Date(startOfWeek)
+        startOfLastWeek.setDate(startOfWeek.getDate() - 7) // Go back to Sunday of last week
+        
+        // Create days for both last week and current week (only up to today)
+        for (let i = 0; i < 14; i++) { // 14 days = 2 weeks
+          const date = new Date(startOfLastWeek)
+          date.setDate(startOfLastWeek.getDate() + i)
           date.setHours(0, 0, 0, 0) // Reset time for comparison
           
           // Skip future dates

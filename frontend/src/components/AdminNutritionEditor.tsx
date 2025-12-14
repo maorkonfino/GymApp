@@ -174,16 +174,21 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
         }))
       }
       
-      // Add current week's dates if they don't exist
+      // Add current week and last week's dates if they don't exist
       const today = new Date()
+      today.setHours(0, 0, 0, 0) // Reset time for comparison
       const currentDayOfWeek = today.getDay() // 0 = Sunday, 1 = Monday, etc.
       const startOfWeek = new Date(today)
-      startOfWeek.setDate(today.getDate() - currentDayOfWeek) // Go back to Sunday
+      startOfWeek.setDate(today.getDate() - currentDayOfWeek) // Go back to Sunday of current week
       
-      // Create 7 days for the current week
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(startOfWeek)
-        date.setDate(startOfWeek.getDate() + i)
+      // Go back one more week to include last week
+      const startOfLastWeek = new Date(startOfWeek)
+      startOfLastWeek.setDate(startOfWeek.getDate() - 7) // Go back to Sunday of last week
+      
+      // Create days for both last week and current week (admin can see all days including future)
+      for (let i = 0; i < 14; i++) { // 14 days = 2 weeks
+        const date = new Date(startOfLastWeek)
+        date.setDate(startOfLastWeek.getDate() + i)
         const dateStr = format(date, 'yyyy-MM-dd')
         
         // Check if this date already exists
