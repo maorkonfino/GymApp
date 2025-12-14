@@ -511,7 +511,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                         className={`relative px-2 py-1 rounded flex flex-col justify-center text-center group min-h-[30px] ${
                                           user?.email === reg.email
                                             ? 'bg-cyan-500/30 text-cyan-100 border border-cyan-500/50'
-                                            : 'bg-green-500/20 text-green-200 border border-green-500/30'
+                                            : 'bg-gray-700/50 text-gray-300 border border-gray-600/30'
                                         }`}
                                       >
                                         {canDeleteRegistration(reg) && (
@@ -589,18 +589,18 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       className={`p-3 rounded-lg relative group ${
                         user?.email === reg.email
                           ? 'bg-cyan-500/20 border border-cyan-500/40'
-                          : 'bg-green-500/15 border border-green-500/20'
+                          : 'bg-gray-700/50 border border-gray-600/30'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <p className={`font-medium ${
-                          user?.email === reg.email ? 'text-cyan-300' : 'text-green-300'
+                          user?.email === reg.email ? 'text-cyan-300' : 'text-gray-300'
                         }`}>
                           {reg.name}
                         </p>
                         <div className="flex items-center gap-2">
                           <div className={`text-sm font-medium ${
-                            user?.email === reg.email ? 'text-cyan-300' : 'text-green-300'
+                            user?.email === reg.email ? 'text-cyan-300' : 'text-gray-300'
                           }`}>
                             {reg.startTime}-{reg.endTime}
                           </div>
