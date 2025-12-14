@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { format, addDays } from 'date-fns'
 import { he } from 'date-fns/locale'
 import { Registration } from '../types'
@@ -6,7 +6,7 @@ import { registrationAPI } from '../api'
 import { useAuth } from '../contexts/AuthContext'
 import { X, Calendar, ChevronDown, Users, Edit2, Save } from 'lucide-react'
 import { generateTimeSlotRanges } from '../utils/timeSlotRanges'
-import { getRestrictionMessage } from '../utils/timeRestrictions'
+import { getRestrictionMessage, getAvailableTimeOptions } from '../utils/timeRestrictions'
 
 interface FullWeekViewProps {
   isOpen: boolean
@@ -661,6 +661,34 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       const dateStr = format(workoutDate, 'd.M.yyyy')
                       const isEditing = editingWorkoutId === reg.id
                       
+                      // Get available times for this date
+                      const availableTimes = useMemo(() => {
+                        return getAvailableTimeOptions(workoutDate, user?.role)
+                      }, [workoutDate, user?.role])
+                      
+                      // Extract unique hours and minutes from available times
+                      const hours = useMemo(() => {
+                        const hoursSet = new Set(availableTimes.map(time => time.split(':')[0]))
+                        return Array.from(hoursSet).sort()
+                      }, [availableTimes])
+                      
+                      const minutes = useMemo(() => {
+                        const minutesSet = new Set(availableTimes.map(time => time.split(':')[1]))
+                        return Array.from(minutesSet).sort()
+                      }, [availableTimes])
+                      
+                      // Parse time into hours and minutes
+                      const [startHour, startMinute] = editFormData.startTime.split(':')
+                      const [endHour, endMinute] = editFormData.endTime.split(':')
+                      
+                      const handleStartTimeChange = (hour: string, minute: string) => {
+                        setEditFormData(prev => ({ ...prev, startTime: `${hour}:${minute}` }))
+                      }
+                      
+                      const handleEndTimeChange = (hour: string, minute: string) => {
+                        setEditFormData(prev => ({ ...prev, endTime: `${hour}:${minute}` }))
+                      }
+                      
                       return (
                         <div
                           key={reg.id}
@@ -675,25 +703,125 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 <span className="text-gray-400 text-sm">{dateStr}</span>
                               </div>
                               
-                              {/* Edit times only */}
-                              <div className="grid grid-cols-2 gap-3">
-                                <div>
-                                  <label className="block text-cyan-400 text-xs mb-1">שעת התחלה</label>
-                                  <input
-                                    type="time"
-                                    value={editFormData.startTime}
-                                    onChange={(e) => setEditFormData(prev => ({ ...prev, startTime: e.target.value }))}
-                                    className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm"
-                                  />
+                              {/* Edit times only - with scrollable selects */}
+                              <div className="flex items-end gap-2 justify-center">
+                                {/* End Time */}
+                                <div className="flex-1">
+                                  <label className="block text-cyan-400 text-xs mb-1 text-center">שעת סיום</label>
+                                  <div className="flex gap-1">
+                                    {/* Minutes */}
+                                    <div className="relative flex-1">
+                                      <select
+                                        value={endMinute}
+                                        onChange={(e) => handleEndTimeChange(endHour, e.target.value)}
+                                        className="w-full bg-dark-hover border border-cyan-500/50 rounded-lg pl-2 pr-5 py-1.5 text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                                        style={{
+                                          appearance: 'none',
+                                          WebkitAppearance: 'none',
+                                          MozAppearance: 'none'
+                                        }}
+                                      >
+                                        {minutes.map((minute) => (
+                                          <option key={minute} value={minute} className="bg-dark-card text-white">
+                                            {minute}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-2 h-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                      </div>
+                                    </div>
+                                    
+                                    <div className="text-white text-sm font-bold self-center">:</div>
+                                    
+                                    {/* Hours */}
+                                    <div className="relative flex-1">
+                                      <select
+                                        value={endHour}
+                                        onChange={(e) => handleEndTimeChange(e.target.value, endMinute)}
+                                        className="w-full bg-dark-hover border border-cyan-500/50 rounded-lg pl-2 pr-5 py-1.5 text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                                        style={{
+                                          appearance: 'none',
+                                          WebkitAppearance: 'none',
+                                          MozAppearance: 'none'
+                                        }}
+                                      >
+                                        {hours.map((hour) => (
+                                          <option key={hour} value={hour} className="bg-dark-card text-white">
+                                            {hour}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-2 h-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div>
-                                  <label className="block text-cyan-400 text-xs mb-1">שעת סיום</label>
-                                  <input
-                                    type="time"
-                                    value={editFormData.endTime}
-                                    onChange={(e) => setEditFormData(prev => ({ ...prev, endTime: e.target.value }))}
-                                    className="w-full bg-dark-hover text-white px-3 py-2 rounded-lg border border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm"
-                                  />
+                                
+                                {/* Separator */}
+                                <div className="text-white text-sm font-bold pb-1.5">-</div>
+                                
+                                {/* Start Time */}
+                                <div className="flex-1">
+                                  <label className="block text-cyan-400 text-xs mb-1 text-center">שעת התחלה</label>
+                                  <div className="flex gap-1">
+                                    {/* Minutes */}
+                                    <div className="relative flex-1">
+                                      <select
+                                        value={startMinute}
+                                        onChange={(e) => handleStartTimeChange(startHour, e.target.value)}
+                                        className="w-full bg-dark-hover border border-cyan-500/50 rounded-lg pl-2 pr-5 py-1.5 text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                                        style={{
+                                          appearance: 'none',
+                                          WebkitAppearance: 'none',
+                                          MozAppearance: 'none'
+                                        }}
+                                      >
+                                        {minutes.map((minute) => (
+                                          <option key={minute} value={minute} className="bg-dark-card text-white">
+                                            {minute}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-2 h-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                      </div>
+                                    </div>
+                                    
+                                    <div className="text-white text-sm font-bold self-center">:</div>
+                                    
+                                    {/* Hours */}
+                                    <div className="relative flex-1">
+                                      <select
+                                        value={startHour}
+                                        onChange={(e) => handleStartTimeChange(e.target.value, startMinute)}
+                                        className="w-full bg-dark-hover border border-cyan-500/50 rounded-lg pl-2 pr-5 py-1.5 text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer hover:bg-dark-border transition-colors text-center"
+                                        style={{
+                                          appearance: 'none',
+                                          WebkitAppearance: 'none',
+                                          MozAppearance: 'none'
+                                        }}
+                                      >
+                                        {hours.map((hour) => (
+                                          <option key={hour} value={hour} className="bg-dark-card text-white">
+                                            {hour}
+                                          </option>
+                                        ))}
+                                      </select>
+                                      <div className="absolute right-1 top-1/2 -translate-y-1/2 pointer-events-none">
+                                        <svg className="w-2 h-2 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                               

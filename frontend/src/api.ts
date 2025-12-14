@@ -19,26 +19,56 @@ const api = axios.create({
 export const registrationAPI = {
   // Create new registration
   create: async (data: Omit<Registration, 'id' | 'createdAt'>) => {
-    const response = await api.post('/registrations', data)
+    // Convert camelCase to snake_case for backend
+    const backendData = {
+      full_name: data.name,
+      phone: data.phone,
+      email: data.email,
+      date: data.date,
+      start_time: data.startTime,
+      end_time: data.endTime
+    }
+    const response = await api.post('/registrations', backendData)
     return response.data
   },
 
   // Get all registrations
   getAll: async (): Promise<Registration[]> => {
     const response = await api.get('/registrations')
-    return response.data
+    // Convert snake_case from backend to camelCase for frontend
+    return response.data.map((reg: any) => ({
+      ...reg,
+      name: reg.full_name,
+      startTime: reg.start_time,
+      endTime: reg.end_time,
+      createdAt: reg.created_at
+    }))
   },
 
   // Get registrations for a specific user
   getByUser: async (email: string): Promise<Registration[]> => {
     const response = await api.get(`/registrations/user/${email}`)
-    return response.data
+    // Convert snake_case from backend to camelCase for frontend
+    return response.data.map((reg: any) => ({
+      ...reg,
+      name: reg.full_name,
+      startTime: reg.start_time,
+      endTime: reg.end_time,
+      createdAt: reg.created_at
+    }))
   },
 
   // Get registrations by date
   getByDate: async (date: string): Promise<Registration[]> => {
     const response = await api.get(`/registrations/date/${date}`)
-    return response.data
+    // Convert snake_case from backend to camelCase for frontend
+    return response.data.map((reg: any) => ({
+      ...reg,
+      name: reg.full_name,
+      startTime: reg.start_time,
+      endTime: reg.end_time,
+      createdAt: reg.created_at
+    }))
   },
 
   // Get registrations by date range
@@ -46,7 +76,14 @@ export const registrationAPI = {
     const response = await api.get('/registrations/range', {
       params: { start, end }
     })
-    return response.data
+    // Convert snake_case from backend to camelCase for frontend
+    return response.data.map((reg: any) => ({
+      ...reg,
+      name: reg.full_name,
+      startTime: reg.start_time,
+      endTime: reg.end_time,
+      createdAt: reg.created_at
+    }))
   },
 
   // Get count of registrations for specific date and time
@@ -59,7 +96,12 @@ export const registrationAPI = {
 
   // Update registration
   update: async (id: number, date: string, startTime: string, endTime: string): Promise<void> => {
-    await api.put(`/registrations/${id}`, { date, startTime, endTime })
+    // Convert camelCase to snake_case for backend
+    await api.put(`/registrations/${id}`, { 
+      date, 
+      start_time: startTime, 
+      end_time: endTime 
+    })
   },
 
   // Delete registration
