@@ -33,10 +33,10 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
   // Calculate averages
   const getAverages = () => {
     if (viewMode === 'daily') {
-      // Sort newest to oldest (left to right for RTL)
-      return [...validEntries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      // Sort oldest to newest (left to right)
+      return [...validEntries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     } else if (viewMode === 'weekly') {
-      // Group by weeks and sort newest to oldest
+      // Group by weeks and sort oldest to newest
       const weeks: { [key: number]: number[] } = {}
       const sortedEntries = [...validEntries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       
@@ -46,13 +46,13 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         weeks[weekNum].push(entry.weight)
       })
       
-      // Reverse order for RTL display (newest first)
-      return Object.keys(weeks).sort((a, b) => Number(b) - Number(a)).map((weekNum) => ({
+      // Sort by week number (oldest first)
+      return Object.keys(weeks).sort((a, b) => Number(a) - Number(b)).map((weekNum) => ({
         date: `שבוע ${Number(weekNum) + 1}`,
         weight: weeks[Number(weekNum)].reduce((a, b) => a + b, 0) / weeks[Number(weekNum)].length
       }))
     } else {
-      // Monthly average - sort newest to oldest
+      // Monthly average - sort oldest to newest
       const months: { [key: string]: number[] } = {}
       validEntries.forEach(entry => {
         const month = entry.date.substring(0, 7)
@@ -60,8 +60,8 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         months[month].push(entry.weight)
       })
       
-      // Reverse sort for RTL display (newest first)
-      return Object.keys(months).sort().reverse().map((month) => ({
+      // Sort chronologically (oldest first)
+      return Object.keys(months).sort().map((month) => ({
         date: month,
         weight: months[month].reduce((a, b) => a + b, 0) / months[month].length
       }))
@@ -178,8 +178,10 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
               const prevEntry = displayData[idx - 1]
               
               const totalPoints = displayData.length
-              const x1 = ((idx - 1) / (totalPoints - 1)) * 100
-              const x2 = (idx / (totalPoints - 1)) * 100
+              const padding = 0
+              const availableWidth = 100 - (2 * padding)
+              const x1 = totalPoints === 1 ? 50 : padding + ((idx - 1) / (totalPoints - 1)) * availableWidth
+              const x2 = totalPoints === 1 ? 50 : padding + (idx / (totalPoints - 1)) * availableWidth
               const y1 = 100 - ((prevEntry.weight - yMin) / range) * 100
               const y2 = 100 - ((entry.weight - yMin) / range) * 100
               
@@ -202,7 +204,12 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
           <div className="absolute inset-0">
             {displayData.map((entry, idx) => {
               const totalPoints = displayData.length
-              const xPercent = (idx / (totalPoints - 1)) * 100
+              // Add padding so points don't sit on axes (5% to 95% range)
+              const padding = 0
+              const availableWidth = 100 - (2 * padding)
+              const xPercent = totalPoints === 1 
+                ? 50 
+                : padding + (idx / (totalPoints - 1)) * availableWidth
               const yPercent = ((entry.weight - yMin) / range) * 100
               
               return (
@@ -228,8 +235,15 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
         </div>
         
         {/* X Axis Labels */}
-        <div className="absolute left-16 right-8 bottom-10 flex justify-around">
+        <div className="absolute left-16 right-8 bottom-10">
           {displayData.map((entry, idx) => {
+            const totalPoints = displayData.length
+            const padding = 0
+            const availableWidth = 100 - (2 * padding)
+            const xPercent = totalPoints === 1 
+              ? 50 
+              : padding + (idx / (totalPoints - 1)) * availableWidth
+            
             // Format date label based on view mode
             let label = ''
             if (viewMode === 'daily') {
@@ -243,8 +257,15 @@ const WeightGraph: React.FC<WeightGraphProps> = ({ entries }) => {
             }
             
             return (
-              <div key={idx} className="flex-1 text-center">
-                <div className="text-[9px] text-gray-400 font-medium">
+              <div 
+                key={idx} 
+                className="absolute"
+                style={{
+                  left: `${xPercent}%`,
+                  transform: 'translateX(-50%)'
+                }}
+              >
+                <div className="text-[9px] text-gray-400 font-medium whitespace-nowrap">
                   {label}
                 </div>
               </div>
