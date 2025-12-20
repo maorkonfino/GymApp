@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { X, Users, Edit2, Dumbbell, Apple, Search } from 'lucide-react'
+import { X, Users, Edit2, Dumbbell, Apple, Search, Settings, Bell } from 'lucide-react'
 import { User } from '../types'
 import api from '../api'
 import AdminWorkoutEditor from './AdminWorkoutEditor'
@@ -10,19 +10,31 @@ interface ManageUsersProps {
   onClose: () => void
 }
 
+interface ReminderSettings {
+  enabled: number
+  message_24h: string
+  message_4h: string
+}
+
 const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [editMode, setEditMode] = useState<'role' | 'workout' | 'nutrition' | 'name' | null>(null)
+  const [editMode, setEditMode] = useState<'role' | 'workout' | 'nutrition' | 'name' | 'settings' | null>(null)
   const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz' | 'teenbeast' | 'onlinebeast'>('kibbutz')
   const [editedName, setEditedName] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
+  const [reminderSettings, setReminderSettings] = useState<ReminderSettings>({
+    enabled: 1,
+    message_24h: 'תזכורת: יש לך אימון מחר ב-{time}',
+    message_4h: 'תזכורת: יש לך אימון בעוד 4 שעות'
+  })
 
   useEffect(() => {
     if (isOpen) {
       fetchUsers()
+      fetchReminderSettings()
     }
   }, [isOpen])
 
@@ -35,6 +47,26 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
       console.error('Error fetching users:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchReminderSettings = async () => {
+    try {
+      const response = await api.get('/reminder-settings')
+      setReminderSettings(response.data)
+    } catch (error) {
+      console.error('Error fetching reminder settings:', error)
+    }
+  }
+
+  const handleSaveReminderSettings = async () => {
+    try {
+      await api.put('/reminder-settings', reminderSettings)
+      alert('הגדרות התזכורות עודכנו בהצלחה!')
+      setEditMode(null)
+    } catch (error) {
+      console.error('Error saving reminder settings:', error)
+      alert('שגיאה בשמירת הגדרות התזכורות')
     }
   }
 
@@ -100,12 +132,22 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
               <p className="text-gray-400 text-sm">ניהול משתמשים ותוכניות</p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-dark-hover rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5 text-gray-400" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setEditMode('settings')}
+              className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all flex items-center gap-2"
+              title="הגדרות כלליות"
+            >
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline">הגדרות</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-dark-hover rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-400" />
+            </button>
+          </div>
         </div>
 
         {/* Content */}
@@ -408,6 +450,99 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
           user={selectedUser}
           onClose={closeEditModal}
         />
+      )}
+
+      {/* General Settings Modal */}
+      {editMode === 'settings' && (
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-dark-card border border-dark-border rounded-2xl max-w-2xl w-full p-6 animate-fade-in max-h-[80vh] overflow-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <Bell className="w-6 h-6 text-purple-400" />
+                <h3 className="text-xl font-bold text-white">הגדרות כלליות</h3>
+              </div>
+              <button
+                onClick={() => setEditMode(null)}
+                className="p-2 hover:bg-dark-hover rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+
+            {/* Reminder Settings */}
+            <div className="space-y-6">
+              <div className="p-4 bg-dark-hover border border-dark-border rounded-lg">
+                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Bell className="w-5 h-5 text-yellow-400" />
+                  הגדרות תזכורות
+                </h4>
+
+                {/* Enable/Disable Toggle */}
+                <div className="flex items-center justify-between mb-4 p-3 bg-dark-card rounded-lg">
+                  <span className="text-gray-300">הפעל תזכורות</span>
+                  <button
+                    onClick={() => setReminderSettings({ ...reminderSettings, enabled: reminderSettings.enabled ? 0 : 1 })}
+                    className={`relative w-14 h-7 rounded-full transition-colors ${
+                      reminderSettings.enabled ? 'bg-green-500' : 'bg-gray-600'
+                    }`}
+                  >
+                    <div
+                      className={`absolute top-0.5 w-6 h-6 bg-white rounded-full transition-transform ${
+                        reminderSettings.enabled ? 'right-0.5' : 'right-7'
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* 24h Message */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    תזכורת 24 שעות לפני אימון
+                  </label>
+                  <textarea
+                    value={reminderSettings.message_24h}
+                    onChange={(e) => setReminderSettings({ ...reminderSettings, message_24h: e.target.value })}
+                    className="w-full bg-dark-card border border-dark-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                    rows={2}
+                    placeholder='תזכורת: יש לך אימון מחר ב-{time}'
+                  />
+                  <p className="text-xs text-gray-500 mt-1">השתמש ב-{'{time}'} להצגת שעת האימון</p>
+                </div>
+
+                {/* 4h Message */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    תזכורת 4 שעות לפני אימון
+                  </label>
+                  <textarea
+                    value={reminderSettings.message_4h}
+                    onChange={(e) => setReminderSettings({ ...reminderSettings, message_4h: e.target.value })}
+                    className="w-full bg-dark-card border border-dark-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                    rows={2}
+                    placeholder="תזכורת: יש לך אימון בעוד 4 שעות"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">השתמש ב-{'{time}'} להצגת שעת האימון</p>
+                </div>
+              </div>
+
+              {/* Save Button */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setEditMode(null)}
+                  className="flex-1 px-4 py-2 bg-dark-hover hover:bg-dark-border text-gray-300 rounded-lg transition-all"
+                >
+                  ביטול
+                </button>
+                <button
+                  onClick={handleSaveReminderSettings}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-lg transition-all font-semibold"
+                >
+                  שמור הגדרות
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
