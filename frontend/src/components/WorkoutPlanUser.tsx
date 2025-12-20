@@ -231,10 +231,10 @@ const WorkoutPlanUser: React.FC = () => {
     
     // Check each week starting from week 1
     for (let week = 1; week <= totalWeeks; week++) {
-      // Check if ALL exercises in this week have at least some data (weight OR reps in set 1)
+      // Check if ALL exercises in this week have BOTH weight AND reps in set 1
       const allExercisesHaveData = workout.exercises.every(exercise => {
-        const weekData = exercise.weeklyData[week]?.[0] // Check set 1
-        return weekData && (weekData.weight || weekData.reps)
+        const weekData = exercise.weeklyData[week]?.[0] // Check set 1 only
+        return weekData && weekData.weight && weekData.reps
       })
       
       // If not all exercises have data, this is the current week to fill
@@ -245,8 +245,8 @@ const WorkoutPlanUser: React.FC = () => {
       // If all exercises have data and this is not the last week, check next week
       if (week < totalWeeks) {
         const nextWeekAllFilled = workout.exercises.every(exercise => {
-          const nextWeekData = exercise.weeklyData[week + 1]?.[0]
-          return nextWeekData && (nextWeekData.weight || nextWeekData.reps)
+          const nextWeekData = exercise.weeklyData[week + 1]?.[0] // Check set 1 only
+          return nextWeekData && nextWeekData.weight && nextWeekData.reps
         })
         
         // If next week is not fully filled, it's the current week
