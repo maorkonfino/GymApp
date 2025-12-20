@@ -42,7 +42,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   })
   const { user, isAdmin } = useAuth()
 
-  // Get week dates - Sunday to Saturday
+  // Get week dates - Sunday to Saturday with rolling logic
   const getWeekDates = () => {
     const today = new Date()
     today.setHours(0, 0, 0, 0) // Reset to start of day
@@ -53,9 +53,16 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     
     const dates = []
     
-    // Show 7 days from Sunday to Saturday
-    for (let i = 0; i < 7; i++) {
-      dates.push(addDays(currentSunday, i))
+    // For each day of the week
+    for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+      let date = addDays(currentSunday, dayOfWeek)
+      
+      // If this day has already passed (before today), show next week's same day
+      if (dayOfWeek < currentDayOfWeek) {
+        date = addDays(date, 7)
+      }
+      
+      dates.push(date)
     }
     
     return dates
