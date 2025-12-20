@@ -236,107 +236,125 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
               <p className="text-gray-400">טוען משתמשים...</p>
             </div>
           ) : (
-            <div className="space-y-3">
-              {users
-                .filter(user => {
-                  // Filter by search query
-                  const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase())
-                  // Filter by role
-                  const matchesRole = roleFilter === 'all' || user.role === roleFilter
-                  return matchesSearch && matchesRole
-                })
-                .map((user) => (
-                <div
-                  key={user.id}
-                  className="bg-dark-hover border border-dark-border rounded-xl p-4 hover:border-cyan-500/30 transition-all"
-                >
-                  <div className="flex items-center justify-between">
-                    {/* User Info */}
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-white font-semibold text-lg">{user.name}</h3>
-                        <span className={`text-xs px-2 py-1 rounded font-semibold ${
-                          user.role === 'admin' 
-                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
-                            : user.role === 'vip'
-                            ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
-                            : user.role === 'teenbeast'
-                            ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
-                            : user.role === 'onlinebeast'
-                            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
-                            : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                        }`}>
-                          {user.role === 'admin' ? 'מנהל' 
-                            : user.role === 'vip' ? 'BEAST' 
-                            : user.role === 'teenbeast' ? 'TeenBEAST' 
-                            : user.role === 'onlinebeast' ? 'OnlineBEAST'
-                            : 'קיבוץ'}
-                        </span>
-                      </div>
-                      <div className="text-sm text-gray-400 space-y-1">
-                        <p>📧 {user.email}</p>
-                        <p>📱 {user.phone}</p>
-                      </div>
-                    </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead className="bg-dark-hover sticky top-0 z-10">
+                  <tr>
+                    <th className="p-3 text-right border border-dark-border text-gray-300 font-semibold">שם</th>
+                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">תפקיד</th>
+                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">שם</th>
+                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">תפקיד</th>
+                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">אימון</th>
+                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">תזונה</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users
+                    .filter(user => {
+                      // Filter by search query
+                      const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase())
+                      // Filter by role
+                      const matchesRole = roleFilter === 'all' || user.role === roleFilter
+                      return matchesSearch && matchesRole
+                    })
+                    .map((user) => (
+                      <tr key={user.id} className="hover:bg-dark-hover/50 transition-colors">
+                        {/* Name and Info */}
+                        <td className="p-3 border border-dark-border">
+                          <div className="text-white font-semibold">{user.name}</div>
+                          <div className="text-xs text-gray-400 mt-1">📧 {user.email}</div>
+                          <div className="text-xs text-gray-400">📱 {user.phone}</div>
+                        </td>
 
-                    {/* Action Buttons */}
-                    <div className="flex gap-2">
-                      {/* Edit Name */}
-                      <button
-                        onClick={() => {
-                          setSelectedUser(user)
-                          setEditedName(user.name)
-                          setEditMode('name')
-                        }}
-                        className="px-3 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
-                        title="ערוך שם"
-                      >
-                        <Edit2 className="w-3 h-3 flex-shrink-0" />
-                        <span className="flex-shrink-0">שם</span>
-                      </button>
+                        {/* Role Badge */}
+                        <td className="p-3 border border-dark-border text-center">
+                          <span className={`inline-block text-xs px-2 py-1 rounded font-semibold whitespace-nowrap ${
+                            user.role === 'admin' 
+                              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                              : user.role === 'vip'
+                              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                              : user.role === 'teenbeast'
+                              ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
+                              : user.role === 'onlinebeast'
+                              ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
+                              : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                          }`}>
+                            {user.role === 'admin' ? 'מנהל' 
+                              : user.role === 'vip' ? 'BEAST' 
+                              : user.role === 'teenbeast' ? 'TeenBEAST' 
+                              : user.role === 'onlinebeast' ? 'OnlineBEAST'
+                              : 'קיבוץ'}
+                          </span>
+                        </td>
 
-                      {/* Edit Role */}
-                      <button
-                        onClick={() => {
-                          setSelectedUser(user)
-                          setSelectedRole(user.role)
-                          setEditMode('role')
-                        }}
-                        className="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
-                        title="ערוך תפקיד"
-                      >
-                        <Edit2 className="w-3 h-3 flex-shrink-0" />
-                        <span className="flex-shrink-0">תפקיד</span>
-                      </button>
+                        {/* Edit Name Button */}
+                        <td className="p-3 border border-dark-border text-center">
+                          <button
+                            onClick={() => {
+                              setSelectedUser(user)
+                              setEditedName(user.name)
+                              setEditMode('name')
+                            }}
+                            className="px-3 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 rounded-lg text-xs font-medium transition-all inline-flex items-center gap-1.5"
+                            title="ערוך שם"
+                          >
+                            <Edit2 className="w-3 h-3" />
+                            <span>ערוך</span>
+                          </button>
+                        </td>
 
-                      {/* Edit Workout Plan */}
-                      <button
-                        onClick={() => handleEditWorkout(user)}
-                        className="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
-                        title="ערוך תכנית אימון"
-                      >
-                        <Dumbbell className="w-3 h-3 flex-shrink-0" />
-                        <span className="flex-shrink-0">אימון</span>
-                      </button>
+                        {/* Edit Role Button */}
+                        <td className="p-3 border border-dark-border text-center">
+                          <button
+                            onClick={() => {
+                              setSelectedUser(user)
+                              setSelectedRole(user.role)
+                              setEditMode('role')
+                            }}
+                            className="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-xs font-medium transition-all inline-flex items-center gap-1.5"
+                            title="ערוך תפקיד"
+                          >
+                            <Edit2 className="w-3 h-3" />
+                            <span>ערוך</span>
+                          </button>
+                        </td>
 
-                      {/* Edit Nutrition Plan */}
-                      <button
-                        onClick={() => handleEditNutrition(user)}
-                        className="px-3 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
-                        title="ערוך תכנית תזונה"
-                      >
-                        <Apple className="w-3 h-3 flex-shrink-0" />
-                        <span className="flex-shrink-0">תזונה</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                        {/* Edit Workout Button */}
+                        <td className="p-3 border border-dark-border text-center">
+                          <button
+                            onClick={() => handleEditWorkout(user)}
+                            className="px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-lg text-xs font-medium transition-all inline-flex items-center gap-1.5"
+                            title="ערוך תכנית אימון"
+                          >
+                            <Dumbbell className="w-3 h-3" />
+                            <span>ערוך</span>
+                          </button>
+                        </td>
 
-              {users.length === 0 && (
+                        {/* Edit Nutrition Button */}
+                        <td className="p-3 border border-dark-border text-center">
+                          <button
+                            onClick={() => handleEditNutrition(user)}
+                            className="px-3 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg text-xs font-medium transition-all inline-flex items-center gap-1.5"
+                            title="ערוך תכנית תזונה"
+                          >
+                            <Apple className="w-3 h-3" />
+                            <span>ערוך</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+
+              {users.filter(user => {
+                const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase())
+                const matchesRole = roleFilter === 'all' || user.role === roleFilter
+                return matchesSearch && matchesRole
+              }).length === 0 && (
                 <div className="text-center py-12 text-gray-400">
                   <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>אין משתמשים במערכת</p>
+                  <p>לא נמצאו משתמשים</p>
                 </div>
               )}
             </div>
