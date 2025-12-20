@@ -518,5 +518,57 @@ export const updateRegistrationReminderStatus = async (id: number, reminderType:
   await pool.query(query, [id]);
 };
 
+// ===== REMINDER SETTINGS =====
+
+export interface ReminderSettings {
+  id?: number;
+  enabled: number;
+  message_24h: string;
+  message_4h: string;
+  updated_at?: string;
+}
+
+export const getReminderSettings = async (): Promise<ReminderSettings> => {
+  const query = 'SELECT * FROM reminder_settings LIMIT 1';
+  const result = await pool.query(query);
+  
+  // If no settings exist, create default ones
+  if (result.rows.length === 0) {
+    const insertQuery = `
+      INSERT INTO reminder_settings (enabled, message_24h, message_4h)
+      VALUES (1, 'תזכורת: יש לך אימון מחר ב-{time}', 'תזכורת: יש לך אימון בעוד 4 שעות')
+      RETURNING *
+    `;
+    const insertResult = await pool.query(insertQuery);
+    return insertResult.rows[0];
+  }
+  
+  return result.rows[0];
+};
+
+export const updateReminderSettings = async (settings: Partial<Omit<ReminderSettings, 'id' | 'updated_at'>>): Promise<void> => {
+  const fields = [];
+  const values = [];
+  let paramIndex = 1;
+  
+  if (settings.enabled !== undefined) {
+    fields.push(`enabled = $${paramIndex++}`);
+    values.push(settings.enabled);
+  }
+  if (settings.message_24h) {
+    fields.push(`message_24h = $${paramIndex++}`);
+    values.push(settings.message_24h);
+  }
+  if (settings.message_4h) {
+    fields.push(`message_4h = $${paramIndex++}`);
+    values.push(settings.message_4h);
+  }
+  
+  if (fields.length === 0) return;
+  
+  const query = `UPDATE reminder_settings SET ${fields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM reminder_settings LIMIT 1)`;
+  await pool.query(query, values);
+};
+
 export default pool;
 

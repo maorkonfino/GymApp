@@ -522,6 +522,57 @@ export const deleteWorkoutFolder = (id: number) => {
   return stmt.run(id);
 };
 
+// ===== REMINDER SETTINGS =====
+
+export interface ReminderSettings {
+  id?: number;
+  enabled: number;
+  message_24h: string;
+  message_4h: string;
+  updated_at?: string;
+}
+
+export const getReminderSettings = (): ReminderSettings => {
+  const stmt = db.prepare('SELECT * FROM reminder_settings LIMIT 1');
+  let settings = stmt.get() as ReminderSettings | undefined;
+  
+  // If no settings exist, create default ones
+  if (!settings) {
+    const insertStmt = db.prepare(`
+      INSERT INTO reminder_settings (enabled, message_24h, message_4h)
+      VALUES (1, 'תזכורת: יש לך אימון מחר ב-{time}', 'תזכורת: יש לך אימון בעוד 4 שעות')
+    `);
+    insertStmt.run();
+    settings = stmt.get() as ReminderSettings;
+  }
+  
+  return settings!;
+};
+
+export const updateReminderSettings = (settings: Partial<Omit<ReminderSettings, 'id' | 'updated_at'>>) => {
+  const fields = [];
+  const values = [];
+  
+  if (settings.enabled !== undefined) {
+    fields.push('enabled = ?');
+    values.push(settings.enabled);
+  }
+  if (settings.message_24h) {
+    fields.push('message_24h = ?');
+    values.push(settings.message_24h);
+  }
+  if (settings.message_4h) {
+    fields.push('message_4h = ?');
+    values.push(settings.message_4h);
+  }
+  
+  if (fields.length === 0) return;
+  
+  const query = `UPDATE reminder_settings SET ${fields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM reminder_settings LIMIT 1)`;
+  const stmt = db.prepare(query);
+  return stmt.run(...values);
+};
+
 export default db;
 
 

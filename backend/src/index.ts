@@ -743,6 +743,29 @@ app.delete('/api/daily-tracking/:email/:date', (req: Request, res: Response) => 
   }
 });
 
+// Get reminder settings
+app.get('/api/reminder-settings', (req: Request, res: Response) => {
+  try {
+    const settings = db.getReminderSettings();
+    res.json(settings);
+  } catch (error) {
+    console.error('Error fetching reminder settings:', error);
+    res.status(500).json({ error: 'Failed to fetch reminder settings' });
+  }
+});
+
+// Update reminder settings
+app.put('/api/reminder-settings', (req: Request, res: Response) => {
+  try {
+    const { enabled, message_24h, message_4h } = req.body;
+    db.updateReminderSettings({ enabled, message_24h, message_4h });
+    res.json({ message: 'Reminder settings updated successfully' });
+  } catch (error) {
+    console.error('Error updating reminder settings:', error);
+    res.status(500).json({ error: 'Failed to update reminder settings' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);

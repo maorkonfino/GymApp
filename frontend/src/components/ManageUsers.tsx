@@ -14,8 +14,9 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [editMode, setEditMode] = useState<'role' | 'workout' | 'nutrition' | null>(null)
+  const [editMode, setEditMode] = useState<'role' | 'workout' | 'nutrition' | 'name' | null>(null)
   const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz' | 'teenbeast' | 'onlinebeast'>('kibbutz')
+  const [editedName, setEditedName] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
 
@@ -47,6 +48,24 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
     } catch (error) {
       console.error('Error updating role:', error)
       alert('שגיאה בעדכון תפקיד המשתמש')
+    }
+  }
+
+  const handleEditName = async (userId: number, newName: string) => {
+    if (!newName.trim()) {
+      alert('שם המשתמש לא יכול להיות ריק')
+      return
+    }
+    try {
+      await api.put(`/users/${userId}`, { name: newName })
+      alert('שם המשתמש עודכן בהצלחה!')
+      await fetchUsers() // Refresh the list
+      setEditMode(null)
+      setSelectedUser(null)
+      setEditedName('')
+    } catch (error) {
+      console.error('Error updating name:', error)
+      alert('שגיאה בעדכון שם המשתמש')
     }
   }
 
@@ -220,6 +239,20 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
 
                     {/* Action Buttons */}
                     <div className="flex gap-2">
+                      {/* Edit Name */}
+                      <button
+                        onClick={() => {
+                          setSelectedUser(user)
+                          setEditedName(user.name)
+                          setEditMode('name')
+                        }}
+                        className="px-3 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap"
+                        title="ערוך שם"
+                      >
+                        <Edit2 className="w-3 h-3 flex-shrink-0" />
+                        <span className="flex-shrink-0">שם</span>
+                      </button>
+
                       {/* Edit Role */}
                       <button
                         onClick={() => {
@@ -267,6 +300,47 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
             </div>
           )}
         </div>
+
+        {/* Edit Name Modal */}
+        {editMode === 'name' && selectedUser && (
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-dark-card border border-dark-border rounded-2xl max-w-md w-full p-6 animate-fade-in">
+              <h3 className="text-xl font-bold text-white mb-4">ערוך שם משתמש</h3>
+              <p className="text-gray-400 mb-4 text-sm">📧 {selectedUser.email}</p>
+              
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-300 mb-2">שם מלא</label>
+                <input
+                  type="text"
+                  value={editedName}
+                  onChange={(e) => setEditedName(e.target.value)}
+                  className="w-full bg-dark-hover border border-dark-border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  placeholder="הכנס שם מלא"
+                  autoFocus
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setEditMode(null)
+                    setSelectedUser(null)
+                    setEditedName('')
+                  }}
+                  className="flex-1 px-4 py-2 bg-dark-hover hover:bg-dark-border text-gray-300 rounded-lg transition-all"
+                >
+                  ביטול
+                </button>
+                <button
+                  onClick={() => handleEditName(Number(selectedUser.id!), editedName)}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white rounded-lg transition-all font-semibold"
+                >
+                  שמור שינויים
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Edit Role Modal */}
         {editMode === 'role' && selectedUser && (
