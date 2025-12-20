@@ -80,6 +80,34 @@ export const initDatabase = async () => {
         used BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+
+      CREATE TABLE IF NOT EXISTS time_restrictions (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        day_of_week INTEGER NOT NULL,
+        start_time TEXT NOT NULL,
+        end_time TEXT NOT NULL,
+        message TEXT NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE IF NOT EXISTS role_time_restrictions (
+        id SERIAL PRIMARY KEY,
+        role TEXT NOT NULL,
+        day_of_week INTEGER NOT NULL,
+        start_time TEXT NOT NULL,
+        end_time TEXT NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(role, day_of_week)
+      );
+
+      CREATE TABLE IF NOT EXISTS reminder_settings (
+        id SERIAL PRIMARY KEY,
+        enabled INTEGER DEFAULT 1,
+        message_24h TEXT DEFAULT 'תזכורת: יש לך אימון מחר ב-{time}',
+        message_4h TEXT DEFAULT 'תזכורת: יש לך אימון בעוד 4 שעות',
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
     `);
 
     console.log('✅ Database tables initialized successfully');

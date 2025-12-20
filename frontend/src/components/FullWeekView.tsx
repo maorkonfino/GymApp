@@ -42,35 +42,16 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   })
   const { user, isAdmin } = useAuth()
 
-  // Get week dates - smart rolling week logic
+  // Get week dates - simple 7-day forward view
   const getWeekDates = () => {
     const today = new Date()
     today.setHours(0, 0, 0, 0) // Reset to start of day
-    const currentDayOfWeek = today.getDay() // 0=Sunday, 1=Monday, ..., 6=Saturday
-    
-    // Calculate the Sunday of current week
-    const currentSunday = addDays(today, -currentDayOfWeek)
     
     const dates = []
     
-    for (let dayOfWeek = 0; dayOfWeek <= 6; dayOfWeek++) {
-      let date = addDays(currentSunday, dayOfWeek)
-      
-      // Rolling week logic based on current day
-      if (currentDayOfWeek >= 3 && currentDayOfWeek <= 5) {
-        // Today is Wed (3), Thu (4), or Fri (5)
-        // Days Sun, Mon, Tue (0,1,2) -> show next week
-        if (dayOfWeek <= 2) {
-          date = addDays(date, 7)
-        }
-      } else if (currentDayOfWeek === 6) {
-        // Today is Saturday (6)
-        // ALL days (Sun-Sat, 0-6) -> show next week
-        date = addDays(date, 7)
-      }
-      // If today is Sun-Tue (0-2): show all days of current week (no changes)
-      
-      dates.push(date)
+    // Show 7 days starting from today
+    for (let i = 0; i < 7; i++) {
+      dates.push(addDays(today, i))
     }
     
     return dates
@@ -97,8 +78,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
   const fetchRegistrations = async () => {
     setLoading(true)
     try {
-      // For smart rolling week, we need to fetch data for potentially 2 separate weeks
-      // So we get min and max dates which covers both weeks
+      // Clean up old registrations first
+      await registrationAPI.cleanupOld()
+      
+      // Get week dates for display
       const allDates = weekDates.map(d => d.getTime())
       const minDate = new Date(Math.min(...allDates))
       const maxDate = new Date(Math.max(...allDates))

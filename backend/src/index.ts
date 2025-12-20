@@ -363,19 +363,10 @@ app.delete('/api/registrations/cleanup/old', (req: Request, res: Response) => {
     today.setHours(0, 0, 0, 0);
     const todayString = today.toISOString().split('T')[0];
     
-    const allRegistrations = db.getAllRegistrations();
-    let deletedCount = 0;
-    
-    allRegistrations.forEach((registration: any) => {
-      if (registration.date < todayString) {
-        db.deleteRegistration(registration.id);
-        deletedCount++;
-      }
-    });
+    db.deleteOldRegistrations(todayString);
     
     res.json({ 
-      message: `Deleted ${deletedCount} old registrations`,
-      deletedCount 
+      message: 'Old registrations cleaned up successfully'
     });
   } catch (error) {
     console.error('Error cleaning up old registrations:', error);

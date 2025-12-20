@@ -205,6 +205,42 @@ const WorkoutPlanUser: React.FC = () => {
     return plan.numberOfWeeks
   }
 
+  // Find the current week to work on (first week that's not fully filled)
+  const getCurrentWeek = (workoutIndex: number): number => {
+    if (!plan) return 1
+    const workout = plan.workouts[workoutIndex]
+    const totalWeeks = getActualWeeks()
+    
+    // Check each week starting from week 1
+    for (let week = 1; week <= totalWeeks; week++) {
+      // Check if this week has any exercise with missing data (at least set 1 empty)
+      const hasEmptyData = workout.exercises.some(exercise => {
+        const weekData = exercise.weeklyData[week]?.[0] // Check set 1
+        return !weekData || !weekData.weight || !weekData.reps
+      })
+      
+      if (hasEmptyData) {
+        return week // This is the current week to fill
+      }
+    }
+    
+    // If all weeks are filled, return the last week
+    return totalWeeks
+  }
+
+  // Sort weeks: current week first, then previous weeks in descending order, then future weeks
+  const getSortedWeeks = (workoutIndex: number): number[] => {
+    const totalWeeks = getActualWeeks()
+    const currentWeek = getCurrentWeek(workoutIndex)
+    const allWeeks = Array.from({ length: totalWeeks }, (_, i) => i + 1)
+    
+    // Split into: current, before current (descending), after current (ascending)
+    const beforeCurrent = allWeeks.filter(w => w < currentWeek).reverse() // [2, 1] if current is 3
+    const afterCurrent = allWeeks.filter(w => w > currentWeek) // [4, 5, 6] if current is 3
+    
+    return [currentWeek, ...beforeCurrent, ...afterCurrent]
+  }
+
   const getWeeklyData = (exercise: Exercise, week: number, setIndex: number) => {
     return exercise.weeklyData[week]?.[setIndex] || { weight: '', reps: '' }
   }
@@ -374,11 +410,8 @@ const WorkoutPlanUser: React.FC = () => {
                   <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">מנוחה</th>
                   <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">RIR</th>
                   {(() => {
-                    // Sort weeks: open weeks first (by number), then collapsed weeks (by number)
-                    const allWeeks = Array.from({ length: getActualWeeks() }, (_, i) => i + 1)
-                    const openWeeks = allWeeks.filter(week => !collapsedWeeks.has(`${workoutIndex}-${week}`))
-                    const closedWeeks = allWeeks.filter(week => collapsedWeeks.has(`${workoutIndex}-${week}`))
-                    const sortedWeeks = [...openWeeks, ...closedWeeks]
+                    // Sort weeks: current week first, then previous weeks for comparison
+                    const sortedWeeks = getSortedWeeks(workoutIndex)
                     
                     return sortedWeeks.map(week => {
                       const weekKey = `${workoutIndex}-${week}`
@@ -439,11 +472,8 @@ const WorkoutPlanUser: React.FC = () => {
                         {exercise.rir}
                       </td>
                       {(() => {
-                        // Sort weeks: open weeks first (by number), then collapsed weeks (by number)
-                        const allWeeks = Array.from({ length: getActualWeeks() }, (_, i) => i + 1)
-                        const openWeeks = allWeeks.filter(week => !collapsedWeeks.has(`${workoutIndex}-${week}`))
-                        const closedWeeks = allWeeks.filter(week => collapsedWeeks.has(`${workoutIndex}-${week}`))
-                        const sortedWeeks = [...openWeeks, ...closedWeeks]
+                        // Sort weeks: current week first, then previous weeks for comparison
+                        const sortedWeeks = getSortedWeeks(workoutIndex)
                         
                         return sortedWeeks.map(week => {
                           const weekKey = `${workoutIndex}-${week}`

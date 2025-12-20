@@ -108,6 +108,11 @@ export const registrationAPI = {
   delete: async (id: number): Promise<void> => {
     await api.delete(`/registrations/${id}`)
   },
+
+  // Clean up old registrations (before today)
+  cleanupOld: async (): Promise<void> => {
+    await api.delete('/registrations/cleanup/old')
+  },
 }
 
 export default api

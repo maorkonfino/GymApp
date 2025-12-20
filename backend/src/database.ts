@@ -80,6 +80,34 @@ db.exec(`
     archived_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (folder_id) REFERENCES workout_folders(id) ON DELETE SET NULL
   );
+
+  CREATE TABLE IF NOT EXISTS time_restrictions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    day_of_week INTEGER NOT NULL,
+    start_time TEXT NOT NULL,
+    end_time TEXT NOT NULL,
+    message TEXT NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS role_time_restrictions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role TEXT NOT NULL,
+    day_of_week INTEGER NOT NULL,
+    start_time TEXT NOT NULL,
+    end_time TEXT NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(role, day_of_week)
+  );
+
+  CREATE TABLE IF NOT EXISTS reminder_settings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    enabled INTEGER DEFAULT 1,
+    message_24h TEXT DEFAULT 'תזכורת: יש לך אימון מחר ב-{time}',
+    message_4h TEXT DEFAULT 'תזכורת: יש לך אימון בעוד 4 שעות',
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
 `);
 
 // Add password column to existing users table if it doesn't exist
@@ -162,6 +190,11 @@ export const getAllRegistrations = (): Registration[] => {
 export const deleteRegistration = (id: number) => {
   const stmt = db.prepare('DELETE FROM registrations WHERE id = ?');
   return stmt.run(id);
+};
+
+export const deleteOldRegistrations = (beforeDate: string) => {
+  const stmt = db.prepare('DELETE FROM registrations WHERE date < ?');
+  return stmt.run(beforeDate);
 };
 
 export const updateRegistration = (id: number, date: string, startTime: string, endTime: string) => {
