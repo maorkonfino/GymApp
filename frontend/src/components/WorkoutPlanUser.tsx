@@ -223,7 +223,7 @@ const WorkoutPlanUser: React.FC = () => {
     return plan.numberOfWeeks
   }
 
-  // Find the current week to work on (first week without any data, or next week if current has data)
+  // Find the current week to work on (first week where ALL exercises have data moves to next week)
   const getCurrentWeek = (workoutIndex: number): number => {
     if (!plan) return 1
     const workout = plan.workouts[workoutIndex]
@@ -231,32 +231,32 @@ const WorkoutPlanUser: React.FC = () => {
     
     // Check each week starting from week 1
     for (let week = 1; week <= totalWeeks; week++) {
-      // Check if this week has ANY data at all (even partial)
-      const hasAnyData = workout.exercises.some(exercise => {
+      // Check if ALL exercises in this week have at least some data (weight OR reps in set 1)
+      const allExercisesHaveData = workout.exercises.every(exercise => {
         const weekData = exercise.weeklyData[week]?.[0] // Check set 1
         return weekData && (weekData.weight || weekData.reps)
       })
       
-      // If this week has no data at all, it's the current week
-      if (!hasAnyData) {
+      // If not all exercises have data, this is the current week to fill
+      if (!allExercisesHaveData) {
         return week
       }
       
-      // If this week has data but it's not the last week, check if next week is empty
+      // If all exercises have data and this is not the last week, check next week
       if (week < totalWeeks) {
-        const nextWeekHasData = workout.exercises.some(exercise => {
+        const nextWeekAllFilled = workout.exercises.every(exercise => {
           const nextWeekData = exercise.weeklyData[week + 1]?.[0]
           return nextWeekData && (nextWeekData.weight || nextWeekData.reps)
         })
         
-        // If next week has no data, it's the current week
-        if (!nextWeekHasData) {
+        // If next week is not fully filled, it's the current week
+        if (!nextWeekAllFilled) {
           return week + 1
         }
       }
     }
     
-    // If all weeks have data, return the last week
+    // If all weeks are fully filled, return the last week
     return totalWeeks
   }
 
