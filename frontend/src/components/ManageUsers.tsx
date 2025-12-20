@@ -120,7 +120,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-dark-card border border-dark-border rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-dark-card border border-dark-border rounded-2xl w-full max-w-7xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-6 border-b border-dark-border flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -240,12 +240,11 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
               <table className="w-full text-sm border-collapse">
                 <thead className="bg-dark-hover sticky top-0 z-10">
                   <tr>
-                    <th className="p-3 text-right border border-dark-border text-gray-300 font-semibold">שם</th>
-                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">תפקיד</th>
-                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">שם</th>
-                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">תפקיד</th>
-                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">אימון</th>
-                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold">תזונה</th>
+                    <th className="p-3 text-right border border-dark-border text-gray-300 font-semibold min-w-[200px]">שם</th>
+                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold min-w-[150px]">תפקיד</th>
+                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold min-w-[120px]">עריכת שם</th>
+                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold min-w-[120px]">תכנית אימון</th>
+                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold min-w-[120px]">תכנית תזונה</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -266,25 +265,39 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                           <div className="text-xs text-gray-400">📱 {user.phone}</div>
                         </td>
 
-                        {/* Role Badge */}
+                        {/* Role Badge with Edit Button */}
                         <td className="p-3 border border-dark-border text-center">
-                          <span className={`inline-block text-xs px-2 py-1 rounded font-semibold whitespace-nowrap ${
-                            user.role === 'admin' 
-                              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
-                              : user.role === 'vip'
-                              ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
-                              : user.role === 'teenbeast'
-                              ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
-                              : user.role === 'onlinebeast'
-                              ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
-                              : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
-                          }`}>
-                            {user.role === 'admin' ? 'מנהל' 
-                              : user.role === 'vip' ? 'BEAST' 
-                              : user.role === 'teenbeast' ? 'TeenBEAST' 
-                              : user.role === 'onlinebeast' ? 'OnlineBEAST'
-                              : 'קיבוץ'}
-                          </span>
+                          <div className="flex flex-col items-center gap-2">
+                            <span className={`inline-block text-xs px-2 py-1 rounded font-semibold whitespace-nowrap ${
+                              user.role === 'admin' 
+                                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                                : user.role === 'vip'
+                                ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
+                                : user.role === 'teenbeast'
+                                ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white'
+                                : user.role === 'onlinebeast'
+                                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'
+                                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+                            }`}>
+                              {user.role === 'admin' ? 'מנהל' 
+                                : user.role === 'vip' ? 'BEAST' 
+                                : user.role === 'teenbeast' ? 'TeenBEAST' 
+                                : user.role === 'onlinebeast' ? 'OnlineBEAST'
+                                : 'קיבוץ'}
+                            </span>
+                            <button
+                              onClick={() => {
+                                setSelectedUser(user)
+                                setSelectedRole(user.role)
+                                setEditMode('role')
+                              }}
+                              className="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-xs font-medium transition-all inline-flex items-center gap-1.5"
+                              title="ערוך תפקיד"
+                            >
+                              <Edit2 className="w-3 h-3" />
+                              <span>ערוך</span>
+                            </button>
+                          </div>
                         </td>
 
                         {/* Edit Name Button */}
@@ -297,22 +310,6 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                             }}
                             className="px-3 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 rounded-lg text-xs font-medium transition-all inline-flex items-center gap-1.5"
                             title="ערוך שם"
-                          >
-                            <Edit2 className="w-3 h-3" />
-                            <span>ערוך</span>
-                          </button>
-                        </td>
-
-                        {/* Edit Role Button */}
-                        <td className="p-3 border border-dark-border text-center">
-                          <button
-                            onClick={() => {
-                              setSelectedUser(user)
-                              setSelectedRole(user.role)
-                              setEditMode('role')
-                            }}
-                            className="px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-xs font-medium transition-all inline-flex items-center gap-1.5"
-                            title="ערוך תפקיד"
                           >
                             <Edit2 className="w-3 h-3" />
                             <span>ערוך</span>
