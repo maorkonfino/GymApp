@@ -44,7 +44,14 @@ const WorkoutPlanUser: React.FC = () => {
   const [hasWorkoutPlan, setHasWorkoutPlan] = useState<boolean | null>(null)
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
-  const [userAddedWeeks, setUserAddedWeeks] = useState(1) // For flexible plans
+  const [userAddedWeeks, setUserAddedWeeks] = useState(() => {
+    // Load user added weeks from localStorage
+    if (user) {
+      const saved = localStorage.getItem(`workout-user-weeks-${user.email}`)
+      return saved ? parseInt(saved) : 1
+    }
+    return 1
+  })
   const [collapsedWorkouts, setCollapsedWorkouts] = useState<Set<number>>(() => {
     // Load collapsed workouts from localStorage
     const saved = localStorage.getItem('workout-collapsed-workouts')
@@ -73,6 +80,13 @@ const WorkoutPlanUser: React.FC = () => {
     localStorage.setItem('workout-collapsed-weeks', JSON.stringify(Array.from(collapsedWeeks)))
   }, [collapsedWeeks])
 
+  // Save user added weeks to localStorage
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem(`workout-user-weeks-${user.email}`, userAddedWeeks.toString())
+    }
+  }, [userAddedWeeks, user])
+
   const fetchWorkoutPlan = async () => {
     if (!user) {
       setLoading(false)
@@ -87,11 +101,15 @@ const WorkoutPlanUser: React.FC = () => {
       if (response.data && response.data.plan_content) {
         const parsedPlan = JSON.parse(response.data.plan_content)
         if (parsedPlan.workouts && parsedPlan.workouts.length > 0) {
-          // Extract notes if they exist
-          const { weekNotes: savedNotes, ...planData } = parsedPlan
+          // Extract notes and userAddedWeeks if they exist
+          const { weekNotes: savedNotes, userAddedWeeks: savedUserWeeks, ...planData } = parsedPlan
           setPlan(planData)
           if (savedNotes) {
             setWeekNotes(savedNotes)
+          }
+          // Load user added weeks from plan (for flexible plans)
+          if (savedUserWeeks && planData.numberOfWeeks === 'flexible') {
+            setUserAddedWeeks(savedUserWeeks)
           }
           setHasWorkoutPlan(true)
         } else {
@@ -205,7 +223,7 @@ const WorkoutPlanUser: React.FC = () => {
     return plan.numberOfWeeks
   }
 
-  // Find the current week to work on (first week that's not fully filled)
+  // Find the current week to work on (first week without any data, or next week if current has data)
   const getCurrentWeek = (workoutIndex: number): number => {
     if (!plan) return 1
     const workout = plan.workouts[workoutIndex]
@@ -213,32 +231,52 @@ const WorkoutPlanUser: React.FC = () => {
     
     // Check each week starting from week 1
     for (let week = 1; week <= totalWeeks; week++) {
-      // Check if this week has any exercise with missing data (at least set 1 empty)
-      const hasEmptyData = workout.exercises.some(exercise => {
+      // Check if this week has ANY data at all (even partial)
+      const hasAnyData = workout.exercises.some(exercise => {
         const weekData = exercise.weeklyData[week]?.[0] // Check set 1
-        return !weekData || !weekData.weight || !weekData.reps
+        return weekData && (weekData.weight || weekData.reps)
       })
       
-      if (hasEmptyData) {
-        return week // This is the current week to fill
+      // If this week has no data at all, it's the current week
+      if (!hasAnyData) {
+        return week
+      }
+      
+      // If this week has data but it's not the last week, check if next week is empty
+      if (week < totalWeeks) {
+        const nextWeekHasData = workout.exercises.some(exercise => {
+          const nextWeekData = exercise.weeklyData[week + 1]?.[0]
+          return nextWeekData && (nextWeekData.weight || nextWeekData.reps)
+        })
+        
+        // If next week has no data, it's the current week
+        if (!nextWeekHasData) {
+          return week + 1
+        }
       }
     }
     
-    // If all weeks are filled, return the last week
+    // If all weeks have data, return the last week
     return totalWeeks
   }
 
-  // Sort weeks: current week first, then previous weeks in descending order, then future weeks
+  // Sort weeks: current week first, previous week second for comparison, then others
   const getSortedWeeks = (workoutIndex: number): number[] => {
     const totalWeeks = getActualWeeks()
     const currentWeek = getCurrentWeek(workoutIndex)
     const allWeeks = Array.from({ length: totalWeeks }, (_, i) => i + 1)
     
-    // Split into: current, before current (descending), after current (ascending)
-    const beforeCurrent = allWeeks.filter(w => w < currentWeek).reverse() // [2, 1] if current is 3
-    const afterCurrent = allWeeks.filter(w => w > currentWeek) // [4, 5, 6] if current is 3
+    // If current week is 1, just show all weeks in order
+    if (currentWeek === 1) {
+      return allWeeks
+    }
     
-    return [currentWeek, ...beforeCurrent, ...afterCurrent]
+    // Current week first, then previous week for comparison (week - 1), then rest
+    const previousWeek = currentWeek - 1
+    const beforePrevious = allWeeks.filter(w => w < previousWeek).reverse() // Weeks before the previous week
+    const afterCurrent = allWeeks.filter(w => w > currentWeek) // Weeks after current
+    
+    return [currentWeek, previousWeek, ...beforePrevious, ...afterCurrent]
   }
 
   const getWeeklyData = (exercise: Exercise, week: number, setIndex: number) => {
@@ -252,7 +290,8 @@ const WorkoutPlanUser: React.FC = () => {
     try {
       const dataToSave = {
         ...plan,
-        weekNotes
+        weekNotes,
+        userAddedWeeks // Save user added weeks for flexible plans
       }
       await api.post('/workout-plans', {
         userId: user.id,
@@ -285,7 +324,7 @@ const WorkoutPlanUser: React.FC = () => {
     setNotesModalOpen(false)
   }
 
-  // Auto-save when plan changes (with debounce)
+  // Auto-save when plan, weekNotes, or userAddedWeeks changes (with debounce)
   useEffect(() => {
     if (!user || !plan) return
 
@@ -307,7 +346,7 @@ const WorkoutPlanUser: React.FC = () => {
         clearTimeout(timeout)
       }
     }
-  }, [plan])
+  }, [plan, weekNotes, userAddedWeeks])
 
   if (loading || hasWorkoutPlan === null) {
     return (
