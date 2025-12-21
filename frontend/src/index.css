@@ -123,3 +123,43 @@ input::-ms-clear {
 /* Test auto-deploy Sun Dec  7 14:23:24 IST 2025 */
 /* Auto-deploy fixed! */
 /* Git author fixed */
+
+/* Force fixed row height in registration table */
+table tbody tr {
+  height: 40px !important;
+  max-height: 40px !important;
+  min-height: 40px !important;
+}
+
+table tbody td {
+  height: 40px !important;
+  max-height: 40px !important;
+  min-height: 40px !important;
+  vertical-align: middle !important;
+  overflow: hidden !important;
+}
+
+/* Allow rowSpan cells to be taller */
+table tbody td[rowspan="2"] {
+  height: 80px !important;
+  max-height: 80px !important;
+  min-height: 80px !important;
+}
+
+table tbody td[rowspan="3"] {
+  height: 120px !important;
+  max-height: 120px !important;
+  min-height: 120px !important;
+}
+
+table tbody td[rowspan="4"] {
+  height: 160px !important;
+  max-height: 160px !important;
+  min-height: 160px !important;
+}
+
+table tbody td[rowspan="5"] {
+  height: 200px !important;
+  max-height: 200px !important;
+  min-height: 200px !important;
+}
