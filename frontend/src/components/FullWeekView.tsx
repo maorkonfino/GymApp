@@ -40,6 +40,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     startTime: '',
     endTime: ''
   })
+  const [showDayWorkoutsModal, setShowDayWorkoutsModal] = useState(false)
+  const [selectedDayWorkouts, setSelectedDayWorkouts] = useState<Registration[]>([])
+  const [selectedDayName, setSelectedDayName] = useState<string>('')
   const { user, isAdmin } = useAuth()
 
   // Get week dates - Sunday to Saturday with rolling logic
@@ -134,6 +137,22 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     e.stopPropagation()
     setSelectedCellRegistrations(regs)
     setShowAllModal(true)
+  }
+
+  // Handle day workouts modal
+  const handleShowDayWorkouts = (date: Date, e: React.MouseEvent) => {
+    e.stopPropagation()
+    const dateStr = format(date, 'yyyy-MM-dd')
+    
+    // Get all registrations for this day
+    const dayRegs = registrations.filter(r => format(new Date(r.date), 'yyyy-MM-dd') === dateStr)
+    
+    // Sort by start time
+    const sortedRegs = dayRegs.sort((a, b) => a.startTime.localeCompare(b.startTime))
+    
+    setSelectedDayWorkouts(sortedRegs)
+    setSelectedDayName(`${format(date, 'EEEE', { locale: he })} ${format(date, 'd.M')}`)
+    setShowDayWorkoutsModal(true)
   }
 
   // Handle delete registration
@@ -288,7 +307,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       return (
                         <th 
                           key={idx} 
-                          className={`p-1 text-center border border-dark-border font-medium ${
+                          className={`p-1 text-center border border-dark-border font-medium relative ${
                             isToday 
                               ? 'bg-cyan-500/20' 
                               : isEvenColumn 
@@ -296,6 +315,15 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 : 'bg-dark-hover'
                           }`}
                         >
+                          {/* Arrow button to show all workouts for this day */}
+                          <button
+                            onClick={(e) => handleShowDayWorkouts(date, e)}
+                            className="absolute top-0.5 left-0.5 z-10 text-white hover:text-cyan-400 transition-colors p-0.5"
+                            title={`כל האימונים ב${format(date, 'EEEE', { locale: he })}`}
+                          >
+                            <ChevronDown className="w-3 h-3" />
+                          </button>
+                          
                           <div className="text-[10px] leading-tight text-cyan-400 font-bold">{format(date, 'EEE', { locale: he })}</div>
                           <div className="text-[8px] text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
                         </th>
@@ -794,6 +822,72 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
             </div>
           </div>
         )}
+
+        {/* Modal for showing all workouts for a specific day - EMBEDDED MODE */}
+        {showDayWorkoutsModal && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
+            <div className="bg-dark-card border border-dark-border rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
+              <div className="p-4 border-b border-dark-border flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-cyan-400" />
+                  <h3 className="text-lg font-bold text-white">אימונים ב{selectedDayName} ({selectedDayWorkouts.length})</h3>
+                </div>
+                <button
+                  onClick={() => setShowDayWorkoutsModal(false)}
+                  className="p-2 hover:bg-dark-hover rounded-lg transition-colors"
+                >
+                  <X className="w-4 h-4 text-gray-400" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-auto p-4">
+                <div className="space-y-2">
+                  {selectedDayWorkouts.map((reg) => (
+                    <div
+                      key={reg.id}
+                      className={`p-3 rounded-lg relative group ${
+                        user?.email === reg.email
+                          ? 'bg-cyan-500/20 border border-cyan-500/40'
+                          : 'bg-gray-400/30 border border-gray-400/40'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <p className={`font-medium ${
+                          user?.email === reg.email ? 'text-cyan-300' : 'text-gray-200'
+                        }`}>
+                          {reg.name}
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <div className={`text-sm font-medium ${
+                            user?.email === reg.email ? 'text-cyan-300' : 'text-gray-200'
+                          }`}>
+                            {reg.startTime}-{reg.endTime}
+                          </div>
+                          {canDeleteRegistration(reg) && (
+                            <button
+                              onClick={(e) => {
+                                handleDeleteRegistration(reg.id!, e)
+                                // Update the modal list
+                                setSelectedDayWorkouts(prev => prev.filter(r => r.id !== reg.id))
+                                // Close modal if no registrations left
+                                if (selectedDayWorkouts.length <= 1) {
+                                  setShowDayWorkoutsModal(false)
+                                }
+                              }}
+                              className="p-1 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+                              title="מחק רישום"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </>
     )
   }
@@ -868,6 +962,72 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                               // Close modal if no registrations left
                               if (selectedCellRegistrations.length <= 1) {
                                 setShowAllModal(false)
+                              }
+                            }}
+                            className="p-1 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+                            title="מחק רישום"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for showing all workouts for a specific day */}
+      {showDayWorkoutsModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
+          <div className="bg-dark-card border border-dark-border rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-dark-border flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-cyan-400" />
+                <h3 className="text-lg font-bold text-white">אימונים ב{selectedDayName} ({selectedDayWorkouts.length})</h3>
+              </div>
+              <button
+                onClick={() => setShowDayWorkoutsModal(false)}
+                className="p-2 hover:bg-dark-hover rounded-lg transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-400" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              <div className="space-y-2">
+                {selectedDayWorkouts.map((reg) => (
+                  <div
+                    key={reg.id}
+                    className={`p-3 rounded-lg relative group ${
+                      user?.email === reg.email
+                        ? 'bg-cyan-500/20 border border-cyan-500/40'
+                        : 'bg-blue-500/20 border border-blue-500/20'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className={`font-medium ${
+                        user?.email === reg.email ? 'text-cyan-300' : 'text-blue-300'
+                      }`}>
+                        {reg.name}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <div className={`text-sm font-medium ${
+                          user?.email === reg.email ? 'text-cyan-300' : 'text-blue-300'
+                        }`}>
+                          {reg.startTime}-{reg.endTime}
+                        </div>
+                        {canDeleteRegistration(reg) && (
+                          <button
+                            onClick={(e) => {
+                              handleDeleteRegistration(reg.id!, e)
+                              // Update the modal list
+                              setSelectedDayWorkouts(prev => prev.filter(r => r.id !== reg.id))
+                              // Close modal if no registrations left
+                              if (selectedDayWorkouts.length <= 1) {
+                                setShowDayWorkoutsModal(false)
                               }
                             }}
                             className="p-1 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
