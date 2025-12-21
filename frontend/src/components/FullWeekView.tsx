@@ -138,13 +138,13 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       case 'admin':
         return 'text-purple-400'
       case 'vip':
-        return 'text-cyan-400'
+        return 'text-cyan-400'  // BEAST - Cyan
       case 'kibbutz':
-        return 'text-green-400'
+        return 'text-green-400'  // Kibbutz - Green
       case 'teenbeast':
-        return 'text-orange-400'
+        return 'text-red-400'  // TeenBEAST - Red
       case 'onlinebeast':
-        return 'text-indigo-400'
+        return 'text-indigo-400'  // OnlineBEAST - Indigo
       default:
         return 'text-gray-200'
     }
@@ -467,7 +467,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                       className={`truncate max-w-full ${
                                         user?.email === reg.email
                                           ? 'text-cyan-400'  // Current user: cyan
-                                          : 'text-white'     // Others: white
+                                          : isAdmin
+                                            ? getRoleColorClass(reg.role)  // Admin sees role colors
+                                            : 'text-white'  // Non-admin sees white
                                       }`}
                                     >
                                       {getFirstName(reg.name)}
