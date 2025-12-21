@@ -395,9 +395,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       const [rangeStart] = timeRange.split('-')
                       
                       return (
-                        <tr key={timeIdx} className="hover:bg-dark-hover/30 h-[45px]">
+                        <tr key={timeIdx} className="hover:bg-dark-hover/30">
                           {/* Time Range Cell */}
-                          <td className="p-1 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[55px] h-[45px]">
+                          <td className="p-1 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[55px]">
                             {timeRange}
                           </td>
                           
@@ -434,7 +434,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                     key={dateIdx} 
                                     rowSpan={2}
                                     className={`p-1 border border-dark-border align-middle bg-orange-500/10 ${columnBgClass}`}
-                                    style={{ height: '90px' }}
                                   >
                                     <div className="text-center py-2 text-orange-400 font-medium text-[8px] leading-tight">
                                       סגור לגיל השלישי<br/>
@@ -487,7 +486,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   className={`p-0 border border-dark-border relative overflow-hidden bg-green-500/15 ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
                                   }`}
-                                  style={{ height: `${rowSpan * 45}px`, maxHeight: `${rowSpan * 45}px` }}
                                   onClick={() => onCellClick && onCellClick(date, timeRange)}
                                 >
                                   {/* "More" button - top left corner - always shown */}
@@ -500,11 +498,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   </button>
                                   
                                   {/* Display registrations vertically (one below the other) */}
-                                  <div className="flex flex-col gap-1 h-full p-1 overflow-hidden">
+                                  <div className="flex flex-col gap-1 h-full p-1">
                                     {overlappingRegs.slice(0, 3).map((reg) => (
                                       <div
                                         key={reg.id}
-                                        className={`relative px-1 py-0.5 rounded flex flex-col justify-center text-center group h-[12px] overflow-hidden ${
+                                        className={`relative px-2 py-1 rounded flex flex-col justify-center text-center group min-h-[30px] ${
                                           user?.email === reg.email
                                             ? 'bg-cyan-500/30 text-cyan-100 border border-cyan-500/50'
                                             : 'bg-gray-400/40 text-gray-200 border border-gray-400/40'
@@ -513,14 +511,17 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                         {canDeleteRegistration(reg) && (
                                           <button
                                             onClick={(e) => handleDeleteRegistration(reg.id!, e)}
-                                            className="absolute -top-0.5 -right-0.5 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                                            className="absolute -top-1 -right-1 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
                                             title="מחק רישום"
                                           >
-                                            <X className="w-2 h-2" />
+                                            <X className="w-3 h-3" />
                                           </button>
                                         )}
-                                        <div className="font-bold leading-none text-[7px] truncate">
-                                          {getFirstName(reg.name)} {reg.startTime.slice(0,5)}
+                                        <div className="font-bold leading-tight mb-0.5 text-[6px]">
+                                          <div className="truncate">{getFirstName(reg.name)}</div>
+                                        </div>
+                                        <div className="opacity-80 leading-tight text-[5px]">
+                                          <div className="truncate">{reg.startTime}-{reg.endTime}</div>
                                         </div>
                                       </div>
                                     ))}
@@ -533,7 +534,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                             return (
                               <td 
                                 key={dateIdx} 
-                                className={`p-0.5 border border-dark-border align-top h-[45px] ${columnBgClass} ${
+                                className={`p-0.5 border border-dark-border align-top ${columnBgClass} ${
                                   onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
                                 }`}
                                 onClick={() => onCellClick && onCellClick(date, timeRange)}
