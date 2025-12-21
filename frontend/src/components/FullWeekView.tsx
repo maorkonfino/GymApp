@@ -360,7 +360,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
         <table className="w-full text-sm border-collapse table-fixed">
           <thead className="bg-dark-card shadow-lg sticky top-0 z-20">
                   <tr>
-                    <th className="p-1 sm:p-2 text-right border border-dark-border bg-dark-hover font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] sm:text-sm w-[55px] sm:w-[80px]">
+                    <th className="p-1 text-right border border-dark-border bg-dark-hover font-medium sticky right-0 z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] text-[9px] w-[55px]">
                       <span className="text-white">שעות</span>
                       <span className="text-gray-500 mx-0.5">|</span>
                       <span className="text-cyan-400">יום</span>
@@ -371,7 +371,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       return (
                         <th 
                           key={idx} 
-                          className={`p-0.5 sm:p-2 text-center border border-dark-border font-medium ${
+                          className={`p-1 text-center border border-dark-border font-medium ${
                             isToday 
                               ? 'bg-cyan-500/20' 
                               : isEvenColumn 
@@ -379,8 +379,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 : 'bg-dark-hover'
                           }`}
                         >
-                          <div className="text-[10px] sm:text-base leading-tight text-cyan-400 font-bold">{format(date, 'EEE', { locale: he })}</div>
-                          <div className="text-[7px] sm:text-xs text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
+                          <div className="text-[10px] leading-tight text-cyan-400 font-bold">{format(date, 'EEE', { locale: he })}</div>
+                          <div className="text-[8px] text-cyan-400 mt-0.5">{format(date, 'd.M')}</div>
                         </th>
                       )
                     })}
@@ -397,7 +397,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                       return (
                         <tr key={timeIdx} className="hover:bg-dark-hover/30">
                           {/* Time Range Cell */}
-                          <td className="p-0.5 sm:p-2 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] sm:text-xs shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[55px] sm:w-[80px]">
+                          <td className="p-1 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[55px]">
                             {timeRange}
                           </td>
                           
@@ -433,11 +433,11 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   <td 
                                     key={dateIdx} 
                                     rowSpan={2}
-                                    className={`p-0.5 sm:p-2 border border-dark-border align-middle bg-orange-500/10 ${columnBgClass}`}
+                                    className={`p-1 border border-dark-border align-middle bg-orange-500/10 ${columnBgClass}`}
                                   >
-                                    <div className="text-center py-1 sm:py-4 text-orange-400 font-medium text-[8px] sm:text-sm leading-tight">
+                                    <div className="text-center py-2 text-orange-400 font-medium text-[8px] leading-tight">
                                       סגור לגיל השלישי<br/>
-                                      <span className="text-[7px] sm:text-xs">09:00-10:00</span>
+                                      <span className="text-[7px]">09:00-10:00</span>
                                     </div>
                                   </td>
                                 )
@@ -539,7 +539,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 }`}
                                 onClick={() => onCellClick && onCellClick(date, timeRange)}
                               >
-                                <div className="text-center text-gray-600 text-[9px] sm:text-xs py-0.5 sm:py-2">
+                                <div className="text-center text-gray-600 text-[9px] py-1">
                                   {onCellClick ? '+' : '-'}
                                 </div>
                               </td>
