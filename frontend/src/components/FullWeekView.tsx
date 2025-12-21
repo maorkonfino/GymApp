@@ -132,6 +132,24 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     return fullName.split(' ')[0]
   }
 
+  // Get color class based on user role (for admin view only)
+  const getRoleColorClass = (role?: string): string => {
+    switch (role) {
+      case 'admin':
+        return 'text-purple-400'
+      case 'vip':
+        return 'text-cyan-400'
+      case 'kibbutz':
+        return 'text-green-400'
+      case 'teenbeast':
+        return 'text-orange-400'
+      case 'onlinebeast':
+        return 'text-indigo-400'
+      default:
+        return 'text-gray-200'
+    }
+  }
+
   // Handle "Show All" modal
   const handleShowAllClick = (regs: Registration[], e: React.MouseEvent) => {
     e.stopPropagation()
@@ -852,13 +870,21 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                     >
                       <div className="flex items-center justify-between">
                         <p className={`font-medium ${
-                          user?.email === reg.email ? 'text-cyan-300' : 'text-gray-200'
+                          user?.email === reg.email 
+                            ? 'text-cyan-300' 
+                            : isAdmin 
+                              ? getRoleColorClass(reg.role)  // Admin sees role colors
+                              : 'text-gray-200'  // Non-admin sees gray
                         }`}>
                           {reg.name}
                         </p>
                         <div className="flex items-center gap-2">
                           <div className={`text-sm font-medium ${
-                            user?.email === reg.email ? 'text-cyan-300' : 'text-gray-200'
+                            user?.email === reg.email 
+                              ? 'text-cyan-300' 
+                              : isAdmin 
+                                ? getRoleColorClass(reg.role)  // Admin sees role colors
+                                : 'text-gray-200'  // Non-admin sees gray
                           }`}>
                             {reg.startTime}-{reg.endTime}
                           </div>
@@ -1004,18 +1030,26 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                     className={`p-3 rounded-lg relative group ${
                       user?.email === reg.email
                         ? 'bg-cyan-500/20 border border-cyan-500/40'
-                        : 'bg-blue-500/20 border border-blue-500/20'
+                        : 'bg-gray-400/30 border border-gray-400/40'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <p className={`font-medium ${
-                        user?.email === reg.email ? 'text-cyan-300' : 'text-blue-300'
+                        user?.email === reg.email 
+                          ? 'text-cyan-300' 
+                          : isAdmin 
+                            ? getRoleColorClass(reg.role)  // Admin sees role colors
+                            : 'text-gray-200'  // Non-admin sees gray
                       }`}>
                         {reg.name}
                       </p>
                       <div className="flex items-center gap-2">
                         <div className={`text-sm font-medium ${
-                          user?.email === reg.email ? 'text-cyan-300' : 'text-blue-300'
+                          user?.email === reg.email 
+                            ? 'text-cyan-300' 
+                            : isAdmin 
+                              ? getRoleColorClass(reg.role)  // Admin sees role colors
+                              : 'text-gray-200'  // Non-admin sees gray
                         }`}>
                           {reg.startTime}-{reg.endTime}
                         </div>
