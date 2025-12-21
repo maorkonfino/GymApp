@@ -479,11 +479,29 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 }
                               }
                               
+                              // Determine cell background color based on number of registrations
+                              const cellBgClass = overlappingRegs.length === 1 
+                                ? 'bg-orange-900/20' // 1 person: red-brown transparent
+                                : 'bg-green-500/15'  // 2+ people: green transparent
+                              
+                              // Sort registrations: current user first, then by start time
+                              const sortedRegs = [...overlappingRegs].sort((a, b) => {
+                                const aIsCurrentUser = user?.email && a.email === user.email
+                                const bIsCurrentUser = user?.email && b.email === user.email
+                                
+                                // Current user always first
+                                if (aIsCurrentUser && !bIsCurrentUser) return -1
+                                if (!aIsCurrentUser && bIsCurrentUser) return 1
+                                
+                                // Then by start time
+                                return a.startTime.localeCompare(b.startTime)
+                              })
+                              
                               return (
                                 <td 
                                   key={dateIdx}
                                   rowSpan={rowSpan}
-                                  className={`p-0 border border-dark-border relative overflow-hidden bg-green-500/15 ${
+                                  className={`p-1 border border-dark-border relative overflow-hidden ${cellBgClass} ${
                                     onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
                                   }`}
                                   style={{ height: `${rowSpan * 40}px`, maxHeight: `${rowSpan * 40}px`, minHeight: `${rowSpan * 40}px` }}
@@ -491,39 +509,25 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 >
                                   {/* "More" button - top left corner - always shown */}
                                   <button
-                                    onClick={(e) => handleShowAllClick(overlappingRegs, e)}
+                                    onClick={(e) => handleShowAllClick(sortedRegs, e)}
                                     className="absolute top-0 left-0 z-10 text-white hover:text-cyan-400 transition-colors p-0.5"
-                                    title={`צפה בכל הרשומים (${overlappingRegs.length})`}
+                                    title={`צפה בכל הרשומים (${sortedRegs.length})`}
                                   >
-                                    <ChevronDown className="w-2 h-2" />
+                                    <ChevronDown className="w-3 h-3" />
                                   </button>
                                   
-                                  {/* Display registrations vertically (one below the other) */}
-                                  <div className="flex flex-col gap-1 h-full p-1">
-                                    {overlappingRegs.slice(0, 3).map((reg) => (
+                                  {/* Display names only - one below the other */}
+                                  <div className="flex flex-col items-center justify-center h-full gap-0.5 text-[10px] font-medium leading-tight">
+                                    {sortedRegs.map((reg) => (
                                       <div
                                         key={reg.id}
-                                        className={`relative px-2 py-1 rounded flex flex-col justify-center text-center group min-h-[30px] ${
+                                        className={`truncate max-w-full ${
                                           user?.email === reg.email
-                                            ? 'bg-cyan-500/30 text-cyan-100 border border-cyan-500/50'
-                                            : 'bg-gray-400/40 text-gray-200 border border-gray-400/40'
+                                            ? 'text-cyan-400'  // Current user: cyan
+                                            : 'text-white'     // Others: white
                                         }`}
                                       >
-                                        {canDeleteRegistration(reg) && (
-                                          <button
-                                            onClick={(e) => handleDeleteRegistration(reg.id!, e)}
-                                            className="absolute -top-1 -right-1 p-0.5 bg-red-500 hover:bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20"
-                                            title="מחק רישום"
-                                          >
-                                            <X className="w-3 h-3" />
-                                          </button>
-                                        )}
-                                        <div className="font-bold leading-tight mb-0.5 text-[6px]">
-                                          <div className="truncate">{getFirstName(reg.name)}</div>
-                                        </div>
-                                        <div className="opacity-80 leading-tight text-[5px]">
-                                          <div className="truncate">{reg.startTime}-{reg.endTime}</div>
-                                        </div>
+                                        {getFirstName(reg.name)}
                                       </div>
                                     ))}
                                   </div>
