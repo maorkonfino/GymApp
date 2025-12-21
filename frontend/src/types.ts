@@ -3,6 +3,7 @@ export interface Registration {
   name: string;
   email: string;
   phone: string;
+  role?: UserType;
   date: string;
   startTime: string;
   endTime: string;

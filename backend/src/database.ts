@@ -10,6 +10,7 @@ db.exec(`
     full_name TEXT NOT NULL,
     phone TEXT NOT NULL,
     email TEXT NOT NULL,
+    role TEXT,
     date TEXT NOT NULL,
     start_time TEXT NOT NULL,
     end_time TEXT NOT NULL,
@@ -117,11 +118,19 @@ try {
   // Column already exists, ignore
 }
 
+// Add role column to registrations table
+try {
+  db.exec('ALTER TABLE registrations ADD COLUMN role TEXT');
+} catch (e) {
+  // Column already exists, ignore
+}
+
 export interface Registration {
   id?: number;
   full_name: string;
   phone: string;
   email: string;
+  role?: string;
   date: string;
   start_time: string;
   end_time: string;
@@ -132,14 +141,15 @@ export interface Registration {
 
 export const createRegistration = (registration: Omit<Registration, 'id' | 'created_at'>) => {
   const stmt = db.prepare(`
-    INSERT INTO registrations (full_name, phone, email, date, start_time, end_time)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO registrations (full_name, phone, email, role, date, start_time, end_time)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
   
   const result = stmt.run(
     registration.full_name,
     registration.phone,
     registration.email,
+    registration.role || null,
     registration.date,
     registration.start_time,
     registration.end_time

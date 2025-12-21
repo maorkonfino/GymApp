@@ -268,6 +268,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           name: user.name,
           email: user.email,
           phone: user.phone,
+          role: user.role,
           date: dateString,
           startTime,
           endTime

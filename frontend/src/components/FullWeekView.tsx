@@ -368,14 +368,22 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                             return regStartMin < slotEndMin && regEndMin > slotStartMin
                           })
                           
-                          // Sort registrations: current user first, then by start time
+                          // Sort registrations: current user first, then admin, then by start time
                           const sortedRegs = [...overlappingRegs].sort((a, b) => {
                             const aIsCurrentUser = user?.email && a.email === user.email
                             const bIsCurrentUser = user?.email && b.email === user.email
+                            const aIsAdmin = a.role === 'admin'
+                            const bIsAdmin = b.role === 'admin'
                             
                             // Current user always first
                             if (aIsCurrentUser && !bIsCurrentUser) return -1
                             if (!aIsCurrentUser && bIsCurrentUser) return 1
+                            
+                            // Admin always second (but not if current user is admin)
+                            if (!aIsCurrentUser && !bIsCurrentUser) {
+                              if (aIsAdmin && !bIsAdmin) return -1
+                              if (!aIsAdmin && bIsAdmin) return 1
+                            }
                             
                             // Then by start time
                             return a.startTime.localeCompare(b.startTime)
@@ -405,9 +413,9 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                   <ChevronDown className="w-3 h-3" />
                                 </button>
                                 
-                                {/* Display up to 3 names - one below the other */}
+                                {/* Display up to 2 names - one below the other */}
                                 <div className="flex flex-col items-center justify-center h-full gap-0.5 text-[9px] font-medium leading-tight">
-                                  {sortedRegs.slice(0, 3).map((reg) => (
+                                  {sortedRegs.slice(0, 2).map((reg) => (
                                     <div
                                       key={reg.id}
                                       className={`truncate max-w-full ${

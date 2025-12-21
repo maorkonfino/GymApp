@@ -18,6 +18,7 @@ export const initDatabase = async () => {
         full_name TEXT NOT NULL,
         phone TEXT NOT NULL,
         email TEXT NOT NULL,
+        role TEXT,
         date TEXT NOT NULL,
         start_time TEXT NOT NULL,
         end_time TEXT NOT NULL,
@@ -110,6 +111,13 @@ export const initDatabase = async () => {
       );
     `);
 
+    // Add role column to registrations table (migration)
+    try {
+      await client.query('ALTER TABLE registrations ADD COLUMN IF NOT EXISTS role TEXT');
+    } catch (e) {
+      // Column already exists, ignore
+    }
+
     console.log('✅ Database tables initialized successfully');
   } catch (error) {
     console.error('❌ Error initializing database:', error);
@@ -126,6 +134,7 @@ export interface Registration {
   full_name: string;
   phone: string;
   email: string;
+  role?: string;
   date: string;
   start_time: string;
   end_time: string;
@@ -183,8 +192,8 @@ export interface User {
 
 export const createRegistration = async (registration: Omit<Registration, 'id' | 'created_at'>): Promise<number> => {
   const query = `
-    INSERT INTO registrations (full_name, phone, email, date, start_time, end_time)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    INSERT INTO registrations (full_name, phone, email, role, date, start_time, end_time)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING id
   `;
   
@@ -192,6 +201,7 @@ export const createRegistration = async (registration: Omit<Registration, 'id' |
     registration.full_name,
     registration.phone,
     registration.email,
+    registration.role || null,
     registration.date,
     registration.start_time,
     registration.end_time
