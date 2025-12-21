@@ -123,89 +123,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     }
   }
 
-  // Helper: Check if two registrations overlap
-  const doRegistrationsOverlap = (reg1: Registration, reg2: Registration): boolean => {
-    if (reg1.date !== reg2.date) return false
-    
-    const timeToMinutes = (time: string) => {
-      const [h, m] = time.split(':').map(Number)
-      return h * 60 + m
-    }
-    
-    const r1Start = timeToMinutes(reg1.startTime)
-    const r1End = timeToMinutes(reg1.endTime)
-    const r2Start = timeToMinutes(reg2.startTime)
-    const r2End = timeToMinutes(reg2.endTime)
-    
-    // Check if there's ANY overlap
-    return r1Start < r2End && r1End > r2Start
-  }
-  
-  // Get all registrations that are connected through overlaps (transitively)
-  const getConnectedRegistrations = (date: Date, timeRange: string): Registration[] => {
-    const dateStr = format(date, 'yyyy-MM-dd')
-    
-    // Get all registrations for this date
-    const dateRegs = registrations.filter(reg => reg.date === dateStr)
-    
-    if (dateRegs.length === 0) return []
-    
-    // Find which registrations overlap with the current time slot
-    const timeToMinutes = (time: string) => {
-      const [h, m] = time.split(':').map(Number)
-      return h * 60 + m
-    }
-    
-    const [slotStart, slotEnd] = timeRange.split('-')
-    const slotStartMin = timeToMinutes(slotStart)
-    const slotEndMin = timeToMinutes(slotEnd)
-    
-    // Find registrations that touch this slot
-    const slotRegs = dateRegs.filter((reg) => {
-      const regStartMin = timeToMinutes(reg.startTime)
-      const regEndMin = timeToMinutes(reg.endTime)
-      return regStartMin < slotEndMin && regEndMin > slotStartMin
-    })
-    
-    if (slotRegs.length === 0) return []
-    
-    // Now find ALL registrations connected to these through overlaps (BFS)
-    const connected = new Set<Registration>(slotRegs)
-    const queue = [...slotRegs]
-    
-    while (queue.length > 0) {
-      const current = queue.shift()!
-      
-      // Find all registrations that overlap with current
-      for (const reg of dateRegs) {
-        if (!connected.has(reg) && doRegistrationsOverlap(current, reg)) {
-          connected.add(reg)
-          queue.push(reg)
-        }
-      }
-    }
-    
-    // Convert to array and sort
-    const result = Array.from(connected)
-    
-    return result.sort((a, b) => {
-      const aIsAdmin = user?.email && a.email === user.email && isAdmin
-      const bIsAdmin = user?.email && b.email === user.email && isAdmin
-      const aIsCurrentUser = user?.email && a.email === user.email
-      const bIsCurrentUser = user?.email && b.email === user.email
-      
-      // Admin always first
-      if (aIsAdmin && !bIsAdmin) return -1
-      if (!aIsAdmin && bIsAdmin) return 1
-      
-      // Current user always first (after admin)
-      if (aIsCurrentUser && !bIsCurrentUser) return -1
-      if (!aIsCurrentUser && bIsCurrentUser) return 1
-      
-      // Then by start time (who starts earlier)
-      return a.startTime.localeCompare(b.startTime)
-    })
-  }
   
   // Get first name only
   const getFirstName = (fullName: string): string => {
@@ -387,173 +304,144 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {(() => {
-                    // Build skip map for this render
-                    const skipCells = new Set<string>()
+                  {timeSlotRanges.map((timeRange, timeIdx) => {
+                    const [rangeStart, rangeEnd] = timeRange.split('-')
                     
-                    return timeSlotRanges.map((timeRange, timeIdx) => {
-                      const [rangeStart] = timeRange.split('-')
-                      
-                      return (
-                        <tr key={timeIdx} className="hover:bg-dark-hover/30 h-[40px] max-h-[40px] min-h-[40px]">
-                          {/* Time Range Cell */}
-                          <td className="p-1 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[55px] h-[40px] max-h-[40px] min-h-[40px] align-middle overflow-hidden">
-                            {timeRange}
-                          </td>
+                    return (
+                      <tr key={timeIdx} className="hover:bg-dark-hover/30 h-[40px] max-h-[40px] min-h-[40px]">
+                        {/* Time Range Cell */}
+                        <td className="p-1 text-white font-medium border border-dark-border bg-dark-card sticky right-0 z-10 text-[8px] shadow-[2px_0_5px_rgba(0,0,0,0.3)] leading-tight w-[55px] h-[40px] max-h-[40px] min-h-[40px] align-middle overflow-hidden">
+                          {timeRange}
+                        </td>
+                        
+                        {/* Date Cells */}
+                        {weekDates.map((date, dateIdx) => {
+                          const dateStr = format(date, 'yyyy-MM-dd')
+                          const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
+                          const isEvenColumn = dateIdx % 2 === 1 // Alternate coloring
+                          const columnBgClass = isToday 
+                            ? 'bg-cyan-500/10' 
+                            : isEvenColumn 
+                              ? 'bg-dark-hover/30' 
+                              : 'bg-dark-bg'
                           
-                          {/* Date Cells */}
-                          {weekDates.map((date, dateIdx) => {
-                            const dateStr = format(date, 'yyyy-MM-dd')
-                            const cellKey = `${dateStr}-${timeRange}`
-                            const isToday = format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
-                            const isEvenColumn = dateIdx % 2 === 1 // Alternate coloring
-                            const columnBgClass = isToday 
-                              ? 'bg-cyan-500/10' 
-                              : isEvenColumn 
-                                ? 'bg-dark-hover/30' 
-                                : 'bg-dark-bg'
-                            
-                            // Skip if this cell was already rendered by a rowSpan
-                            if (skipCells.has(cellKey)) {
-                              return null
-                            }
-                            
-                            // Check for "Closed for Seniors"
-                            const restriction = getRestrictionMessage(date, rangeStart)
-                            const dayOfWeek = date.getDay()
-                            const isSundayOrThursday = dayOfWeek === 0 || dayOfWeek === 4
-                            
-                            // Handle seniors time (9:00-10:00)
-                            if (restriction && isSundayOrThursday) {
-                              if (rangeStart === '09:00') {
-                                // Mark next cell as rendered
-                                skipCells.add(`${dateStr}-09:30-10:00`)
-                                
-                                return (
-                                  <td 
-                                    key={dateIdx} 
-                                    rowSpan={2}
-                                    className={`p-1 border border-dark-border align-middle bg-orange-500/10 h-[80px] max-h-[80px] overflow-hidden ${columnBgClass}`}
-                                  >
-                                    <div className="text-center py-2 text-orange-400 font-medium text-[8px] leading-tight">
-                                      סגור לגיל השלישי<br/>
-                                      <span className="text-[7px]">09:00-10:00</span>
-                                    </div>
-                                  </td>
-                                )
-                              }
-                            }
-                            
-                            // Get all registrations that are connected through overlaps
-                            const overlappingRegs = getConnectedRegistrations(date, timeRange)
-                            
-                            // Only render if there are registrations AND this is the first slot they appear in
-                            if (overlappingRegs.length > 0) {
-                              // Check if this is the earliest time slot for these registrations
-                              const timeToMinutes = (time: string) => {
-                                const [h, m] = time.split(':').map(Number)
-                                return h * 60 + m
-                              }
-                              
-                              const [slotStart] = timeRange.split('-')
-                              const slotStartMin = timeToMinutes(slotStart)
-                              
-                              // Find the earliest start time among overlapping registrations
-                              const earliestStartMin = Math.min(...overlappingRegs.map(r => timeToMinutes(r.startTime)))
-                              
-                              // Only render if this slot matches the earliest start time
-                              if (slotStartMin !== earliestStartMin) {
-                                return null // Skip this cell, will be rendered from earlier slot
-                              }
-                              
-                              // Calculate rowSpan: from earliest start to latest end
-                              const latestEndMin = Math.max(...overlappingRegs.map(r => timeToMinutes(r.endTime)))
-                              const durationMinutes = latestEndMin - earliestStartMin
-                              const rowSpan = Math.ceil(durationMinutes / 30)
-                              
-                              // Mark future cells as skip
-                              for (let i = 1; i < rowSpan; i++) {
-                                const futureTimeRange = timeSlotRanges[timeIdx + i]
-                                if (futureTimeRange) {
-                                  skipCells.add(`${dateStr}-${futureTimeRange}`)
-                                }
-                              }
-                              
-                              // Determine cell background color based on number of registrations
-                              const cellBgClass = overlappingRegs.length === 1 
-                                ? 'bg-orange-900/20' // 1 person: red-brown transparent
-                                : 'bg-green-500/15'  // 2+ people: green transparent
-                              
-                              // Sort registrations: current user first, then by start time
-                              const sortedRegs = [...overlappingRegs].sort((a, b) => {
-                                const aIsCurrentUser = user?.email && a.email === user.email
-                                const bIsCurrentUser = user?.email && b.email === user.email
-                                
-                                // Current user always first
-                                if (aIsCurrentUser && !bIsCurrentUser) return -1
-                                if (!aIsCurrentUser && bIsCurrentUser) return 1
-                                
-                                // Then by start time
-                                return a.startTime.localeCompare(b.startTime)
-                              })
-                              
-                              return (
-                                <td 
-                                  key={dateIdx}
-                                  rowSpan={rowSpan}
-                                  className={`p-1 border border-dark-border relative overflow-hidden ${cellBgClass} ${
-                                    onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
-                                  }`}
-                                  style={{ height: `${rowSpan * 40}px`, maxHeight: `${rowSpan * 40}px`, minHeight: `${rowSpan * 40}px` }}
-                                  onClick={() => onCellClick && onCellClick(date, timeRange)}
-                                >
-                                  {/* "More" button - top left corner - always shown */}
-                                  <button
-                                    onClick={(e) => handleShowAllClick(sortedRegs, e)}
-                                    className="absolute top-0 left-0 z-10 text-white hover:text-cyan-400 transition-colors p-0.5"
-                                    title={`צפה בכל הרשומים (${sortedRegs.length})`}
-                                  >
-                                    <ChevronDown className="w-3 h-3" />
-                                  </button>
-                                  
-                                  {/* Display names only - one below the other */}
-                                  <div className="flex flex-col items-center justify-center h-full gap-0.5 text-[10px] font-medium leading-tight">
-                                    {sortedRegs.map((reg) => (
-                                      <div
-                                        key={reg.id}
-                                        className={`truncate max-w-full ${
-                                          user?.email === reg.email
-                                            ? 'text-cyan-400'  // Current user: cyan
-                                            : 'text-white'     // Others: white
-                                        }`}
-                                      >
-                                        {getFirstName(reg.name)}
-                                      </div>
-                                    ))}
-                                  </div>
-                                </td>
-                              )
-                            }
-                            
-                            // Empty cell - clickable for registration
+                          // Check for "Closed for Seniors" restriction
+                          const restriction = getRestrictionMessage(date, rangeStart)
+                          const dayOfWeek = date.getDay()
+                          const isSundayOrThursday = dayOfWeek === 0 || dayOfWeek === 4
+                          
+                          // Handle seniors time (9:00-10:00) - skip 09:30-10:00 slot
+                          if (restriction && isSundayOrThursday && rangeStart === '09:30') {
+                            return null // Will be handled by the 09:00 slot with rowSpan
+                          }
+                          
+                          if (restriction && isSundayOrThursday && rangeStart === '09:00') {
                             return (
                               <td 
                                 key={dateIdx} 
-                                className={`p-0.5 border border-dark-border align-top h-[40px] max-h-[40px] overflow-hidden ${columnBgClass} ${
-                                  onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
-                                }`}
-                                onClick={() => onCellClick && onCellClick(date, timeRange)}
+                                rowSpan={2}
+                                className={`p-1 border border-dark-border align-middle bg-orange-500/10 h-[80px] max-h-[80px] overflow-hidden ${columnBgClass}`}
                               >
-                                <div className="text-center text-gray-600 text-[9px] py-1">
-                                  {onCellClick ? '+' : '-'}
+                                <div className="text-center py-2 text-orange-400 font-medium text-[8px] leading-tight">
+                                  סגור לגיל השלישי<br/>
+                                  <span className="text-[7px]">09:00-10:00</span>
                                 </div>
                               </td>
                             )
-                          })}
-                        </tr>
-                      )
-                    })
-                  })()}
+                          }
+                          
+                          // Convert time to minutes for comparison
+                          const timeToMinutes = (time: string) => {
+                            const [h, m] = time.split(':').map(Number)
+                            return h * 60 + m
+                          }
+                          
+                          const slotStartMin = timeToMinutes(rangeStart)
+                          const slotEndMin = timeToMinutes(rangeEnd)
+                          
+                          // Get all registrations for this date that overlap with this time slot
+                          const dateRegs = registrations.filter(r => format(new Date(r.date), 'yyyy-MM-dd') === dateStr)
+                          const overlappingRegs = dateRegs.filter((reg) => {
+                            const regStartMin = timeToMinutes(reg.startTime)
+                            const regEndMin = timeToMinutes(reg.endTime)
+                            // Registration overlaps this slot if it starts before slot ends and ends after slot starts
+                            return regStartMin < slotEndMin && regEndMin > slotStartMin
+                          })
+                          
+                          // Sort registrations: current user first, then by start time
+                          const sortedRegs = [...overlappingRegs].sort((a, b) => {
+                            const aIsCurrentUser = user?.email && a.email === user.email
+                            const bIsCurrentUser = user?.email && b.email === user.email
+                            
+                            // Current user always first
+                            if (aIsCurrentUser && !bIsCurrentUser) return -1
+                            if (!aIsCurrentUser && bIsCurrentUser) return 1
+                            
+                            // Then by start time
+                            return a.startTime.localeCompare(b.startTime)
+                          })
+                          
+                          // If there are registrations
+                          if (sortedRegs.length > 0) {
+                            // Determine cell background color based on number of registrations
+                            const cellBgClass = sortedRegs.length === 1 
+                              ? 'bg-orange-900/20' // 1 person: red-brown transparent
+                              : 'bg-green-500/15'  // 2+ people: green transparent
+                            
+                            return (
+                              <td 
+                                key={dateIdx}
+                                className={`p-1 border border-dark-border relative overflow-hidden ${cellBgClass} h-[40px] max-h-[40px] min-h-[40px] ${
+                                  onCellClick ? 'cursor-pointer hover:bg-dark-hover/50' : ''
+                                }`}
+                                onClick={() => onCellClick && onCellClick(date, timeRange)}
+                              >
+                                {/* "More" button - top left corner - always shown when there are registrations */}
+                                <button
+                                  onClick={(e) => handleShowAllClick(sortedRegs, e)}
+                                  className="absolute top-0 left-0 z-10 text-white hover:text-cyan-400 transition-colors p-0.5"
+                                  title={`צפה בכל הרשומים (${sortedRegs.length})`}
+                                >
+                                  <ChevronDown className="w-3 h-3" />
+                                </button>
+                                
+                                {/* Display up to 3 names - one below the other */}
+                                <div className="flex flex-col items-center justify-center h-full gap-0.5 text-[9px] font-medium leading-tight">
+                                  {sortedRegs.slice(0, 3).map((reg) => (
+                                    <div
+                                      key={reg.id}
+                                      className={`truncate max-w-full ${
+                                        user?.email === reg.email
+                                          ? 'text-cyan-400'  // Current user: cyan
+                                          : 'text-white'     // Others: white
+                                      }`}
+                                    >
+                                      {getFirstName(reg.name)}
+                                    </div>
+                                  ))}
+                                </div>
+                              </td>
+                            )
+                          }
+                          
+                          // Empty cell - clickable for registration
+                          return (
+                            <td 
+                              key={dateIdx} 
+                              className={`p-0.5 border border-dark-border align-top h-[40px] max-h-[40px] overflow-hidden ${columnBgClass} ${
+                                onCellClick ? 'cursor-pointer hover:bg-cyan-500/10 transition-colors' : ''
+                              }`}
+                              onClick={() => onCellClick && onCellClick(date, timeRange)}
+                            >
+                              <div className="text-center text-gray-600 text-[9px] py-1">
+                                {onCellClick ? '+' : '-'}
+                              </div>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    )
+                  })}
             </tbody>
           </table>
         )}
