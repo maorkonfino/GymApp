@@ -368,13 +368,53 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
     
     // Add entries with averages
     weeks.forEach((weekEntries, weekKey) => {
-      // Calculate average weight for this week
+      // Calculate averages for this week
       const weights = weekEntries
         .map(e => parseFloat(e.morningWeight))
         .filter(w => !isNaN(w) && w > 0)
       
+      const calories = weekEntries
+        .map(e => parseFloat(e.calories))
+        .filter(c => !isNaN(c) && c > 0)
+      
+      const proteins = weekEntries
+        .map(e => parseFloat(e.protein))
+        .filter(p => !isNaN(p) && p > 0)
+      
+      const fats = weekEntries
+        .map(e => parseFloat(e.fat))
+        .filter(f => !isNaN(f) && f > 0)
+      
+      const carbs = weekEntries
+        .map(e => parseFloat(e.carbs))
+        .filter(c => !isNaN(c) && c > 0)
+      
+      const steps = weekEntries
+        .map(e => parseFloat(e.steps))
+        .filter(s => !isNaN(s) && s > 0)
+      
       const avgWeight = weights.length > 0 
         ? (weights.reduce((a, b) => a + b, 0) / weights.length).toFixed(1)
+        : ''
+      
+      const avgCalories = calories.length > 0
+        ? (calories.reduce((a, b) => a + b, 0) / calories.length).toFixed(0)
+        : ''
+      
+      const avgProtein = proteins.length > 0
+        ? (proteins.reduce((a, b) => a + b, 0) / proteins.length).toFixed(1)
+        : ''
+      
+      const avgFat = fats.length > 0
+        ? (fats.reduce((a, b) => a + b, 0) / fats.length).toFixed(1)
+        : ''
+      
+      const avgCarbs = carbs.length > 0
+        ? (carbs.reduce((a, b) => a + b, 0) / carbs.length).toFixed(1)
+        : ''
+      
+      const avgSteps = steps.length > 0
+        ? (steps.reduce((a, b) => a + b, 0) / steps.length).toFixed(0)
         : ''
       
       // Add average row first
@@ -383,11 +423,11 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
       result.push({
         date: weekKey,
         morningWeight: avgWeight,
-        calories: '',
-        protein: '',
-        fat: '',
-        carbs: '',
-        steps: '',
+        calories: avgCalories,
+        protein: avgProtein,
+        fat: avgFat,
+        carbs: avgCarbs,
+        steps: avgSteps,
         notes: 'ממוצע שבועי',
         isAverage: true,
         weekKey

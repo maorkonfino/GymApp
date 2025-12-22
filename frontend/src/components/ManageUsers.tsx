@@ -242,7 +242,6 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                   <tr>
                     <th className="p-3 text-right border border-dark-border text-gray-300 font-semibold min-w-[200px]">שם</th>
                     <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold min-w-[150px]">תפקיד</th>
-                    <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold min-w-[120px]">עריכת שם</th>
                     <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold min-w-[120px]">תכנית אימון</th>
                     <th className="p-3 text-center border border-dark-border text-gray-300 font-semibold min-w-[120px]">תכנית תזונה</th>
                   </tr>
@@ -258,16 +257,31 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                     })
                     .map((user) => (
                       <tr key={user.id} className="hover:bg-dark-hover/50 transition-colors">
-                        {/* Name and Info */}
+                        {/* Name and Info with Edit Icon */}
                         <td className="p-3 border border-dark-border">
-                          <div className="text-white font-semibold">{user.name}</div>
-                          <div className="text-xs text-gray-400 mt-1">📧 {user.email}</div>
-                          <div className="text-xs text-gray-400">📱 {user.phone}</div>
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1">
+                              <div className="text-white font-semibold">{user.name}</div>
+                              <div className="text-xs text-gray-400 mt-1">📧 {user.email}</div>
+                              <div className="text-xs text-gray-400">📱 {user.phone}</div>
+                            </div>
+                            <button
+                              onClick={() => {
+                                setSelectedUser(user)
+                                setEditedName(user.name)
+                                setEditMode('name')
+                              }}
+                              className="p-1.5 hover:bg-yellow-500/20 text-yellow-400 hover:text-yellow-300 rounded transition-colors flex-shrink-0"
+                              title="ערוך שם"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
 
-                        {/* Role Badge with Edit Button */}
+                        {/* Role Badge with Edit Icon */}
                         <td className="p-3 border border-dark-border text-center">
-                          <div className="flex flex-col items-center gap-2">
+                          <div className="flex items-center justify-center gap-2">
                             <span className={`inline-block text-xs px-2 py-1 rounded font-semibold whitespace-nowrap ${
                               user.role === 'admin' 
                                 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white'
@@ -291,29 +305,12 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                                 setSelectedRole(user.role)
                                 setEditMode('role')
                               }}
-                              className="px-3 py-1.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-xs font-medium transition-all inline-flex items-center gap-1.5"
+                              className="p-1.5 hover:bg-purple-500/20 text-purple-400 hover:text-purple-300 rounded transition-colors"
                               title="ערוך תפקיד"
                             >
-                              <Edit2 className="w-3 h-3" />
-                              <span>ערוך</span>
+                              <Edit2 className="w-4 h-4" />
                             </button>
                           </div>
-                        </td>
-
-                        {/* Edit Name Button */}
-                        <td className="p-3 border border-dark-border text-center">
-                          <button
-                            onClick={() => {
-                              setSelectedUser(user)
-                              setEditedName(user.name)
-                              setEditMode('name')
-                            }}
-                            className="px-3 py-2 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 rounded-lg text-xs font-medium transition-all inline-flex items-center gap-1.5"
-                            title="ערוך שם"
-                          >
-                            <Edit2 className="w-3 h-3" />
-                            <span>ערוך</span>
-                          </button>
                         </td>
 
                         {/* Edit Workout Button */}
