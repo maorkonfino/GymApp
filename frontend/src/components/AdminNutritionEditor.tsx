@@ -634,12 +634,10 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
                       </td>
                       {(['morningWeight', 'calories', 'protein', 'fat', 'carbs', 'steps'] as const).map((field) => (
                         <td key={field} className="p-0.5 text-center">
-                          {isAverage && field === 'morningWeight' ? (
+                          {isAverage ? (
                             <div className="text-cyan-300 font-bold text-[8px] sm:text-[10px]">
-                              {entry[field]}
+                              {entry[field] || '-'}
                             </div>
-                          ) : isAverage ? (
-                            <div className="text-gray-600">-</div>
                           ) : actualIndex >= 0 ? (
                             <input
                               type="number"

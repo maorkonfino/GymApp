@@ -178,7 +178,12 @@ const WorkoutPlanUser: React.FC = () => {
 
   const addWeek = () => {
     if (plan?.numberOfWeeks === 'flexible') {
-      setUserAddedWeeks(prev => prev + 1)
+      setUserAddedWeeks(prev => {
+        const newCount = prev + 1
+        // Trigger save after state update
+        setTimeout(() => saveData(), 100)
+        return newCount
+      })
     }
   }
 
