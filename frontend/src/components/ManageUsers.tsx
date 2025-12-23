@@ -21,7 +21,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [editMode, setEditMode] = useState<'role' | 'workout' | 'nutrition' | 'name' | 'settings' | null>(null)
-  const [selectedRole, setSelectedRole] = useState<'admin' | 'vip' | 'kibbutz' | 'teenbeast' | 'onlinebeast'>('kibbutz')
+  const [selectedRole, setSelectedRole] = useState<string>('kibbutz')
   const [editedName, setEditedName] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
@@ -413,7 +413,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                 ].map((role) => (
                   <button
                     key={role.value}
-                    onClick={() => setSelectedRole(role.value as any)}
+                    onClick={() => setSelectedRole(role.value)}
                     className={`w-full p-4 rounded-lg text-right transition-all ${
                       selectedRole === role.value
                         ? `bg-gradient-to-r ${role.gradient} text-white border-2 border-white/50 shadow-lg`
