@@ -471,31 +471,37 @@ export const deleteUser = (id: number) => {
   try {
     // Delete all related data in a transaction
     db.transaction(() => {
-      const tablesToDelete = [
-        { table: 'registrations', column: 'email', value: user.email },
-        { table: 'workout_plans', column: 'user_email', value: user.email },
-        { table: 'nutrition_goals', column: 'user_email', value: user.email },
-        { table: 'daily_tracking', column: 'user_email', value: user.email },
-        { table: 'workout_folders', column: 'user_email', value: user.email },
-        { table: 'archived_workout_plans', column: 'user_email', value: user.email }
-      ];
-
-      for (const { table, column, value } of tablesToDelete) {
-        try {
-          db.prepare(`DELETE FROM ${table} WHERE ${column} = ?`).run(value);
-          console.log(`Deleted from ${table}`);
-        } catch (tableError: any) {
-          // If table doesn't exist, just log and continue
-          if (tableError.message && tableError.message.includes('no such table')) {
-            console.log(`Table ${table} does not exist, skipping`);
-          } else {
-            throw tableError; // Re-throw other errors
-          }
-        }
+      // Delete from core tables
+      db.prepare('DELETE FROM registrations WHERE email = ?').run(user.email);
+      console.log('Deleted registrations');
+      
+      db.prepare('DELETE FROM workout_plans WHERE user_email = ?').run(user.email);
+      console.log('Deleted workout_plans');
+      
+      db.prepare('DELETE FROM nutrition_goals WHERE user_email = ?').run(user.email);
+      console.log('Deleted nutrition_goals');
+      
+      db.prepare('DELETE FROM daily_tracking WHERE user_email = ?').run(user.email);
+      console.log('Deleted daily_tracking');
+      
+      // Try to delete from optional tables (won't fail if they don't exist)
+      try {
+        db.prepare('DELETE FROM workout_folders WHERE user_email = ?').run(user.email);
+        console.log('Deleted workout_folders');
+      } catch (e) {
+        console.log('workout_folders table does not exist, skipping');
+      }
+      
+      try {
+        db.prepare('DELETE FROM archived_workout_plans WHERE user_email = ?').run(user.email);
+        console.log('Deleted archived_workout_plans');
+      } catch (e) {
+        console.log('archived_workout_plans table does not exist, skipping');
       }
       
       // Finally, delete the user
       db.prepare('DELETE FROM users WHERE id = ?').run(id);
+      console.log('Deleted user');
     })();
   } catch (error) {
     console.error('Database error deleting user:', error);
