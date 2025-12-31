@@ -471,23 +471,28 @@ export const deleteUser = (id: number) => {
   try {
     // Delete all related data in a transaction
     db.transaction(() => {
-      // Delete registrations
-      db.prepare('DELETE FROM registrations WHERE email = ?').run(user.email);
-      
-      // Delete workout plans
-      db.prepare('DELETE FROM workout_plans WHERE user_email = ?').run(user.email);
-      
-      // Delete nutrition goals
-      db.prepare('DELETE FROM nutrition_goals WHERE user_email = ?').run(user.email);
-      
-      // Delete daily tracking
-      db.prepare('DELETE FROM daily_tracking WHERE user_email = ?').run(user.email);
-      
-      // Delete workout folders
-      db.prepare('DELETE FROM workout_folders WHERE user_email = ?').run(user.email);
-      
-      // Delete archived workout plans
-      db.prepare('DELETE FROM archived_workout_plans WHERE user_email = ?').run(user.email);
+      const tablesToDelete = [
+        { table: 'registrations', column: 'email', value: user.email },
+        { table: 'workout_plans', column: 'user_email', value: user.email },
+        { table: 'nutrition_goals', column: 'user_email', value: user.email },
+        { table: 'daily_tracking', column: 'user_email', value: user.email },
+        { table: 'workout_folders', column: 'user_email', value: user.email },
+        { table: 'archived_workout_plans', column: 'user_email', value: user.email }
+      ];
+
+      for (const { table, column, value } of tablesToDelete) {
+        try {
+          db.prepare(`DELETE FROM ${table} WHERE ${column} = ?`).run(value);
+          console.log(`Deleted from ${table}`);
+        } catch (tableError: any) {
+          // If table doesn't exist, just log and continue
+          if (tableError.message && tableError.message.includes('no such table')) {
+            console.log(`Table ${table} does not exist, skipping`);
+          } else {
+            throw tableError; // Re-throw other errors
+          }
+        }
+      }
       
       // Finally, delete the user
       db.prepare('DELETE FROM users WHERE id = ?').run(id);

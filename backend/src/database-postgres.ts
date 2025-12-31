@@ -498,13 +498,29 @@ export const deleteUser = async (id: number): Promise<void> => {
     
     console.log('Deleting all data for user:', userEmail);
     
-    // Delete all related data
-    await client.query('DELETE FROM registrations WHERE email = $1', [userEmail]);
-    await client.query('DELETE FROM workout_plans WHERE user_email = $1', [userEmail]);
-    await client.query('DELETE FROM nutrition_goals WHERE user_email = $1', [userEmail]);
-    await client.query('DELETE FROM daily_tracking WHERE user_email = $1', [userEmail]);
-    await client.query('DELETE FROM workout_folders WHERE user_email = $1', [userEmail]);
-    await client.query('DELETE FROM archived_workout_plans WHERE user_email = $1', [userEmail]);
+    // Delete all related data (with error handling for tables that might not exist)
+    const tablesToDelete = [
+      { table: 'registrations', column: 'email' },
+      { table: 'workout_plans', column: 'user_email' },
+      { table: 'nutrition_goals', column: 'user_email' },
+      { table: 'daily_tracking', column: 'user_email' },
+      { table: 'workout_folders', column: 'user_email' },
+      { table: 'archived_workout_plans', column: 'user_email' }
+    ];
+
+    for (const { table, column } of tablesToDelete) {
+      try {
+        await client.query(`DELETE FROM ${table} WHERE ${column} = $1`, [userEmail]);
+        console.log(`Deleted from ${table}`);
+      } catch (tableError: any) {
+        // If table doesn't exist, just log and continue
+        if (tableError.code === '42P01') { // undefined_table
+          console.log(`Table ${table} does not exist, skipping`);
+        } else {
+          throw tableError; // Re-throw other errors
+        }
+      }
+    }
     
     // Finally, delete the user
     await client.query('DELETE FROM users WHERE id = $1', [id]);
