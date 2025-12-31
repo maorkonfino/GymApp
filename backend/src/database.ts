@@ -464,31 +464,38 @@ export const updateUser = (id: number, updates: Partial<Omit<User, 'id' | 'creat
 export const deleteUser = (id: number) => {
   // Get user email first
   const user = getUserById(id);
-  if (!user) return;
+  if (!user) {
+    throw new Error('User not found');
+  }
 
-  // Delete all related data in a transaction
-  db.transaction(() => {
-    // Delete registrations
-    db.prepare('DELETE FROM registrations WHERE email = ?').run(user.email);
-    
-    // Delete workout plans
-    db.prepare('DELETE FROM workout_plans WHERE user_email = ?').run(user.email);
-    
-    // Delete nutrition goals
-    db.prepare('DELETE FROM nutrition_goals WHERE user_email = ?').run(user.email);
-    
-    // Delete daily tracking
-    db.prepare('DELETE FROM daily_tracking WHERE user_email = ?').run(user.email);
-    
-    // Delete workout folders
-    db.prepare('DELETE FROM workout_folders WHERE user_email = ?').run(user.email);
-    
-    // Delete archived workout plans
-    db.prepare('DELETE FROM archived_workout_plans WHERE user_email = ?').run(user.email);
-    
-    // Finally, delete the user
-    db.prepare('DELETE FROM users WHERE id = ?').run(id);
-  })();
+  try {
+    // Delete all related data in a transaction
+    db.transaction(() => {
+      // Delete registrations
+      db.prepare('DELETE FROM registrations WHERE email = ?').run(user.email);
+      
+      // Delete workout plans
+      db.prepare('DELETE FROM workout_plans WHERE user_email = ?').run(user.email);
+      
+      // Delete nutrition goals
+      db.prepare('DELETE FROM nutrition_goals WHERE user_email = ?').run(user.email);
+      
+      // Delete daily tracking
+      db.prepare('DELETE FROM daily_tracking WHERE user_email = ?').run(user.email);
+      
+      // Delete workout folders
+      db.prepare('DELETE FROM workout_folders WHERE user_email = ?').run(user.email);
+      
+      // Delete archived workout plans
+      db.prepare('DELETE FROM archived_workout_plans WHERE user_email = ?').run(user.email);
+      
+      // Finally, delete the user
+      db.prepare('DELETE FROM users WHERE id = ?').run(id);
+    })();
+  } catch (error) {
+    console.error('Database error deleting user:', error);
+    throw error;
+  }
 };
 
 // Workout Archive & Folders

@@ -492,9 +492,11 @@ export const deleteUser = async (id: number): Promise<void> => {
     const userResult = await client.query('SELECT email FROM users WHERE id = $1', [id]);
     if (userResult.rows.length === 0) {
       await client.query('ROLLBACK');
-      return;
+      throw new Error('User not found');
     }
     const userEmail = userResult.rows[0].email;
+    
+    console.log('Deleting all data for user:', userEmail);
     
     // Delete all related data
     await client.query('DELETE FROM registrations WHERE email = $1', [userEmail]);
@@ -509,8 +511,10 @@ export const deleteUser = async (id: number): Promise<void> => {
     
     // Commit transaction
     await client.query('COMMIT');
+    console.log('User and all related data deleted successfully');
   } catch (e) {
     await client.query('ROLLBACK');
+    console.error('Error in deleteUser transaction:', e);
     throw e;
   } finally {
     client.release();

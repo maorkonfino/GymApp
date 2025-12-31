@@ -147,11 +147,19 @@ app.put('/api/users/:id', (req: Request, res: Response) => {
 app.delete('/api/users/:id', (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    db.deleteUser(parseInt(id));
+    console.log('Attempting to delete user with ID:', id);
+    
+    const userId = parseInt(id);
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Invalid user ID' });
+    }
+    
+    db.deleteUser(userId);
+    console.log('User deleted successfully:', id);
     res.json({ message: 'User deleted successfully' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error deleting user:', error);
-    res.status(500).json({ error: 'Failed to delete user' });
+    res.status(500).json({ error: error.message || 'Failed to delete user' });
   }
 });
 

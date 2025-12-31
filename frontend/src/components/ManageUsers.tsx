@@ -117,14 +117,17 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
     if (!userToDelete) return
     
     try {
+      console.log('Deleting user with ID:', userToDelete.id)
       await api.delete(`/users/${userToDelete.id}`)
       alert('המשתמש נמחק בהצלחה!')
       await fetchUsers() // Refresh the list
       setShowDeleteConfirm(false)
       setUserToDelete(null)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting user:', error)
-      alert('שגיאה במחיקת המשתמש')
+      console.error('Error response:', error.response?.data)
+      const errorMessage = error.response?.data?.error || error.message || 'שגיאה במחיקת המשתמש'
+      alert(`שגיאה במחיקת המשתמש: ${errorMessage}`)
     }
   }
 
