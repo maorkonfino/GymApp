@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { X, Users, Edit2, Dumbbell, Apple, Search, Settings, Bell } from 'lucide-react'
+import { X, Users, Edit2, Dumbbell, Apple, Search, Settings, Bell, Trash2 } from 'lucide-react'
 import { User } from '../types'
 import api from '../api'
 import AdminWorkoutEditor from './AdminWorkoutEditor'
@@ -25,6 +25,8 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const [editedName, setEditedName] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [roleFilter, setRoleFilter] = useState<string>('all')
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [userToDelete, setUserToDelete] = useState<User | null>(null)
   const [reminderSettings, setReminderSettings] = useState<ReminderSettings>({
     enabled: 1,
     message_24h: 'תזכורת: יש לך אימון מחר ב-{time}',
@@ -109,6 +111,21 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const handleEditNutrition = (user: User) => {
     setSelectedUser(user)
     setEditMode('nutrition')
+  }
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return
+    
+    try {
+      await api.delete(`/users/${userToDelete.id}`)
+      alert('המשתמש נמחק בהצלחה!')
+      await fetchUsers() // Refresh the list
+      setShowDeleteConfirm(false)
+      setUserToDelete(null)
+    } catch (error) {
+      console.error('Error deleting user:', error)
+      alert('שגיאה במחיקת המשתמש')
+    }
   }
 
   const closeEditModal = () => {
@@ -257,7 +274,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                     })
                     .map((user) => (
                       <tr key={user.id} className="hover:bg-dark-hover/50 transition-colors">
-                        {/* Name and Info with Edit Icon */}
+                        {/* Name and Info with Edit and Delete Icons */}
                         <td className="p-3 border border-dark-border">
                           <div className="flex items-center gap-2">
                             <div className="flex-1">
@@ -275,6 +292,16 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                               title="ערוך שם"
                             >
                               <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setUserToDelete(user)
+                                setShowDeleteConfirm(true)
+                              }}
+                              className="p-1.5 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded transition-colors flex-shrink-0"
+                              title="מחק משתמש"
+                            >
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                         </td>
@@ -552,6 +579,60 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                   שמור הגדרות
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && userToDelete && (
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-dark-card border border-red-500/50 rounded-2xl max-w-md w-full p-6 animate-fade-in">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
+                <Trash2 className="w-6 h-6 text-red-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white">מחיקת משתמש</h3>
+            </div>
+            
+            <div className="mb-6">
+              <p className="text-gray-300 mb-2">
+                האם אתה בטוח שברצונך למחוק את המשתמש:
+              </p>
+              <div className="p-4 bg-dark-hover border border-dark-border rounded-lg">
+                <p className="text-white font-semibold">{userToDelete.name}</p>
+                <p className="text-xs text-gray-400 mt-1">📧 {userToDelete.email}</p>
+              </div>
+              <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                <p className="text-red-300 text-sm font-medium">⚠️ אזהרה</p>
+                <p className="text-red-200/80 text-xs mt-1">
+                  פעולה זו תמחק לצמיתות את כל הנתונים של המשתמש:
+                </p>
+                <ul className="text-red-200/70 text-xs mt-2 mr-4 list-disc">
+                  <li>תכניות אימון ומעקב</li>
+                  <li>תכניות תזונה ומעקב</li>
+                  <li>כל הרשמות לאימונים</li>
+                  <li>כל הנתונים האישיים</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowDeleteConfirm(false)
+                  setUserToDelete(null)
+                }}
+                className="flex-1 px-4 py-2 bg-dark-hover hover:bg-dark-border text-gray-300 rounded-lg transition-all"
+              >
+                ביטול
+              </button>
+              <button
+                onClick={handleDeleteUser}
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white rounded-lg transition-all font-semibold"
+              >
+                מחק משתמש
+              </button>
             </div>
           </div>
         </div>

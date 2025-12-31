@@ -213,6 +213,18 @@ app.put('/api/users/:id', async (req: Request, res: Response) => {
   }
 });
 
+// Delete user (admin only)
+app.delete('/api/users/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await db.deleteUser(parseInt(id));
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
+
 // Forgot Password - Send reset email
 app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
   try {

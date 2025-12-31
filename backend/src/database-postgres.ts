@@ -482,6 +482,41 @@ export const updateUser = async (id: number, updates: Partial<Omit<User, 'id' | 
   await pool.query(query, values);
 };
 
+export const deleteUser = async (id: number): Promise<void> => {
+  const client = await pool.connect();
+  try {
+    // Start transaction
+    await client.query('BEGIN');
+    
+    // Get user email first
+    const userResult = await client.query('SELECT email FROM users WHERE id = $1', [id]);
+    if (userResult.rows.length === 0) {
+      await client.query('ROLLBACK');
+      return;
+    }
+    const userEmail = userResult.rows[0].email;
+    
+    // Delete all related data
+    await client.query('DELETE FROM registrations WHERE email = $1', [userEmail]);
+    await client.query('DELETE FROM workout_plans WHERE user_email = $1', [userEmail]);
+    await client.query('DELETE FROM nutrition_goals WHERE user_email = $1', [userEmail]);
+    await client.query('DELETE FROM daily_tracking WHERE user_email = $1', [userEmail]);
+    await client.query('DELETE FROM workout_folders WHERE user_email = $1', [userEmail]);
+    await client.query('DELETE FROM archived_workout_plans WHERE user_email = $1', [userEmail]);
+    
+    // Finally, delete the user
+    await client.query('DELETE FROM users WHERE id = $1', [id]);
+    
+    // Commit transaction
+    await client.query('COMMIT');
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
+};
+
 // ===== PASSWORD RESET TOKENS =====
 
 export const createPasswordResetToken = async (email: string, token: string, expiresAt: Date): Promise<void> => {
