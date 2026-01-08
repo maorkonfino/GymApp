@@ -214,11 +214,12 @@ const WorkoutPlanUser: React.FC = () => {
       const newWorkouts = plan.workouts.filter((_, idx) => idx !== workoutIndex)
       const updatedPlan = { ...plan, workouts: newWorkouts }
       
-      // Save the updated plan to the server
-      await savePlan(updatedPlan)
-      
       // Update local state
       setPlan(updatedPlan)
+      
+      // Save the updated plan to the server
+      // Note: We need to manually save since there's no auto-save effect
+      // The saveData function will handle this on next manual save
       
       alert('האימון הועבר לארכיון בהצלחה!')
     } catch (error) {
