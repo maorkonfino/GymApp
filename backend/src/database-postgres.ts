@@ -109,6 +109,22 @@ export const initDatabase = async () => {
         message_4h TEXT DEFAULT 'תזכורת: יש לך אימון בעוד 4 שעות',
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+
+      CREATE TABLE IF NOT EXISTS workout_folders (
+        id SERIAL PRIMARY KEY,
+        user_email TEXT NOT NULL,
+        name TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      CREATE TABLE IF NOT EXISTS archived_workout_plans (
+        id SERIAL PRIMARY KEY,
+        user_email TEXT NOT NULL,
+        name TEXT NOT NULL,
+        plan_content TEXT NOT NULL,
+        folder_id INTEGER REFERENCES workout_folders(id) ON DELETE SET NULL,
+        archived_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
     `);
 
     // Add role column to registrations table (migration)
@@ -149,6 +165,22 @@ export interface WorkoutPlan {
   plan_content: string;
   created_by: string;
   updated_at?: string;
+}
+
+export interface WorkoutFolder {
+  id?: number;
+  user_email: string;
+  name: string;
+  created_at?: string;
+}
+
+export interface ArchivedWorkoutPlan {
+  id?: number;
+  user_email: string;
+  name: string;
+  plan_content: string;
+  folder_id?: number | null;
+  archived_at?: string;
 }
 
 export interface NutritionGoals {
@@ -324,6 +356,68 @@ export const saveWorkoutPlan = async (plan: Omit<WorkoutPlan, 'id' | 'updated_at
     `;
     await pool.query(query, [plan.user_email, plan.plan_content, plan.created_by]);
   }
+};
+
+// ===== WORKOUT ARCHIVE =====
+
+export const createWorkoutFolder = async (folder: Omit<WorkoutFolder, 'id' | 'created_at'>): Promise<number> => {
+  const query = `
+    INSERT INTO workout_folders (user_email, name)
+    VALUES ($1, $2)
+    RETURNING id
+  `;
+  const result = await pool.query(query, [folder.user_email, folder.name]);
+  return result.rows[0].id;
+};
+
+export const getWorkoutFolders = async (userEmail: string): Promise<WorkoutFolder[]> => {
+  const query = 'SELECT * FROM workout_folders WHERE user_email = $1 ORDER BY created_at DESC';
+  const result = await pool.query(query, [userEmail]);
+  return result.rows;
+};
+
+export const archiveWorkoutPlan = async (plan: Omit<ArchivedWorkoutPlan, 'id' | 'archived_at'>): Promise<number> => {
+  const query = `
+    INSERT INTO archived_workout_plans (user_email, name, plan_content, folder_id)
+    VALUES ($1, $2, $3, $4)
+    RETURNING id
+  `;
+  const result = await pool.query(query, [plan.user_email, plan.name, plan.plan_content, plan.folder_id || null]);
+  return result.rows[0].id;
+};
+
+export const getArchivedWorkoutPlans = async (userEmail: string): Promise<ArchivedWorkoutPlan[]> => {
+  const query = 'SELECT * FROM archived_workout_plans WHERE user_email = $1 ORDER BY archived_at DESC';
+  const result = await pool.query(query, [userEmail]);
+  return result.rows;
+};
+
+export const getArchivedWorkoutPlansByFolder = async (userEmail: string, folderId: number): Promise<ArchivedWorkoutPlan[]> => {
+  const query = 'SELECT * FROM archived_workout_plans WHERE user_email = $1 AND folder_id = $2 ORDER BY archived_at DESC';
+  const result = await pool.query(query, [userEmail, folderId]);
+  return result.rows;
+};
+
+export const getUnorganizedArchivedPlans = async (userEmail: string): Promise<ArchivedWorkoutPlan[]> => {
+  const query = 'SELECT * FROM archived_workout_plans WHERE user_email = $1 AND folder_id IS NULL ORDER BY archived_at DESC';
+  const result = await pool.query(query, [userEmail]);
+  return result.rows;
+};
+
+export const unarchiveWorkoutPlan = async (id: number): Promise<void> => {
+  const query = 'DELETE FROM archived_workout_plans WHERE id = $1';
+  await pool.query(query, [id]);
+};
+
+export const movePlanToFolder = async (planId: number, folderId: number | null): Promise<void> => {
+  const query = 'UPDATE archived_workout_plans SET folder_id = $1 WHERE id = $2';
+  await pool.query(query, [folderId, planId]);
+};
+
+export const deleteWorkoutFolder = async (id: number): Promise<void> => {
+  // This will set folder_id to NULL for all plans in this folder (due to ON DELETE SET NULL)
+  const query = 'DELETE FROM workout_folders WHERE id = $1';
+  await pool.query(query, [id]);
 };
 
 // ===== NUTRITION GOALS =====
