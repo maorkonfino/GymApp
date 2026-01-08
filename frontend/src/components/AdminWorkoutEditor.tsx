@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { X, Save, Plus, Trash2, Dumbbell, Archive, FolderOpen } from 'lucide-react'
 import { User } from '../types'
 import api from '../api'
-import { useNavigate } from 'react-router-dom'
+import AdminArchiveViewer from './AdminArchiveViewer'
 
 interface AdminWorkoutEditorProps {
   user: User
@@ -37,12 +37,12 @@ interface WorkoutPlan {
 }
 
 const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }) => {
-  const navigate = useNavigate()
   const [numberOfWeeks, setNumberOfWeeks] = useState<number | 'flexible'>(4)
   const [userAddedWeeks, setUserAddedWeeks] = useState<number>(0)
   const [archiveWorkoutIndex, setArchiveWorkoutIndex] = useState<number | null>(null)
   const [archiveFolders, setArchiveFolders] = useState<Array<{id: number, name: string}>>([])
   const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null)
+  const [showArchiveViewer, setShowArchiveViewer] = useState(false)
   const [workouts, setWorkouts] = useState<Workout[]>([
     {
       name: 'אימון 1',
@@ -212,14 +212,8 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
   }
 
   const openUserArchive = () => {
-    console.log('AdminWorkoutEditor - Opening archive for user:', user.id, user.email, user.name)
-    // Close the modal first
-    onClose()
-    // Small delay to ensure modal closes before navigation
-    setTimeout(() => {
-      console.log('AdminWorkoutEditor - Navigating to:', `/workout-archive?userId=${user.id}`)
-      navigate(`/workout-archive?userId=${user.id}`)
-    }, 100)
+    console.log('AdminWorkoutEditor - Opening archive modal for user:', user.id, user.email, user.name)
+    setShowArchiveViewer(true)
   }
 
   const addExercise = (workoutIndex: number) => {
@@ -601,6 +595,14 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
             </div>
           </div>
         </div>
+      )}
+
+      {/* Archive Viewer Modal */}
+      {showArchiveViewer && (
+        <AdminArchiveViewer
+          user={user}
+          onClose={() => setShowArchiveViewer(false)}
+        />
       )}
     </div>
   )
