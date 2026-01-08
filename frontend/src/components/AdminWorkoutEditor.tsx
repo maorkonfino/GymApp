@@ -212,8 +212,12 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
   }
 
   const openUserArchive = () => {
-    // Open archive page with userId query parameter
-    navigate(`/workout-archive?userId=${user.id}`)
+    // Close the modal first
+    onClose()
+    // Small delay to ensure modal closes before navigation
+    setTimeout(() => {
+      navigate(`/workout-archive?userId=${user.id}`)
+    }, 100)
   }
 
   const addExercise = (workoutIndex: number) => {
