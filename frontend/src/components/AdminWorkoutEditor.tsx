@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { X, Save, Plus, Trash2, Dumbbell, Archive, FolderOpen, ChevronUp, ChevronDown } from 'lucide-react'
+import { X, Save, Plus, Trash2, Dumbbell, Archive, FolderOpen, ChevronUp, ChevronDown, GripVertical } from 'lucide-react'
 import { User } from '../types'
 import api from '../api'
 import AdminArchiveViewer from './AdminArchiveViewer'
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 
 interface AdminWorkoutEditorProps {
   user: User
@@ -43,6 +56,14 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
   const [archiveFolders, setArchiveFolders] = useState<Array<{id: number, name: string}>>([])
   const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null)
   const [showArchiveViewer, setShowArchiveViewer] = useState(false)
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  )
   const [workouts, setWorkouts] = useState<Workout[]>([
     {
       name: 'אימון 1',
@@ -275,6 +296,19 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
     setWorkouts(newWorkouts)
   }
 
+  const handleWorkoutDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (over && active.id !== over.id) {
+      const oldIndex = parseInt(active.id.toString().split('-')[1])
+      const newIndex = parseInt(over.id.toString().split('-')[1])
+
+      if (!isNaN(oldIndex) && !isNaN(newIndex)) {
+        setWorkouts(arrayMove(workouts, oldIndex, newIndex))
+      }
+    }
+  }
+
   const updateWorkoutName = (workoutIndex: number, name: string) => {
     const newWorkouts = [...workouts]
     newWorkouts[workoutIndex].name = name
@@ -375,29 +409,44 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
               </div>
 
               {/* Workouts */}
-              {workouts.map((workout, workoutIndex) => (
-                <div key={workoutIndex} className="bg-dark-hover border border-dark-border rounded-xl p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex flex-col gap-1">
-                        <button
-                          onClick={() => moveWorkoutUp(workoutIndex)}
-                          disabled={workoutIndex === 0}
-                          className="p-1 hover:bg-dark-card rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                          title="הזז למעלה"
-                        >
-                          <ChevronUp className="w-4 h-4 text-cyan-400" />
-                        </button>
-                        <button
-                          onClick={() => moveWorkoutDown(workoutIndex)}
-                          disabled={workoutIndex === workouts.length - 1}
-                          className="p-1 hover:bg-dark-card rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                          title="הזז למטה"
-                        >
-                          <ChevronDown className="w-4 h-4 text-cyan-400" />
-                        </button>
-                      </div>
-                      <Dumbbell className="w-6 h-6 text-cyan-400" />
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleWorkoutDragEnd}
+              >
+                <SortableContext
+                  items={workouts.map((_, i) => `workout-${i}`)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {workouts.map((workout, workoutIndex) => (
+                    <div key={`workout-${workoutIndex}`} className="bg-dark-hover border border-dark-border rounded-xl p-5 mb-5">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div 
+                            className="cursor-grab active:cursor-grabbing p-1.5 hover:bg-dark-card rounded transition-all"
+                            title="גרור להזזה"
+                          >
+                            <GripVertical className="w-5 h-5 text-gray-400" />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <button
+                              onClick={() => moveWorkoutUp(workoutIndex)}
+                              disabled={workoutIndex === 0}
+                              className="p-1 hover:bg-dark-card rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                              title="הזז למעלה"
+                            >
+                              <ChevronUp className="w-4 h-4 text-cyan-400" />
+                            </button>
+                            <button
+                              onClick={() => moveWorkoutDown(workoutIndex)}
+                              disabled={workoutIndex === workouts.length - 1}
+                              className="p-1 hover:bg-dark-card rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                              title="הזז למטה"
+                            >
+                              <ChevronDown className="w-4 h-4 text-cyan-400" />
+                            </button>
+                          </div>
+                          <Dumbbell className="w-6 h-6 text-cyan-400" />
                       <input
                         type="text"
                         value={workout.name}
@@ -574,8 +623,10 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                     <Plus className="w-4 h-4" />
                     הוסף תרגיל
                   </button>
-                </div>
-              ))}
+                    </div>
+                  ))}
+                </SortableContext>
+              </DndContext>
 
               <button
                 onClick={addWorkout}
