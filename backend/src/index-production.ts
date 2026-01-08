@@ -742,9 +742,17 @@ app.post('/api/workout-plans/unarchive/:planId', async (req: Request, res: Respo
       const planData = JSON.parse(currentPlan.plan_content);
       const archivedWorkout = JSON.parse(archivedPlan.plan_content);
       
-      // Add the workout(s) from archived plan to current plan
+      // Add the workout(s) from archived plan to current plan (avoid duplicates by name)
       if (archivedWorkout.workouts && Array.isArray(archivedWorkout.workouts)) {
-        planData.workouts = [...(planData.workouts || []), ...archivedWorkout.workouts];
+        const existingWorkoutNames = new Set((planData.workouts || []).map((w: any) => w.name));
+        const newWorkouts = archivedWorkout.workouts.filter((w: any) => !existingWorkoutNames.has(w.name));
+        
+        if (newWorkouts.length > 0) {
+          planData.workouts = [...(planData.workouts || []), ...newWorkouts];
+          console.log(`✅ Added ${newWorkouts.length} workout(s) to plan`);
+        } else {
+          console.log('⚠️ All workouts already exist in plan, skipping');
+        }
       }
       
       updatedPlanContent = JSON.stringify(planData);

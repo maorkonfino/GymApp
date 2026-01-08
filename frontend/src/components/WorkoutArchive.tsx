@@ -395,21 +395,44 @@ const WorkoutArchive: React.FC = () => {
                                     <table className="w-full text-sm">
                                       <thead>
                                         <tr className="border-b border-dark-border">
-                                          <th className="text-right px-3 py-2 text-gray-400 font-semibold">תרגיל</th>
+                                          <th className="text-right px-3 py-2 text-gray-400 font-semibold sticky right-0 bg-dark-card">תרגיל</th>
                                           <th className="text-center px-3 py-2 text-gray-400 font-semibold">סטים</th>
                                           <th className="text-center px-3 py-2 text-gray-400 font-semibold">חזרות</th>
                                           <th className="text-center px-3 py-2 text-gray-400 font-semibold">מנוחה</th>
                                           <th className="text-center px-3 py-2 text-gray-400 font-semibold">RIR</th>
+                                          {/* Weekly data columns */}
+                                          {Object.keys(workout.exercises[0]?.weeklyData || {}).sort((a, b) => parseInt(a) - parseInt(b)).map((week) => (
+                                            <th key={week} className="text-center px-3 py-2 text-cyan-400 font-semibold border-r border-dark-border">
+                                              שבוע {week}
+                                            </th>
+                                          ))}
                                         </tr>
                                       </thead>
                                       <tbody>
                                         {workout.exercises.map((exercise: any, eIdx: number) => (
                                           <tr key={eIdx} className="border-b border-dark-border/50 hover:bg-dark-hover/30 transition-colors">
-                                            <td className="text-right px-3 py-2 text-white font-medium">{exercise.name}</td>
+                                            <td className="text-right px-3 py-2 text-white font-medium sticky right-0 bg-dark-card">{exercise.name}</td>
                                             <td className="text-center px-3 py-2 text-gray-300">{exercise.sets}</td>
                                             <td className="text-center px-3 py-2 text-gray-300">{exercise.repsRange}</td>
                                             <td className="text-center px-3 py-2 text-gray-300">{exercise.rest}</td>
                                             <td className="text-center px-3 py-2 text-gray-300">{exercise.rir}</td>
+                                            {/* Weekly data */}
+                                            {Object.keys(exercise.weeklyData || {}).sort((a, b) => parseInt(a) - parseInt(b)).map((week) => {
+                                              const weekData = exercise.weeklyData[parseInt(week)]
+                                              return (
+                                                <td key={week} className="text-center px-3 py-2 border-r border-dark-border">
+                                                  {weekData && weekData.length > 0 && (
+                                                    <div className="text-xs space-y-1">
+                                                      {weekData.map((set: any, setIdx: number) => (
+                                                        <div key={setIdx} className="text-cyan-300">
+                                                          {set.weight && set.reps ? `${set.weight}kg × ${set.reps}` : '-'}
+                                                        </div>
+                                                      ))}
+                                                    </div>
+                                                  )}
+                                                </td>
+                                              )
+                                            })}
                                           </tr>
                                         ))}
                                       </tbody>
@@ -497,21 +520,44 @@ const WorkoutArchive: React.FC = () => {
                             <table className="w-full text-sm">
                               <thead>
                                 <tr className="border-b border-dark-border">
-                                  <th className="text-right px-3 py-2 text-gray-400 font-semibold">תרגיל</th>
+                                  <th className="text-right px-3 py-2 text-gray-400 font-semibold sticky right-0 bg-dark-card">תרגיל</th>
                                   <th className="text-center px-3 py-2 text-gray-400 font-semibold">סטים</th>
                                   <th className="text-center px-3 py-2 text-gray-400 font-semibold">חזרות</th>
                                   <th className="text-center px-3 py-2 text-gray-400 font-semibold">מנוחה</th>
                                   <th className="text-center px-3 py-2 text-gray-400 font-semibold">RIR</th>
+                                  {/* Weekly data columns */}
+                                  {Object.keys(workout.exercises[0]?.weeklyData || {}).sort((a, b) => parseInt(a) - parseInt(b)).map((week) => (
+                                    <th key={week} className="text-center px-3 py-2 text-cyan-400 font-semibold border-r border-dark-border">
+                                      שבוע {week}
+                                    </th>
+                                  ))}
                                 </tr>
                               </thead>
                               <tbody>
                                 {workout.exercises.map((exercise: any, eIdx: number) => (
                                   <tr key={eIdx} className="border-b border-dark-border/50 hover:bg-dark-hover/30 transition-colors">
-                                    <td className="text-right px-3 py-2 text-white font-medium">{exercise.name}</td>
+                                    <td className="text-right px-3 py-2 text-white font-medium sticky right-0 bg-dark-card">{exercise.name}</td>
                                     <td className="text-center px-3 py-2 text-gray-300">{exercise.sets}</td>
                                     <td className="text-center px-3 py-2 text-gray-300">{exercise.repsRange}</td>
                                     <td className="text-center px-3 py-2 text-gray-300">{exercise.rest}</td>
                                     <td className="text-center px-3 py-2 text-gray-300">{exercise.rir}</td>
+                                    {/* Weekly data */}
+                                    {Object.keys(exercise.weeklyData || {}).sort((a, b) => parseInt(a) - parseInt(b)).map((week) => {
+                                      const weekData = exercise.weeklyData[parseInt(week)]
+                                      return (
+                                        <td key={week} className="text-center px-3 py-2 border-r border-dark-border">
+                                          {weekData && weekData.length > 0 && (
+                                            <div className="text-xs space-y-1">
+                                              {weekData.map((set: any, setIdx: number) => (
+                                                <div key={setIdx} className="text-cyan-300">
+                                                  {set.weight && set.reps ? `${set.weight}kg × ${set.reps}` : '-'}
+                                                </div>
+                                              ))}
+                                            </div>
+                                          )}
+                                        </td>
+                                      )
+                                    })}
                                   </tr>
                                 ))}
                               </tbody>

@@ -65,6 +65,9 @@ const WorkoutPlanUser: React.FC = () => {
   const [weekNotes, setWeekNotes] = useState<WeekNotes>({})
   const [notesModalOpen, setNotesModalOpen] = useState(false)
   const [currentNotesKey, setCurrentNotesKey] = useState<{workoutIdx: number, week: number} | null>(null)
+  const [archiveWorkoutIndex, setArchiveWorkoutIndex] = useState<number | null>(null)
+  const [archiveFolders, setArchiveFolders] = useState<Array<{id: number, name: string}>>([])
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null)
 
   useEffect(() => {
     fetchWorkoutPlan()
@@ -187,13 +190,27 @@ const WorkoutPlanUser: React.FC = () => {
     }
   }
 
-  const handleArchiveWorkout = async (workoutIndex: number) => {
-    if (!plan || !user) return
-
-    const workout = plan.workouts[workoutIndex]
-    const confirmed = window.confirm(`האם אתה בטוח שברצונך להעביר את "${workout.name}" לארכיון?`)
+  const openArchiveModal = async (workoutIndex: number) => {
+    if (!user) return
     
-    if (!confirmed) return
+    try {
+      // Fetch folders
+      const response = await api.get(`/workout-plans/archive/${user.email}`)
+      setArchiveFolders(response.data.folders || [])
+      setArchiveWorkoutIndex(workoutIndex)
+      setSelectedFolderId(null)
+    } catch (error) {
+      console.error('Error fetching folders:', error)
+      setArchiveFolders([])
+      setArchiveWorkoutIndex(workoutIndex)
+      setSelectedFolderId(null)
+    }
+  }
+
+  const handleArchiveWorkout = async () => {
+    if (!plan || !user || archiveWorkoutIndex === null) return
+
+    const workout = plan.workouts[archiveWorkoutIndex]
 
     try {
       // Create a minimal plan with just this workout
@@ -207,19 +224,19 @@ const WorkoutPlanUser: React.FC = () => {
         userEmail: user.email,
         name: workout.name,
         planContent: JSON.stringify(workoutPlan),
-        folderId: null
+        folderId: selectedFolderId
       })
 
       // Remove workout from current plan
-      const newWorkouts = plan.workouts.filter((_, idx) => idx !== workoutIndex)
+      const newWorkouts = plan.workouts.filter((_, idx) => idx !== archiveWorkoutIndex)
       const updatedPlan = { ...plan, workouts: newWorkouts }
       
       // Update local state
       setPlan(updatedPlan)
       
-      // Save the updated plan to the server
-      // Note: We need to manually save since there's no auto-save effect
-      // The saveData function will handle this on next manual save
+      // Close modal
+      setArchiveWorkoutIndex(null)
+      setSelectedFolderId(null)
       
       alert('האימון הועבר לארכיון בהצלחה!')
     } catch (error) {
@@ -435,7 +452,7 @@ const WorkoutPlanUser: React.FC = () => {
               <button 
                 onClick={(e) => {
                   e.stopPropagation()
-                  handleArchiveWorkout(workoutIndex)
+                  openArchiveModal(workoutIndex)
                 }}
                 className="p-2 text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 rounded-lg transition-colors"
                 title="העבר לארכיון"
@@ -643,6 +660,56 @@ const WorkoutPlanUser: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Archive Modal */}
+      {archiveWorkoutIndex !== null && plan && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setArchiveWorkoutIndex(null)}>
+          <div className="bg-dark-card border border-purple-500/50 rounded-xl p-6 max-w-md w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+              <FolderOpen className="w-7 h-7 text-purple-400" />
+              העבר אימון לארכיון
+            </h3>
+            
+            <p className="text-gray-300 mb-4">
+              מעביר את "{plan.workouts[archiveWorkoutIndex].name}" לארכיון
+            </p>
+
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-400 mb-2">
+                בחר תיקייה (אופציונלי):
+              </label>
+              <select
+                value={selectedFolderId || ''}
+                onChange={(e) => setSelectedFolderId(e.target.value ? parseInt(e.target.value) : null)}
+                className="w-full px-4 py-2 bg-dark-hover border border-dark-border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                <option value="">ללא תיקייה (לא מאורגן)</option>
+                {archiveFolders.map((folder) => (
+                  <option key={folder.id} value={folder.id}>{folder.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={handleArchiveWorkout}
+                className="flex-1 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-all font-semibold"
+              >
+                העבר לארכיון
+              </button>
+              <button
+                onClick={() => {
+                  setArchiveWorkoutIndex(null)
+                  setSelectedFolderId(null)
+                }}
+                className="flex-1 px-4 py-2 bg-dark-hover hover:bg-dark-border text-gray-300 rounded-lg transition-all font-semibold"
+              >
+                ביטול
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
