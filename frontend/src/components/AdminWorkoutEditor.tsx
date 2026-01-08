@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { X, Save, Plus, Trash2, Dumbbell, Archive, FolderOpen } from 'lucide-react'
+import { X, Save, Plus, Trash2, Dumbbell, Archive, FolderOpen, ChevronUp, ChevronDown } from 'lucide-react'
 import { User } from '../types'
 import api from '../api'
 import AdminArchiveViewer from './AdminArchiveViewer'
@@ -161,6 +161,24 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
     }
   }
 
+  const moveWorkoutUp = (workoutIndex: number) => {
+    if (workoutIndex === 0) return
+    const newWorkouts = [...workouts]
+    const temp = newWorkouts[workoutIndex]
+    newWorkouts[workoutIndex] = newWorkouts[workoutIndex - 1]
+    newWorkouts[workoutIndex - 1] = temp
+    setWorkouts(newWorkouts)
+  }
+
+  const moveWorkoutDown = (workoutIndex: number) => {
+    if (workoutIndex === workouts.length - 1) return
+    const newWorkouts = [...workouts]
+    const temp = newWorkouts[workoutIndex]
+    newWorkouts[workoutIndex] = newWorkouts[workoutIndex + 1]
+    newWorkouts[workoutIndex + 1] = temp
+    setWorkouts(newWorkouts)
+  }
+
   const openArchiveModal = async (workoutIndex: number) => {
     try {
       // Fetch folders for this user
@@ -235,6 +253,26 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
       newWorkouts[workoutIndex].exercises.splice(exerciseIndex, 1)
       setWorkouts(newWorkouts)
     }
+  }
+
+  const moveExerciseUp = (workoutIndex: number, exerciseIndex: number) => {
+    if (exerciseIndex === 0) return
+    const newWorkouts = [...workouts]
+    const exercises = newWorkouts[workoutIndex].exercises
+    const temp = exercises[exerciseIndex]
+    exercises[exerciseIndex] = exercises[exerciseIndex - 1]
+    exercises[exerciseIndex - 1] = temp
+    setWorkouts(newWorkouts)
+  }
+
+  const moveExerciseDown = (workoutIndex: number, exerciseIndex: number) => {
+    const newWorkouts = [...workouts]
+    const exercises = newWorkouts[workoutIndex].exercises
+    if (exerciseIndex === exercises.length - 1) return
+    const temp = exercises[exerciseIndex]
+    exercises[exerciseIndex] = exercises[exerciseIndex + 1]
+    exercises[exerciseIndex + 1] = temp
+    setWorkouts(newWorkouts)
   }
 
   const updateWorkoutName = (workoutIndex: number, name: string) => {
@@ -341,6 +379,24 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                 <div key={workoutIndex} className="bg-dark-hover border border-dark-border rounded-xl p-5">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={() => moveWorkoutUp(workoutIndex)}
+                          disabled={workoutIndex === 0}
+                          className="p-1 hover:bg-dark-card rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                          title="הזז למעלה"
+                        >
+                          <ChevronUp className="w-4 h-4 text-cyan-400" />
+                        </button>
+                        <button
+                          onClick={() => moveWorkoutDown(workoutIndex)}
+                          disabled={workoutIndex === workouts.length - 1}
+                          className="p-1 hover:bg-dark-card rounded transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                          title="הזז למטה"
+                        >
+                          <ChevronDown className="w-4 h-4 text-cyan-400" />
+                        </button>
+                      </div>
                       <Dumbbell className="w-6 h-6 text-cyan-400" />
                       <input
                         type="text"
@@ -349,22 +405,24 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                         className="text-xl font-bold text-white bg-transparent border-b border-transparent hover:border-cyan-500 focus:border-cyan-500 focus:outline-none px-2 py-1"
                       />
                     </div>
-                    <button
-                      onClick={() => openArchiveModal(workoutIndex)}
-                      className="p-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all"
-                      title="העבר לארכיון"
-                    >
-                      <FolderOpen className="w-4 h-4" />
-                    </button>
-                    {workouts.length > 1 && (
+                    <div className="flex items-center gap-2">
                       <button
-                        onClick={() => removeWorkout(workoutIndex)}
-                        className="p-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-all"
-                        title="מחק אימון"
+                        onClick={() => openArchiveModal(workoutIndex)}
+                        className="p-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all"
+                        title="העבר לארכיון"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <FolderOpen className="w-4 h-4" />
                       </button>
-                    )}
+                      {workouts.length > 1 && (
+                        <button
+                          onClick={() => removeWorkout(workoutIndex)}
+                          className="p-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-all"
+                          title="מחק אימון"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   {/* Exercises Table */}
@@ -372,6 +430,7 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                     <table className="w-full border-collapse text-[7px] sm:text-[9px]">
                       <thead className="sticky top-0 z-20">
                         <tr className="bg-dark-card">
+                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8">סדר</th>
                           <th className="border border-dark-border px-1 py-1 text-gray-300 font-semibold text-right w-[120px] sm:w-[180px] md:w-[220px]">תרגיל</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">סטים</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">חזרות</th>
@@ -396,6 +455,26 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                           const numSets = parseInt(exercise.sets) || 3
                           return (
                             <tr key={exerciseIndex} className="hover:bg-dark-card/30">
+                              <td className="border border-dark-border px-0.5 py-0.5">
+                                <div className="flex flex-col items-center gap-0.5">
+                                  <button
+                                    onClick={() => moveExerciseUp(workoutIndex, exerciseIndex)}
+                                    disabled={exerciseIndex === 0}
+                                    className="p-0.5 hover:bg-dark-hover rounded transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                                    title="הזז למעלה"
+                                  >
+                                    <ChevronUp className="w-3 h-3 text-cyan-400" />
+                                  </button>
+                                  <button
+                                    onClick={() => moveExerciseDown(workoutIndex, exerciseIndex)}
+                                    disabled={exerciseIndex === workout.exercises.length - 1}
+                                    className="p-0.5 hover:bg-dark-hover rounded transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                                    title="הזז למטה"
+                                  >
+                                    <ChevronDown className="w-3 h-3 text-cyan-400" />
+                                  </button>
+                                </div>
+                              </td>
                               <td className="border border-dark-border px-1 py-1">
                                 <input
                                   type="text"
