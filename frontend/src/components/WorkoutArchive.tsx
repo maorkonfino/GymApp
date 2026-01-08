@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Archive, ChevronDown, ChevronUp, Dumbbell, FolderOpen, ArrowLeft, Edit2, Trash2 } from 'lucide-react'
+import { Archive, ChevronDown, ChevronUp, Dumbbell, FolderOpen, Edit2, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
 
@@ -207,18 +207,15 @@ const WorkoutArchive: React.FC = () => {
       {/* Header */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-4 mb-4">
+          <h1 className="text-4xl font-bold text-white">ארכיון תוכניות אימון</h1>
           <button
             onClick={() => navigate('/workout-plan')}
-            className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 rounded-lg transition-all flex items-center gap-2 font-semibold text-sm"
+            className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 rounded-lg transition-all flex items-center gap-2 font-semibold"
             title="חזור לתוכנית האימון"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <Dumbbell className="w-5 h-5" />
             תוכנית האימון שלי
           </button>
-          <h1 className="text-4xl font-bold text-white flex items-center gap-3">
-            <Archive className="w-10 h-10 text-purple-400" />
-            ארכיון תוכניות אימון
-          </h1>
         </div>
         <p className="text-gray-400 text-sm">
           כאן תוכל לארגן ולצפות בתוכניות אימון קודמות
