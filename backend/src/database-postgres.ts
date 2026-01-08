@@ -404,14 +404,32 @@ export const getUnorganizedArchivedPlans = async (userEmail: string): Promise<Ar
   return result.rows;
 };
 
-export const unarchiveWorkoutPlan = async (id: number): Promise<void> => {
-  const query = 'DELETE FROM archived_workout_plans WHERE id = $1';
-  await pool.query(query, [id]);
+export const unarchiveWorkoutPlan = async (id: number): Promise<ArchivedWorkoutPlan | null> => {
+  // First get the archived plan
+  const selectQuery = 'SELECT * FROM archived_workout_plans WHERE id = $1';
+  const result = await pool.query(selectQuery, [id]);
+  
+  if (result.rows.length === 0) {
+    return null;
+  }
+  
+  const archivedPlan = result.rows[0];
+  
+  // Delete from archive
+  const deleteQuery = 'DELETE FROM archived_workout_plans WHERE id = $1';
+  await pool.query(deleteQuery, [id]);
+  
+  return archivedPlan;
 };
 
 export const movePlanToFolder = async (planId: number, folderId: number | null): Promise<void> => {
   const query = 'UPDATE archived_workout_plans SET folder_id = $1 WHERE id = $2';
   await pool.query(query, [folderId, planId]);
+};
+
+export const updateWorkoutFolder = async (id: number, name: string): Promise<void> => {
+  const query = 'UPDATE workout_folders SET name = $1 WHERE id = $2';
+  await pool.query(query, [name, id]);
 };
 
 export const deleteWorkoutFolder = async (id: number): Promise<void> => {

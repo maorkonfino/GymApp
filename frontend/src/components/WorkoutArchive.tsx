@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Archive, ChevronDown, ChevronUp, Dumbbell, FolderOpen, ArrowLeft } from 'lucide-react'
+import { Archive, ChevronDown, ChevronUp, Dumbbell, FolderOpen, ArrowLeft, Edit2, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
 
@@ -54,6 +54,8 @@ const WorkoutArchive: React.FC = () => {
   const [collapsedPlans, setCollapsedPlans] = useState<Set<number>>(new Set())
   const [newFolderName, setNewFolderName] = useState('')
   const [showNewFolderInput, setShowNewFolderInput] = useState(false)
+  const [editingFolderId, setEditingFolderId] = useState<number | null>(null)
+  const [editFolderName, setEditFolderName] = useState('')
 
   useEffect(() => {
     fetchArchivedPlans()
@@ -152,6 +154,45 @@ const WorkoutArchive: React.FC = () => {
     }
   }
 
+  const deleteFolder = async (folderId: number) => {
+    if (!user) return
+    
+    const confirmed = window.confirm('האם אתה בטוח שברצונך למחוק את התיקייה? התוכניות בתוכה יועברו ל"ללא ארגון"')
+    if (!confirmed) return
+    
+    try {
+      await api.delete(`/workout-plans/folders/${folderId}`)
+      await fetchArchivedPlans()
+    } catch (error) {
+      console.error('Error deleting folder:', error)
+      alert('שגיאה במחיקת התיקייה')
+    }
+  }
+
+  const startEditFolder = (folderId: number, currentName: string) => {
+    setEditingFolderId(folderId)
+    setEditFolderName(currentName)
+  }
+
+  const saveEditFolder = async (folderId: number) => {
+    if (!user || !editFolderName.trim()) return
+    
+    try {
+      await api.put(`/workout-plans/folders/${folderId}`, { name: editFolderName })
+      setEditingFolderId(null)
+      setEditFolderName('')
+      await fetchArchivedPlans()
+    } catch (error) {
+      console.error('Error updating folder:', error)
+      alert('שגיאה בעדכון שם התיקייה')
+    }
+  }
+
+  const cancelEditFolder = () => {
+    setEditingFolderId(null)
+    setEditFolderName('')
+  }
+
   if (loading) {
     return (
       <div className="text-center py-12">
@@ -232,18 +273,77 @@ const WorkoutArchive: React.FC = () => {
             
             return (
               <div key={folder.id} className="bg-dark-card border border-purple-500/30 rounded-xl p-6 shadow-xl">
-                <div 
-                  className="flex items-center justify-between mb-4 cursor-pointer hover:bg-dark-hover/30 -m-2 p-2 rounded-lg transition-colors"
-                  onClick={() => toggleFolderCollapse(folder.id)}
-                >
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between mb-4">
+                  <div 
+                    className="flex items-center gap-3 flex-1 cursor-pointer hover:bg-dark-hover/30 -m-2 p-2 rounded-lg transition-colors"
+                    onClick={() => toggleFolderCollapse(folder.id)}
+                  >
                     <FolderOpen className="w-8 h-8 text-purple-400" />
-                    <h2 className="text-2xl font-bold text-white">{folder.name}</h2>
-                    <span className="text-sm text-gray-400">({folder.plans.length} תוכניות)</span>
+                    {editingFolderId === folder.id ? (
+                      <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                        <input
+                          type="text"
+                          value={editFolderName}
+                          onChange={(e) => setEditFolderName(e.target.value)}
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter') saveEditFolder(folder.id)
+                            if (e.key === 'Escape') cancelEditFolder()
+                          }}
+                          className="px-3 py-1 bg-dark-hover border border-purple-500/50 rounded text-white text-xl font-bold focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          autoFocus
+                        />
+                        <button
+                          onClick={() => saveEditFolder(folder.id)}
+                          className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-sm"
+                        >
+                          שמור
+                        </button>
+                        <button
+                          onClick={cancelEditFolder}
+                          className="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white rounded text-sm"
+                        >
+                          ביטול
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <h2 className="text-2xl font-bold text-white">{folder.name}</h2>
+                        <span className="text-sm text-gray-400">({folder.plans.length} תוכניות)</span>
+                      </>
+                    )}
                   </div>
-                  <button className="text-purple-400 hover:text-purple-300 transition-colors">
-                    {isFolderCollapsed ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {editingFolderId !== folder.id && (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            startEditFolder(folder.id, folder.name)
+                          }}
+                          className="p-2 text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10 rounded-lg transition-colors"
+                          title="ערוך שם תיקייה"
+                        >
+                          <Edit2 className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            deleteFolder(folder.id)
+                          }}
+                          className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+                          title="מחק תיקייה"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </>
+                    )}
+                    <button 
+                      onClick={() => toggleFolderCollapse(folder.id)}
+                      className="text-purple-400 hover:text-purple-300 transition-colors"
+                    >
+                      {isFolderCollapsed ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
+                    </button>
+                  </div>
                 </div>
 
                 {!isFolderCollapsed && (
@@ -281,9 +381,42 @@ const WorkoutArchive: React.FC = () => {
                           </div>
                           
                           {!isPlanCollapsed && (
-                            <div className="mt-4 text-sm text-gray-300">
-                              <p>מספר אימונים: {plan.plan.workouts.length}</p>
-                              <p>מספר שבועות: {plan.plan.numberOfWeeks === 'flexible' ? 'גמיש' : plan.plan.numberOfWeeks}</p>
+                            <div className="mt-4 space-y-4">
+                              <div className="text-sm text-gray-400 mb-3">
+                                מספר שבועות: {plan.plan.numberOfWeeks === 'flexible' ? 'גמיש' : plan.plan.numberOfWeeks}
+                              </div>
+                              {plan.plan.workouts.map((workout: any, wIdx: number) => (
+                                <div key={wIdx} className="bg-dark-card border border-cyan-500/30 rounded-lg p-4">
+                                  <h4 className="text-lg font-semibold text-cyan-300 mb-3 flex items-center gap-2">
+                                    <Dumbbell className="w-5 h-5" />
+                                    {workout.name}
+                                  </h4>
+                                  <div className="overflow-x-auto">
+                                    <table className="w-full text-sm">
+                                      <thead>
+                                        <tr className="border-b border-dark-border">
+                                          <th className="text-right px-3 py-2 text-gray-400 font-semibold">תרגיל</th>
+                                          <th className="text-center px-3 py-2 text-gray-400 font-semibold">סטים</th>
+                                          <th className="text-center px-3 py-2 text-gray-400 font-semibold">חזרות</th>
+                                          <th className="text-center px-3 py-2 text-gray-400 font-semibold">מנוחה</th>
+                                          <th className="text-center px-3 py-2 text-gray-400 font-semibold">RIR</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {workout.exercises.map((exercise: any, eIdx: number) => (
+                                          <tr key={eIdx} className="border-b border-dark-border/50 hover:bg-dark-hover/30 transition-colors">
+                                            <td className="text-right px-3 py-2 text-white font-medium">{exercise.name}</td>
+                                            <td className="text-center px-3 py-2 text-gray-300">{exercise.sets}</td>
+                                            <td className="text-center px-3 py-2 text-gray-300">{exercise.repsRange}</td>
+                                            <td className="text-center px-3 py-2 text-gray-300">{exercise.rest}</td>
+                                            <td className="text-center px-3 py-2 text-gray-300">{exercise.rir}</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              ))}
                             </div>
                           )}
                         </div>
@@ -350,9 +483,42 @@ const WorkoutArchive: React.FC = () => {
                   </div>
                   
                   {!isPlanCollapsed && (
-                    <div className="mt-4 text-sm text-gray-300">
-                      <p>מספר אימונים: {plan.plan.workouts.length}</p>
-                      <p>מספר שבועות: {plan.plan.numberOfWeeks === 'flexible' ? 'גמיש' : plan.plan.numberOfWeeks}</p>
+                    <div className="mt-4 space-y-4">
+                      <div className="text-sm text-gray-400 mb-3">
+                        מספר שבועות: {plan.plan.numberOfWeeks === 'flexible' ? 'גמיש' : plan.plan.numberOfWeeks}
+                      </div>
+                      {plan.plan.workouts.map((workout: any, wIdx: number) => (
+                        <div key={wIdx} className="bg-dark-card border border-cyan-500/30 rounded-lg p-4">
+                          <h4 className="text-lg font-semibold text-cyan-300 mb-3 flex items-center gap-2">
+                            <Dumbbell className="w-5 h-5" />
+                            {workout.name}
+                          </h4>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="border-b border-dark-border">
+                                  <th className="text-right px-3 py-2 text-gray-400 font-semibold">תרגיל</th>
+                                  <th className="text-center px-3 py-2 text-gray-400 font-semibold">סטים</th>
+                                  <th className="text-center px-3 py-2 text-gray-400 font-semibold">חזרות</th>
+                                  <th className="text-center px-3 py-2 text-gray-400 font-semibold">מנוחה</th>
+                                  <th className="text-center px-3 py-2 text-gray-400 font-semibold">RIR</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {workout.exercises.map((exercise: any, eIdx: number) => (
+                                  <tr key={eIdx} className="border-b border-dark-border/50 hover:bg-dark-hover/30 transition-colors">
+                                    <td className="text-right px-3 py-2 text-white font-medium">{exercise.name}</td>
+                                    <td className="text-center px-3 py-2 text-gray-300">{exercise.sets}</td>
+                                    <td className="text-center px-3 py-2 text-gray-300">{exercise.repsRange}</td>
+                                    <td className="text-center px-3 py-2 text-gray-300">{exercise.rest}</td>
+                                    <td className="text-center px-3 py-2 text-gray-300">{exercise.rir}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>

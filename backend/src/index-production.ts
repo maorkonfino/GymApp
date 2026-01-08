@@ -721,10 +721,49 @@ app.post('/api/workout-plans/unarchive/:planId', async (req: Request, res: Respo
   try {
     const planId = parseInt(req.params.planId);
     
-    await db.unarchiveWorkoutPlan(planId);
+    console.log('🔄 Unarchiving workout:', planId);
+    
+    // Get and remove from archive
+    const archivedPlan = await db.unarchiveWorkoutPlan(planId);
+    
+    if (!archivedPlan) {
+      console.log('❌ Archived plan not found');
+      return res.status(404).json({ error: 'Archived plan not found' });
+    }
+    
+    console.log('📦 Archived plan retrieved:', archivedPlan.name);
+    
+    // Get current workout plan
+    const currentPlan = await db.getWorkoutPlan(archivedPlan.user_email);
+    
+    let updatedPlanContent;
+    if (currentPlan && currentPlan.plan_content) {
+      // Parse current plan and add the archived workout
+      const planData = JSON.parse(currentPlan.plan_content);
+      const archivedWorkout = JSON.parse(archivedPlan.plan_content);
+      
+      // Add the workout(s) from archived plan to current plan
+      if (archivedWorkout.workouts && Array.isArray(archivedWorkout.workouts)) {
+        planData.workouts = [...(planData.workouts || []), ...archivedWorkout.workouts];
+      }
+      
+      updatedPlanContent = JSON.stringify(planData);
+    } else {
+      // No current plan, use the archived plan as the main plan
+      updatedPlanContent = archivedPlan.plan_content;
+    }
+    
+    // Save updated plan
+    await db.saveWorkoutPlan({
+      user_email: archivedPlan.user_email,
+      plan_content: updatedPlanContent,
+      created_by: archivedPlan.user_email
+    });
+    
+    console.log('✅ Workout unarchived and added to main plan');
     res.json({ message: 'Plan unarchived successfully' });
   } catch (error) {
-    console.error('Error unarchiving plan:', error);
+    console.error('❌ Error unarchiving plan:', error);
     res.status(500).json({ error: 'Failed to unarchive plan' });
   }
 });
@@ -743,15 +782,40 @@ app.post('/api/workout-plans/move/:planId', async (req: Request, res: Response) 
   }
 });
 
+// Update workout folder name
+app.put('/api/workout-plans/folders/:folderId', async (req: Request, res: Response) => {
+  try {
+    const folderId = parseInt(req.params.folderId);
+    const { name } = req.body;
+    
+    console.log('📝 Updating folder:', { folderId, name });
+    
+    if (!name) {
+      console.log('❌ Missing name');
+      return res.status(400).json({ error: 'Name is required' });
+    }
+    
+    await db.updateWorkoutFolder(folderId, name);
+    console.log('✅ Folder updated');
+    res.json({ message: 'Folder updated successfully' });
+  } catch (error) {
+    console.error('❌ Error updating folder:', error);
+    res.status(500).json({ error: 'Failed to update folder' });
+  }
+});
+
 // Delete workout folder
 app.delete('/api/workout-plans/folders/:folderId', async (req: Request, res: Response) => {
   try {
     const folderId = parseInt(req.params.folderId);
     
+    console.log('🗑️ Deleting folder:', folderId);
+    
     await db.deleteWorkoutFolder(folderId);
+    console.log('✅ Folder deleted');
     res.json({ message: 'Folder deleted successfully' });
   } catch (error) {
-    console.error('Error deleting folder:', error);
+    console.error('❌ Error deleting folder:', error);
     res.status(500).json({ error: 'Failed to delete folder' });
   }
 });
