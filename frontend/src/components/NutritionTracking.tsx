@@ -522,7 +522,7 @@ const NutritionTracking: React.FC = () => {
               <Apple className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">מעקב התקדמות ותזונה</h2>
+              <h2 className="text-2xl font-bold text-white">מעקב תזונה והתקדמות</h2>
               <p className="text-gray-400 text-sm">יומן מעקב יומי</p>
             </div>
           </div>

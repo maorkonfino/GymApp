@@ -34,7 +34,7 @@ const NavigationCards: React.FC = () => {
       path: '/workout-plan'
     },
     {
-      title: 'מעקב התקדמות',
+      title: 'מעקב תזונה והתקדמות',
       icon: <TrendingUp className="w-6 h-6" />,
       color: 'text-green-400',
       bgGradient: 'from-green-500/20 to-emerald-500/20',
