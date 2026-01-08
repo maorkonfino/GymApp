@@ -51,6 +51,25 @@ app.get('/api/users', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/api/users/:id', async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const users = await db.getAllUsers();
+    const user = users.find(u => u.id === userId);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Don't send password back
+    const { password, ...userWithoutPassword } = user;
+    res.json(userWithoutPassword);
+  } catch (error) {
+    console.error('Error getting user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Register new user
 app.post('/api/auth/register', async (req: Request, res: Response) => {
   try {

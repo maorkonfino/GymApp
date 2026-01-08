@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { X, Save, Plus, Trash2, Dumbbell } from 'lucide-react'
+import { X, Save, Plus, Trash2, Dumbbell, Archive, FolderOpen } from 'lucide-react'
 import { User } from '../types'
 import api from '../api'
+import { useNavigate } from 'react-router-dom'
 
 interface AdminWorkoutEditorProps {
   user: User
@@ -36,8 +37,12 @@ interface WorkoutPlan {
 }
 
 const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }) => {
+  const navigate = useNavigate()
   const [numberOfWeeks, setNumberOfWeeks] = useState<number | 'flexible'>(4)
   const [userAddedWeeks, setUserAddedWeeks] = useState<number>(0)
+  const [archiveWorkoutIndex, setArchiveWorkoutIndex] = useState<number | null>(null)
+  const [archiveFolders, setArchiveFolders] = useState<Array<{id: number, name: string}>>([])
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null)
   const [workouts, setWorkouts] = useState<Workout[]>([
     {
       name: 'אימון 1',
@@ -156,6 +161,61 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
     }
   }
 
+  const openArchiveModal = async (workoutIndex: number) => {
+    try {
+      // Fetch folders for this user
+      const response = await api.get(`/workout-plans/archive/${user.email}`)
+      setArchiveFolders(response.data.folders || [])
+      setArchiveWorkoutIndex(workoutIndex)
+      setSelectedFolderId(null)
+    } catch (error) {
+      console.error('Error fetching folders:', error)
+      setArchiveFolders([])
+      setArchiveWorkoutIndex(workoutIndex)
+      setSelectedFolderId(null)
+    }
+  }
+
+  const handleArchiveWorkout = async () => {
+    if (archiveWorkoutIndex === null) return
+
+    const workout = workouts[archiveWorkoutIndex]
+
+    try {
+      // Create a minimal plan with just this workout
+      const workoutPlan = {
+        numberOfWeeks: numberOfWeeks,
+        workouts: [workout]
+      }
+
+      // Archive the workout
+      await api.post('/workout-plans/archive', {
+        userEmail: user.email,
+        name: workout.name,
+        planContent: JSON.stringify(workoutPlan),
+        folderId: selectedFolderId
+      })
+
+      // Remove workout from current plan
+      const newWorkouts = workouts.filter((_, idx) => idx !== archiveWorkoutIndex)
+      setWorkouts(newWorkouts)
+      
+      // Close modal
+      setArchiveWorkoutIndex(null)
+      setSelectedFolderId(null)
+      
+      alert('האימון הועבר לארכיון בהצלחה!')
+    } catch (error) {
+      console.error('Error archiving workout:', error)
+      alert('שגיאה בהעברה לארכיון')
+    }
+  }
+
+  const openUserArchive = () => {
+    // Open archive page with userId query parameter
+    navigate(`/workout-archive?userId=${user.id}`)
+  }
+
   const addExercise = (workoutIndex: number) => {
     const newWorkouts = [...workouts]
     newWorkouts[workoutIndex].exercises.push({
@@ -228,9 +288,19 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
       <div className="bg-dark-card border border-dark-border rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="p-6 border-b border-dark-border flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-white">עריכת תוכנית אימון</h2>
-            <p className="text-gray-400 text-sm">{user.name}</p>
+          <div className="flex items-center gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-white">עריכת תוכנית אימון</h2>
+              <p className="text-gray-400 text-sm">{user.name}</p>
+            </div>
+            <button
+              onClick={openUserArchive}
+              className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all flex items-center gap-2 font-semibold text-sm"
+              title="פתח ארכיון"
+            >
+              <Archive className="w-4 h-4" />
+              ארכיון
+            </button>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-dark-hover rounded-lg transition-colors">
             <X className="w-5 h-5 text-gray-400" />
@@ -279,6 +349,13 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                         className="text-xl font-bold text-white bg-transparent border-b border-transparent hover:border-cyan-500 focus:border-cyan-500 focus:outline-none px-2 py-1"
                       />
                     </div>
+                    <button
+                      onClick={() => openArchiveModal(workoutIndex)}
+                      className="p-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all"
+                      title="העבר לארכיון"
+                    >
+                      <FolderOpen className="w-4 h-4" />
+                    </button>
                     {workouts.length > 1 && (
                       <button
                         onClick={() => removeWorkout(workoutIndex)}
@@ -295,7 +372,7 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                     <table className="w-full border-collapse text-[7px] sm:text-[9px]">
                       <thead className="sticky top-0 z-20">
                         <tr className="bg-dark-card">
-                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-right w-[50px] sm:w-[70px]">תרגיל</th>
+                          <th className="border border-dark-border px-1 py-1 text-gray-300 font-semibold text-right w-[120px] sm:w-[180px] md:w-[220px]">תרגיל</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">סטים</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">חזרות</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">מנוחה</th>
@@ -319,13 +396,13 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                           const numSets = parseInt(exercise.sets) || 3
                           return (
                             <tr key={exerciseIndex} className="hover:bg-dark-card/30">
-                              <td className="border border-dark-border px-0.5 py-0.5">
+                              <td className="border border-dark-border px-1 py-1">
                                 <input
                                   type="text"
                                   placeholder="שם התרגיל"
                                   value={exercise.name}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'name', e.target.value)}
-                                  className="w-full bg-transparent text-white text-[7px] sm:text-[9px] focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
+                                  className="w-full bg-transparent text-white text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-1 py-1"
                                 />
                               </td>
                               <td className="border border-dark-border px-0.5 py-0.5">
@@ -464,6 +541,61 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
           </div>
         </div>
       </div>
+
+      {/* Archive Modal */}
+      {archiveWorkoutIndex !== null && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60]">
+          <div className="bg-dark-card border border-dark-border rounded-2xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold text-white mb-4">העבר לארכיון</h3>
+            <p className="text-gray-300 mb-4">בחר תיקייה:</p>
+            
+            {archiveFolders.length === 0 ? (
+              <p className="text-gray-400 text-sm mb-4">אין תיקיות זמינות. האימון יועבר לארכיון ללא תיקייה.</p>
+            ) : (
+              <div className="space-y-2 mb-4">
+                <button
+                  onClick={() => setSelectedFolderId(null)}
+                  className={`w-full px-4 py-2 rounded-lg text-right transition-all ${
+                    selectedFolderId === null
+                      ? 'bg-purple-500/30 text-purple-200 border border-purple-400'
+                      : 'bg-dark-hover text-gray-300 border border-dark-border hover:bg-dark-border'
+                  }`}
+                >
+                  ללא תיקייה
+                </button>
+                {archiveFolders.map(folder => (
+                  <button
+                    key={folder.id}
+                    onClick={() => setSelectedFolderId(folder.id)}
+                    className={`w-full px-4 py-2 rounded-lg text-right transition-all ${
+                      selectedFolderId === folder.id
+                        ? 'bg-purple-500/30 text-purple-200 border border-purple-400'
+                        : 'bg-dark-hover text-gray-300 border border-dark-border hover:bg-dark-border'
+                    }`}
+                  >
+                    {folder.name}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setArchiveWorkoutIndex(null)}
+                className="flex-1 px-4 py-2 bg-dark-hover hover:bg-dark-border text-gray-300 rounded-lg transition-all"
+              >
+                ביטול
+              </button>
+              <button
+                onClick={handleArchiveWorkout}
+                className="flex-1 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all"
+              >
+                העבר לארכיון
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

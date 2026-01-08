@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Archive, ChevronDown, ChevronUp, Dumbbell, FolderOpen, Edit2, Trash2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Archive, ChevronDown, ChevronUp, Dumbbell, FolderOpen, Edit2, Trash2, Plus } from 'lucide-react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../api'
 
 interface WeeklyTracking {
@@ -45,8 +45,11 @@ interface Folder {
 }
 
 const WorkoutArchive: React.FC = () => {
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const [viewingUserEmail, setViewingUserEmail] = useState<string | null>(null)
+  const [viewingUserName, setViewingUserName] = useState<string>('')
   const [folders, setFolders] = useState<Folder[]>([])
   const [unorganizedPlans, setUnorganizedPlans] = useState<ArchivedPlan[]>([])
   const [loading, setLoading] = useState(true)
@@ -57,16 +60,37 @@ const WorkoutArchive: React.FC = () => {
   const [editingFolderId, setEditingFolderId] = useState<number | null>(null)
   const [editFolderName, setEditFolderName] = useState('')
 
+  // Check if admin is viewing another user's archive
   useEffect(() => {
-    fetchArchivedPlans()
-  }, [user])
+    const userId = searchParams.get('userId')
+    if (userId && isAdmin) {
+      // Fetch user email from userId
+      api.get(`/users/${userId}`).then(response => {
+        setViewingUserEmail(response.data.email)
+        setViewingUserName(response.data.name)
+      }).catch(error => {
+        console.error('Error fetching user:', error)
+        alert('שגיאה בטעינת פרטי משתמש')
+        navigate('/manage-users')
+      })
+    } else {
+      setViewingUserEmail(user?.email || null)
+      setViewingUserName(user?.name || '')
+    }
+  }, [searchParams, user, isAdmin])
+
+  useEffect(() => {
+    if (viewingUserEmail) {
+      fetchArchivedPlans()
+    }
+  }, [viewingUserEmail])
 
   const fetchArchivedPlans = async () => {
-    if (!user) return
+    if (!viewingUserEmail) return
     
     setLoading(true)
     try {
-      const response = await api.get(`/workout-plans/archive/${user.email}`)
+      const response = await api.get(`/workout-plans/archive/${viewingUserEmail}`)
       
       // Parse plan_content for each plan
       const foldersWithParsedPlans = (response.data.folders || []).map((folder: any) => ({
@@ -116,10 +140,10 @@ const WorkoutArchive: React.FC = () => {
   }
 
   const createFolder = async () => {
-    if (!newFolderName.trim() || !user) return
+    if (!newFolderName.trim() || !viewingUserEmail) return
     
     try {
-      await api.post('/workout-plans/folders', { name: newFolderName, userEmail: user.email })
+      await api.post('/workout-plans/folders', { name: newFolderName, userEmail: viewingUserEmail })
       setNewFolderName('')
       setShowNewFolderInput(false)
       await fetchArchivedPlans()
@@ -130,7 +154,7 @@ const WorkoutArchive: React.FC = () => {
   }
 
   const unarchivePlan = async (planId: number) => {
-    if (!user) return
+    if (!viewingUserEmail) return
     
     try {
       await api.post(`/workout-plans/unarchive/${planId}`)
@@ -155,7 +179,7 @@ const WorkoutArchive: React.FC = () => {
   }
 
   const deleteFolder = async (folderId: number) => {
-    if (!user) return
+    if (!viewingUserEmail) return
     
     const confirmed = window.confirm('האם אתה בטוח שברצונך למחוק את התיקייה? התוכניות בתוכה יועברו ל"ללא ארגון"')
     if (!confirmed) return
@@ -207,11 +231,22 @@ const WorkoutArchive: React.FC = () => {
       {/* Header */}
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-4 mb-4">
-          <h1 className="text-4xl font-bold text-white">ארכיון תוכניות אימון</h1>
+          <div>
+            <h1 className="text-4xl font-bold text-white">ארכיון תוכניות אימון</h1>
+            {searchParams.get('userId') && isAdmin && (
+              <p className="text-gray-400 text-lg mt-2">{viewingUserName}</p>
+            )}
+          </div>
           <button
-            onClick={() => navigate('/workout-plan')}
+            onClick={() => {
+              if (searchParams.get('userId')) {
+                navigate('/manage-users')
+              } else {
+                navigate('/workout-plan')
+              }
+            }}
             className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 rounded-lg transition-all flex items-center gap-2 font-semibold"
-            title="חזור לתוכנית האימון"
+            title={searchParams.get('userId') ? 'חזור לניהול משתמשים' : 'חזור לתוכנית האימון'}
           >
             <Dumbbell className="w-5 h-5" />
             תוכנית האימון שלי
