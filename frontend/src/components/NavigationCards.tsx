@@ -49,6 +49,11 @@ const NavigationCards: React.FC = () => {
       return false;
     }
     
+    // Hide "תוכנית האימון שלי" button when in workout archive
+    if (card.path === '/workout-plan' && location.pathname === '/workout-archive') {
+      return false;
+    }
+    
     if (!user) return card.path === '/'; // Guest can see registration only
     if (isAdmin) return true; // Admin sees all
     

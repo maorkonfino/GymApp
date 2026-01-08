@@ -209,11 +209,11 @@ const WorkoutArchive: React.FC = () => {
         <div className="flex items-center justify-center gap-4 mb-4">
           <button
             onClick={() => navigate('/workout-plan')}
-            className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 rounded-lg transition-all flex items-center gap-2 font-semibold"
+            className="px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 rounded-lg transition-all flex items-center gap-2 font-semibold text-sm"
             title="חזור לתוכנית האימון"
           >
             <ArrowLeft className="w-5 h-5" />
-            חזרה
+            תוכנית האימון שלי
           </button>
           <h1 className="text-4xl font-bold text-white flex items-center gap-3">
             <Archive className="w-10 h-10 text-purple-400" />
