@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { Archive, ChevronDown, ChevronUp, Dumbbell, FolderOpen, Edit2, Trash2, Plus } from 'lucide-react'
+import { Archive, ChevronDown, ChevronUp, Dumbbell, FolderOpen, Edit2, Trash2 } from 'lucide-react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../api'
 
