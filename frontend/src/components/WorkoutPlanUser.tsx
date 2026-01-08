@@ -202,6 +202,7 @@ const WorkoutPlanUser: React.FC = () => {
         workouts: [workout]
       }
 
+      // Archive the workout
       await api.post('/workout-plans/archive', {
         userEmail: user.email,
         name: workout.name,
@@ -211,7 +212,13 @@ const WorkoutPlanUser: React.FC = () => {
 
       // Remove workout from current plan
       const newWorkouts = plan.workouts.filter((_, idx) => idx !== workoutIndex)
-      setPlan({ ...plan, workouts: newWorkouts })
+      const updatedPlan = { ...plan, workouts: newWorkouts }
+      
+      // Save the updated plan to the server
+      await savePlan(updatedPlan)
+      
+      // Update local state
+      setPlan(updatedPlan)
       
       alert('האימון הועבר לארכיון בהצלחה!')
     } catch (error) {

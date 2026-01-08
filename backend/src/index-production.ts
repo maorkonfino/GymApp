@@ -641,22 +641,29 @@ app.get('/api/workout-plans/archive/:email', async (req: Request, res: Response)
   try {
     const { email } = req.params;
     
+    console.log('📂 Getting archived plans for:', email);
+    
     // Get folders with their plans
     const folders = await db.getWorkoutFolders(email);
-    const foldersWithPlans = folders.map(folder => ({
-      ...folder,
-      plans: db.getArchivedWorkoutPlansByFolder(email, folder.id!)
-    }));
+    console.log('📁 Folders found:', folders.length);
+    
+    const foldersWithPlans = await Promise.all(
+      folders.map(async (folder: any) => ({
+        ...folder,
+        plans: await db.getArchivedWorkoutPlansByFolder(email, folder.id!)
+      }))
+    );
     
     // Get unorganized plans
     const unorganized = await db.getUnorganizedArchivedPlans(email);
+    console.log('📦 Unorganized plans found:', unorganized.length);
     
     res.json({
       folders: foldersWithPlans,
       unorganized
     });
   } catch (error) {
-    console.error('Error getting archived plans:', error);
+    console.error('❌ Error getting archived plans:', error);
     res.status(500).json({ error: 'Failed to get archived plans' });
   }
 });
@@ -666,14 +673,18 @@ app.post('/api/workout-plans/folders', async (req: Request, res: Response) => {
   try {
     const { name, userEmail } = req.body;
     
+    console.log('📁 Creating folder:', { name, userEmail });
+    
     if (!name || !userEmail) {
+      console.log('❌ Missing name or userEmail');
       return res.status(400).json({ error: 'Name and userEmail are required' });
     }
     
     const folderId = await db.createWorkoutFolder({ user_email: userEmail, name });
+    console.log('✅ Folder created with ID:', folderId);
     res.json({ id: folderId, message: 'Folder created successfully' });
   } catch (error) {
-    console.error('Error creating folder:', error);
+    console.error('❌ Error creating folder:', error);
     res.status(500).json({ error: 'Failed to create folder' });
   }
 });
@@ -683,7 +694,10 @@ app.post('/api/workout-plans/archive', async (req: Request, res: Response) => {
   try {
     const { userEmail, name, planContent, folderId } = req.body;
     
+    console.log('📦 Archiving workout:', { userEmail, name, folderId });
+    
     if (!userEmail || !name || !planContent) {
+      console.log('❌ Missing required fields');
       return res.status(400).json({ error: 'userEmail, name, and planContent are required' });
     }
     
@@ -694,9 +708,10 @@ app.post('/api/workout-plans/archive', async (req: Request, res: Response) => {
       folder_id: folderId || null
     });
     
+    console.log('✅ Workout archived with ID:', planId);
     res.json({ id: planId, message: 'Plan archived successfully' });
   } catch (error) {
-    console.error('Error archiving plan:', error);
+    console.error('❌ Error archiving plan:', error);
     res.status(500).json({ error: 'Failed to archive plan' });
   }
 });
