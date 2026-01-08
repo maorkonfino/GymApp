@@ -63,9 +63,12 @@ const WorkoutArchive: React.FC = () => {
   // Check if admin is viewing another user's archive
   useEffect(() => {
     const userId = searchParams.get('userId')
+    console.log('WorkoutArchive - userId from params:', userId, 'isAdmin:', isAdmin)
     if (userId && isAdmin) {
       // Fetch user email from userId
+      console.log('Fetching user details for userId:', userId)
       api.get(`/users/${userId}`).then(response => {
+        console.log('User details fetched:', response.data)
         setViewingUserEmail(response.data.email)
         setViewingUserName(response.data.name)
       }).catch(error => {
@@ -74,10 +77,11 @@ const WorkoutArchive: React.FC = () => {
         navigate('/manage-users')
       })
     } else {
+      console.log('Using current user email:', user?.email)
       setViewingUserEmail(user?.email || null)
       setViewingUserName(user?.name || '')
     }
-  }, [searchParams, user, isAdmin])
+  }, [searchParams, user, isAdmin, navigate])
 
   useEffect(() => {
     if (viewingUserEmail) {

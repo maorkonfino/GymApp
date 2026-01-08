@@ -212,10 +212,12 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
   }
 
   const openUserArchive = () => {
+    console.log('AdminWorkoutEditor - Opening archive for user:', user.id, user.email, user.name)
     // Close the modal first
     onClose()
     // Small delay to ensure modal closes before navigation
     setTimeout(() => {
+      console.log('AdminWorkoutEditor - Navigating to:', `/workout-archive?userId=${user.id}`)
       navigate(`/workout-archive?userId=${user.id}`)
     }, 100)
   }
