@@ -4,7 +4,7 @@ import { he } from 'date-fns/locale'
 import { Registration } from '../types'
 import { registrationAPI } from '../api'
 import { useAuth } from '../contexts/AuthContext'
-import { X, Calendar, ChevronDown, Users, Edit2, Save } from 'lucide-react'
+import { X, Calendar, ChevronDown, Users, Edit2, Save, Phone } from 'lucide-react'
 import { generateTimeSlotRanges } from '../utils/timeSlotRanges'
 import { getRestrictionMessage, getAvailableTimeOptions } from '../utils/timeRestrictions'
 
@@ -294,7 +294,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       
       {/* Week Display - My Workouts Button */}
       <div className="pb-2 sm:pb-4">
-        <div className="flex items-center justify-center bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
+        <div className="flex items-center justify-center gap-3 bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
           <button
             onClick={loadMyWorkouts}
             className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors font-medium text-sm sm:text-base"
@@ -302,6 +302,13 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
             כל האימונים שלי
           </button>
+          <a
+            href="tel:0547101272"
+            className="flex items-center justify-center p-2.5 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors shadow-lg"
+            title="התקשר"
+          >
+            <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
+          </a>
         </div>
       </div>
         
