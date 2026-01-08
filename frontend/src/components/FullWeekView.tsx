@@ -294,7 +294,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
       
       {/* Week Display - My Workouts Button */}
       <div className="pb-2 sm:pb-4">
-        <div className="flex items-center justify-center gap-3 bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
+        <div className="relative flex items-center justify-center bg-dark-hover rounded-lg p-2 sm:p-3 shadow-lg">
           <button
             onClick={loadMyWorkouts}
             className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors font-medium text-sm sm:text-base"
@@ -304,10 +304,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
           </button>
           <a
             href="tel:0547101272"
-            className="flex items-center justify-center p-2.5 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors shadow-lg"
+            className="absolute right-2 sm:right-3 flex items-center justify-center p-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
             title="התקשר"
           >
-            <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
+            <Phone className="w-4 h-4" />
           </a>
         </div>
       </div>
