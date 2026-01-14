@@ -195,56 +195,49 @@ const AboutUs: React.FC = () => {
               <CheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
               <div>
                 <h3 className="text-lg font-bold text-white mb-2">תכנית אימון מותאמת אישית</h3>
-                <p className="text-gray-400">למטרות שלך למיקסום תוצאות מבוססת מדע</p>
+                <p className="text-gray-400">למטרות שלך, ליכולות שלך ולאורח החיים שלך</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-purple-500/20">
               <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">מאמן מוסמך תמיד נוכח</h3>
-                <p className="text-gray-400">באימון לליווי והכוונה צמודים</p>
+                <h3 className="text-lg font-bold text-white mb-2">נוכחות מאמן מוסמך</h3>
+                <p className="text-gray-400">ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-green-500/20">
               <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">לימוד ותיקון טכניקות</h3>
-                <p className="text-gray-400">עם הכוונה בזמן אמת לביצוע מושלם</p>
+                <h3 className="text-lg font-bold text-white mb-2">מעקב אובייקטיבי</h3>
+                <p className="text-gray-400">אפליקציה המרכזת את הכל ועושה סדר, מראה לכם כמה התקדמתם בתהליך</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-blue-500/20">
               <CheckCircle className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">מעקב התקדמות לאורך זמן</h3>
-                <p className="text-gray-400">בלי לבזבז זמן - רואים בדיוק איפה אתם</p>
+                <h3 className="text-lg font-bold text-white mb-2">זמינות מרחוק</h3>
+                <p className="text-gray-400">זמינות ומעטפת גם מחוץ לאימון להצלחה בתהליך</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-orange-500/20">
               <CheckCircle className="w-6 h-6 text-orange-400 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">ליווי מרחוק 24/7</h3>
-                <p className="text-gray-400">תמיד זמין לך לכל שאלה או הכוונה</p>
+                <h3 className="text-lg font-bold text-white mb-2">ליווי תזונתי</h3>
+                <p className="text-gray-400">תזונה תומכת אימון, מטרה וביצועים</p>
               </div>
             </div>
 
             <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-pink-500/20">
               <CheckCircle className="w-6 h-6 text-pink-400 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">אפליקציה ייעודית</h3>
-                <p className="text-gray-400">לבקרה ומעקב מדויק על כל התהליך</p>
+                <h3 className="text-lg font-bold text-white mb-2">גמישות מלאה</h3>
+                <p className="text-gray-400">תכנית האימון תשתנה בהתאם לשינויים בחייכם כך שתמיד תוכלו להתמיד</p>
               </div>
             </div>
-          </div>
-
-          <div className="mt-12 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-white mb-4 text-center">גמישות מלאה</h3>
-            <p className="text-gray-300 text-center text-lg">
-              ייעול זמנים עם פיקוח והכוונה צמודים • תכנית אימון מבוססת מדע - לא אימון קבוצתי או חדר כושר מסחרי • גמישות בשעות האימון ללא הגבלת אימונים
-            </p>
           </div>
         </div>
       </section>
