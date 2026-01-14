@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Mail, MapPin, Clock, Instagram, CheckCircle, ChevronDown, ChevronUp, Star } from 'lucide-react'
+import { MapPin, Instagram, CheckCircle, ChevronDown, ChevronUp, Star } from 'lucide-react'
 
 // WhatsApp Logo Component
 const WhatsAppLogo = ({ className }: { className?: string }) => (
@@ -378,86 +378,43 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-16 bg-dark-card/50">
+      {/* Final CTA Section */}
+      <section className="py-16 bg-dark-card/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
-            בוא נתחיל את המסע שלך
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Contact Info */}
-            <div className="space-y-8">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-[#25D366]/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <WhatsAppLogo className="w-6 h-6 text-[#25D366]" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-2">WhatsApp</h3>
-                  <a href="https://wa.me/972548151103" target="_blank" rel="noopener noreferrer" className="text-[#25D366] hover:text-[#20BD5A] transition-colors text-lg">
-                    054-815-1103
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-6 h-6 text-purple-400" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-2">אימייל</h3>
-                  <a href="mailto:info@beast-training.com" className="text-purple-400 hover:text-purple-300 transition-colors text-lg">
-                    info@beast-training.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-green-400" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-2">מיקום</h3>
-                  <p className="text-gray-300 text-lg">
-                    קיבוץ מעברות, עמק חפר
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Clock className="w-6 h-6 text-orange-400" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white mb-2">שעות פעילות</h3>
-                  <p className="text-gray-300">
-                    ראשון - חמישי: 06:00 - 22:00
-                  </p>
-                  <p className="text-gray-300">
-                    שישי: 06:00 - 14:00
-                  </p>
-                  <p className="text-gray-300">
-                    שבת: סגור
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* CTA Card */}
-            <div className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-xl p-8 flex flex-col justify-center">
-              <h3 className="text-2xl font-bold text-white mb-4">
-                מוכן להתחיל?
-              </h3>
-              <p className="text-gray-300 mb-6 text-lg">
-                הצטרף אלינו עוד היום והתחל את המסע שלך להיות הגרסה הכי טובה של עצמך
-              </p>
+          <div className="text-center">
+            {/* CTA Text */}
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 animate-fade-in px-4">
+              רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
+            </h2>
+            
+            {/* CTA Buttons - Square Icons Only */}
+            <div className="flex gap-3 justify-center animate-fade-in">
               <a
                 href="https://wa.me/972548151103"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-lg transition-all font-bold text-lg shadow-lg"
+                className="flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl transition-all shadow-lg"
+                aria-label="צור קשר בוואטסאפ"
               >
-                <WhatsAppLogo className="w-5 h-5" />
-                צור קשר - 054-815-1103
+                <WhatsAppLogo className="w-7 h-7" />
+              </a>
+              <a
+                href="https://www.instagram.com/shlomi_konfino/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all shadow-lg"
+                aria-label="עקבו באינסטגרם"
+              >
+                <Instagram className="w-7 h-7" />
+              </a>
+              <a
+                href="https://share.google/VbA2nUfw3peHiUarh"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-14 h-14 bg-white hover:bg-gray-100 text-gray-800 rounded-xl transition-all shadow-lg"
+                aria-label="עלינו בגוגל"
+              >
+                <GoogleLogo className="w-7 h-7" />
               </a>
             </div>
           </div>
