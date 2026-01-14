@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dumbbell, Users, Target, Award, Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react'
+import { Dumbbell, Users, Target, Award, Phone, Mail, MapPin, Clock, MessageCircle, Instagram, Star } from 'lucide-react'
 
 const AboutUs: React.FC = () => {
   return (
@@ -54,11 +54,22 @@ const AboutUs: React.FC = () => {
                 צור קשר
               </a>
               <a
-                href="tel:0547101272"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-dark-hover hover:bg-dark-border text-white rounded-lg transition-all font-bold text-lg border border-cyan-500/30"
+                href="https://www.instagram.com/shlomi_konfino/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all font-bold text-lg shadow-lg"
               >
-                <Phone className="w-5 h-5" />
-                התקשר עכשיו
+                <Instagram className="w-5 h-5" />
+                עקוב באינסטגרם
+              </a>
+              <a
+                href="https://share.google/VbA2nUfw3peHiUarh"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-all font-bold text-lg shadow-lg"
+              >
+                <Star className="w-5 h-5" />
+                דרג אותנו בגוגל
               </a>
             </div>
           </div>
