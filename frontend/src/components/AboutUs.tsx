@@ -1,5 +1,5 @@
-import React from 'react'
-import { Users, Target, Award, Mail, MapPin, Clock, Instagram, TrendingUp, Home } from 'lucide-react'
+import React, { useState } from 'react'
+import { Users, Target, Award, Mail, MapPin, Clock, Instagram, TrendingUp, Home, CheckCircle, ChevronDown, ChevronUp, Star } from 'lucide-react'
 
 // WhatsApp Logo Component
 const WhatsAppLogo = ({ className }: { className?: string }) => (
@@ -19,6 +19,43 @@ const GoogleLogo = ({ className }: { className?: string }) => (
 )
 
 const AboutUs: React.FC = () => {
+  const [openFAQ, setOpenFAQ] = useState<number | null>(null)
+
+  const toggleFAQ = (index: number) => {
+    setOpenFAQ(openFAQ === index ? null : index)
+  }
+
+  const faqs = [
+    {
+      question: "למי חדר הכושר Beast מתאים?",
+      answer: "לכולם! למתחילים, מתקדמים, צעירים ומבוגרים - מגיל 10 ועד גיל 120 ולכל מצב גופני!"
+    },
+    {
+      question: "האם יש הגבלה בכמות האימונים?",
+      answer: "האימונים הם ללא הגבלה - זמינים לך תמיד"
+    },
+    {
+      question: "האם מתאמנים לבד או עם עוד מתאמנים?",
+      answer: "האימון הוא אישי אך עצמאי בהשגחה צמודה בהתאם לתכנית שלך - לכל מתאמן יש מטרות אישיות ותכנית מדויקת אליו"
+    },
+    {
+      question: "איך נבנת תכנית אימון?",
+      answer: "על בסיס מדע מדויק - אבחון ראשוני, מטרות אישיות ומצב בריאותי, אורח חיים וזמינות עם התאמות שוטפות לאורך כל הדרך"
+    },
+    {
+      question: "כמה זמן לוקח לראות תוצאות?",
+      answer: "כבר בשבועות הראשונים, עם התמדה ומעקב אישי הדרך מובטחת"
+    },
+    {
+      question: "מה ההבדל בין Beast לחדר כושר מסחרי?",
+      answer: "בחדר כושר רגיל משלמים על גישה למתקנים - אצלנו המעטפת מלאה, יחס ומעקב אישיים המותאמים אליך באווירה אינטימית"
+    },
+    {
+      question: "אני בן 13, כדאי לי להתאמן בגילי?",
+      answer: "ברור ואפילו מומלץ - במקום אימונים לנערים ונערות עם תכניות מותאמות אישית לבניית הגוף והביטחון בכל יום!"
+    }
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-dark-bg via-dark-card to-dark-bg">
       {/* Hero Section */}
@@ -89,12 +126,129 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Subtitle Section */}
+      <section className="py-12 sm:py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            מתאמנים חופשי ועצמאית עם שלומי - מאמן אישי מוסמך
+          </h1>
+          <p className="text-xl sm:text-2xl text-gray-300 leading-relaxed">
+            חדר כושר בוטיק עם תכנית אימון מותאמת אישית למטרותיך, השגחה צמודה וללא הגבלת אימונים
+          </p>
+        </div>
+      </section>
+
+      {/* All You Need Section */}
+      <section className="py-16 bg-dark-card/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+            כל מה שמתאמן צריך תחת קורת גג אחת
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-dark-hover border border-cyan-500/30 rounded-xl p-8 text-center hover:border-cyan-500/60 transition-all">
+              <div className="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Users className="w-8 h-8 text-cyan-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">מאמן מוסמך שנמצא במקום</h3>
+              <p className="text-gray-400">תמיד זמין לשאלות, הדרכה ותיקון טכניקות</p>
+            </div>
+
+            <div className="bg-dark-hover border border-purple-500/30 rounded-xl p-8 text-center hover:border-purple-500/60 transition-all">
+              <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Home className="w-8 h-8 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">גישה חופשית לחדר הכושר</h3>
+              <p className="text-gray-400">תחת השגחה צמודה וללא הגבלת אימונים</p>
+            </div>
+
+            <div className="bg-dark-hover border border-green-500/30 rounded-xl p-8 text-center hover:border-green-500/60 transition-all">
+              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Target className="w-8 h-8 text-green-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">ליווי אישי ומדויק</h3>
+              <p className="text-gray-400">לך ולמטרות שלך עם מעקב צמוד</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What You Get Section */}
+      <section className="py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
+            מה מקבלים?
+          </h2>
+          <p className="text-xl text-gray-300 text-center mb-12 max-w-4xl mx-auto">
+            אצלנו בחדר הכושר Beast יש ליווי צמוד בהתאם לתכנית אימון המותאמת למטרות שלך
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-cyan-500/20">
+              <CheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">תכנית אימון מותאמת אישית</h3>
+                <p className="text-gray-400">למטרות שלך למיקסום תוצאות מבוססת מדע</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-purple-500/20">
+              <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">מאמן מוסמך תמיד נוכח</h3>
+                <p className="text-gray-400">באימון לליווי והכוונה צמודים</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-green-500/20">
+              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">לימוד ותיקון טכניקות</h3>
+                <p className="text-gray-400">עם הכוונה בזמן אמת לביצוע מושלם</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-blue-500/20">
+              <CheckCircle className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">מעקב התקדמות לאורך זמן</h3>
+                <p className="text-gray-400">בלי לבזבז זמן - רואים בדיוק איפה אתם</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-orange-500/20">
+              <CheckCircle className="w-6 h-6 text-orange-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">ליווי מרחוק 24/7</h3>
+                <p className="text-gray-400">תמיד זמין לך לכל שאלה או הכוונה</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-pink-500/20">
+              <CheckCircle className="w-6 h-6 text-pink-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">אפליקציה ייעודית</h3>
+                <p className="text-gray-400">לבקרה ומעקב מדויק על כל התהליך</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 rounded-2xl p-8">
+            <h3 className="text-2xl font-bold text-white mb-4 text-center">גמישות מלאה</h3>
+            <p className="text-gray-300 text-center text-lg">
+              ייעול זמנים עם פיקוח והכוונה צמודים • תכנית אימון מבוססת מדע - לא אימון קבוצתי או חדר כושר מסחרי • גמישות בשעות האימון ללא הגבלת אימונים
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Why BEAST Section */}
       <section className="py-20 bg-dark-card/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
             למה BEAST?
           </h2>
+          <p className="text-xl text-gray-300 text-center mb-12 max-w-3xl mx-auto">
+            מה מיוחד ב-Beast? חדר כושר במעטפת אישית - מאמן שתמיד בשטח
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1 */}
             <div className="bg-dark-hover border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-500/50 transition-all">
@@ -150,90 +304,182 @@ const AboutUs: React.FC = () => {
                 עשרות אנשים שכבר עשו את השינוי הכי גדול בחייהם
               </p>
             </div>
+
+            {/* Feature 6 - Special */}
+            <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/40 rounded-xl p-6 hover:border-cyan-500/70 transition-all">
+              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4">
+                <Target className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">יחס אישי ללא אימון אישי</h3>
+              <p className="text-gray-300">
+                לכל אורך האימון - תהליך מבוסס מדע שאפשר להתמיד בו ולראות תוצאות אמיתיות לאורך זמן
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* About Shlomi Section */}
+      <section className="py-20 bg-gradient-to-b from-dark-bg to-dark-card/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-dark-hover border border-cyan-500/30 rounded-2xl p-8 sm:p-12">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                הכירו את שלומי קונפינו
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-cyan-500 to-purple-500 mx-auto rounded-full"></div>
+            </div>
+            
+            <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
+              <p>
+                <span className="text-cyan-400 font-bold">אני שלומי קונפינו</span> - מאמן כושר אישי מוסמך, בעל תואר ראשון בחינוך גופני ותואר שני בפיזיולוגיה של המאמץ באוניברסיטת תל אביב. בעל <span className="text-white font-semibold">10 שנות ניסיון</span> בתחום הכושר הגופני.
+              </p>
+              
+              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-r-4 border-cyan-500 rounded-lg p-6">
+                <p className="text-white text-xl font-semibold mb-3">
+                  אני מאמין בתהליכי אימון מבוססי מדע בהתאם למטרות שלך
+                </p>
+                <p>
+                  בין אם זה חיטוב, עליה במשקל, חיזוק הביטחון העצמי והגוף ואפילו לכיף
+                </p>
+              </div>
+
+              <p className="text-xl text-white font-semibold">
+                המטרה שלי היא שהמתאמנים שלי יתמידו ויהנו מהתהליך ולא רק יתאמנו. אני מזמין אתכם להצטרף לבית שלנו
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Location Section */}
+      <section className="py-16 bg-dark-card/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              המיקום שלנו
+            </h2>
+            <div className="flex items-center justify-center gap-3 text-xl text-gray-300">
+              <MapPin className="w-6 h-6 text-cyan-400" />
+              <span>קיבוץ מעברות, בלב עמק חפר</span>
+            </div>
+          </div>
+
+          <div className="bg-dark-hover border border-purple-500/30 rounded-xl p-8 max-w-3xl mx-auto">
+            <p className="text-gray-300 text-lg text-center leading-relaxed mb-6">
+              חדר הכושר Beast ממוקם בקיבוץ מעברות בלב עמק חפר. החדר כולל <span className="text-white font-semibold">ציוד מקצועי, מכשירי כוח ואירובי</span> באווירה אינטימית, נינוחה ובגובה העיניים.
+            </p>
+            <div className="text-center">
+              <p className="text-cyan-400 font-bold text-xl">
+                אני מזמין אתכם לפגישת התרשמות בחינם וזמין לכם כאן תמיד
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
       <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-16">
-            השירותים שלנו
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
+            מה אומרים עלינו?
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Service 1 */}
-            <div className="bg-gradient-to-br from-cyan-500/10 to-cyan-500/5 border border-cyan-500/20 rounded-xl p-8 hover:border-cyan-500/50 transition-all">
-              <h3 className="text-2xl font-bold text-cyan-400 mb-4">אימוני כוח</h3>
-              <p className="text-gray-300 mb-6">
-                בניית שרירים, חיטוב הגוף והגדלת כוח באמצעות אימוני משקולות מקצועיים
-              </p>
-              <ul className="space-y-2 text-gray-400">
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
-                  תוכנית מותאמת אישית
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
-                  ליווי מאמן אישי
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
-                  מעקב והתקדמות
-                </li>
-              </ul>
-            </div>
+          <p className="text-xl text-gray-300 text-center mb-12">
+            ביקורות מתאמנים
+          </p>
+          
+          <div className="text-center py-12">
+            <a
+              href="https://share.google/VbA2nUfw3peHiUarh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-10 py-5 bg-white hover:bg-gray-100 text-gray-800 rounded-xl transition-all font-bold text-xl shadow-xl"
+            >
+              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+              <span className="mr-2">קראו את הביקורות שלנו בגוגל</span>
+            </a>
+          </div>
+        </div>
+      </section>
 
-            {/* Service 2 */}
-            <div className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-500/20 rounded-xl p-8 hover:border-purple-500/50 transition-all">
-              <h3 className="text-2xl font-bold text-purple-400 mb-4">אימוני קרוספיט</h3>
-              <p className="text-gray-300 mb-6">
-                שיפור כושר אירובי, גמישות וכוח פונקציונלי באמצעות אימונים מגוונים
-              </p>
-              <ul className="space-y-2 text-gray-400">
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
-                  קבוצות קטנות
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
-                  אווירה מעצימה
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
-                  כל הרמות מתאימות
-                </li>
-              </ul>
-            </div>
+      {/* FAQ Section */}
+      <section className="py-20 bg-dark-card/50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+            שאלות נפוצות
+          </h2>
+          
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-dark-hover border border-cyan-500/20 rounded-xl overflow-hidden hover:border-cyan-500/40 transition-all"
+              >
+                <button
+                  onClick={() => toggleFAQ(index)}
+                  className="w-full flex items-center justify-between p-6 text-right"
+                >
+                  <span className="text-lg font-bold text-white pr-2">
+                    {faq.question}
+                  </span>
+                  {openFAQ === index ? (
+                    <ChevronUp className="w-6 h-6 text-cyan-400 flex-shrink-0" />
+                  ) : (
+                    <ChevronDown className="w-6 h-6 text-cyan-400 flex-shrink-0" />
+                  )}
+                </button>
+                {openFAQ === index && (
+                  <div className="px-6 pb-6">
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Service 3 */}
-            <div className="bg-gradient-to-br from-green-500/10 to-green-500/5 border border-green-500/20 rounded-xl p-8 hover:border-green-500/50 transition-all">
-              <h3 className="text-2xl font-bold text-green-400 mb-4">ייעוץ תזונתי</h3>
-              <p className="text-gray-300 mb-6">
-                תפריט תזונה מותאם אישית שמשלים את האימונים ומזרז את התוצאות
-              </p>
-              <ul className="space-y-2 text-gray-400">
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
-                  תפריט מותאם אישית
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
-                  מעקב יומי
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
-                  תמיכה מתמדת
-                </li>
-              </ul>
-            </div>
+      {/* Final CTA Section */}
+      <section className="py-20 bg-gradient-to-b from-dark-bg via-dark-card/50 to-dark-bg">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-5xl font-bold text-white mb-6">
+            רוצה להוציא את ה-BEAST שבך?
+          </h2>
+          <p className="text-xl sm:text-2xl text-gray-300 mb-10">
+            השאר פרטים לשיחת ייעוץ חינם - בלי התחייבות
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="https://wa.me/972548151103"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl transition-all font-bold text-xl shadow-xl"
+            >
+              <WhatsAppLogo className="w-6 h-6" />
+              שיחת ייעוץ חינם
+            </a>
+            <a
+              href="tel:0548151103"
+              className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl transition-all font-bold text-xl shadow-xl"
+            >
+              <Mail className="w-6 h-6" />
+              התקשר עכשיו
+            </a>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-dark-card/50">
+      <section id="contact" className="py-16 bg-dark-card/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
             בוא נתחיל את המסע שלך
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -270,7 +516,7 @@ const AboutUs: React.FC = () => {
                 <div>
                   <h3 className="text-xl font-bold text-white mb-2">מיקום</h3>
                   <p className="text-gray-300 text-lg">
-                    ישראל
+                    קיבוץ מעברות, עמק חפר
                   </p>
                 </div>
               </div>
@@ -329,4 +575,3 @@ const AboutUs: React.FC = () => {
 }
 
 export default AboutUs
-
