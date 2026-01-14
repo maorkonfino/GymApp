@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dumbbell, Users, Target, Award, Phone, Mail, MapPin, Clock, MessageCircle, Instagram, Star } from 'lucide-react'
+import { Dumbbell, Users, Target, Award, Mail, MapPin, Clock, MessageCircle, Instagram, Star } from 'lucide-react'
 
 const AboutUs: React.FC = () => {
   return (
