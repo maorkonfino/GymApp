@@ -18,6 +18,22 @@ const GoogleLogo = ({ className }: { className?: string }) => (
   </svg>
 )
 
+// Waze Logo Component
+const WazeLogo = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3-7c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm6 0c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm-3 4c1.93 0 3.5-1.43 3.5-3.2h-7c0 1.77 1.57 3.2 3.5 3.2z"/>
+  </svg>
+)
+
+// Google Maps Logo Component  
+const GoogleMapsLogo = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#EA4335"/>
+    <path d="M12 11.5c1.38 0 2.5-1.12 2.5-2.5S13.38 6.5 12 6.5 9.5 7.62 9.5 9s1.12 2.5 2.5 2.5z" fill="#FBBC05"/>
+    <path d="M12 2c-3.87 0-7 3.13-7 7 0 5.25 7 13 7 13V2z" fill="#34A853"/>
+  </svg>
+)
+
 const AboutUs: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
 
@@ -97,104 +113,35 @@ const AboutUs: React.FC = () => {
               רוצה להוציא את ה-BEAST שבך?
             </h2>
             
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
+            {/* CTA Buttons - Square Icons Only */}
+            <div className="flex gap-4 justify-center animate-fade-in">
               <a
                 href="https://wa.me/972548151103"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-lg transition-all font-bold text-lg shadow-lg"
+                className="flex items-center justify-center w-16 h-16 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl transition-all shadow-lg"
+                aria-label="צור קשר בוואטסאפ"
               >
-                <WhatsAppLogo className="w-5 h-5" />
-                צור קשר
+                <WhatsAppLogo className="w-8 h-8" />
               </a>
               <a
                 href="https://www.instagram.com/shlomi_konfino/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all font-bold text-lg shadow-lg"
+                className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all shadow-lg"
+                aria-label="עקבו באינסטגרם"
               >
-                <Instagram className="w-5 h-5" />
-                האינסטה שלנו
+                <Instagram className="w-8 h-8" />
               </a>
               <a
                 href="https://share.google/VbA2nUfw3peHiUarh"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-gray-100 text-gray-800 rounded-lg transition-all font-bold text-lg shadow-lg"
+                className="flex items-center justify-center w-16 h-16 bg-white hover:bg-gray-100 text-gray-800 rounded-xl transition-all shadow-lg"
+                aria-label="עלינו בגוגל"
               >
-                <GoogleLogo className="w-5 h-5" />
-                עלינו בגוגל
+                <GoogleLogo className="w-8 h-8" />
               </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* About Shlomi Section */}
-      <section className="py-16 bg-dark-card/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
-            הכירו את שלומי קונפינו
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 1. Credentials */}
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-cyan-500/20">
-              <CheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">פיזיולוג מאמץ בוגר תואר שני</h3>
-                <p className="text-gray-400">בפקולטה לרפואה באוניברסיטת תל אביב</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-purple-500/20">
-              <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">10 שנות ניסיון כמאמן</h3>
-                <p className="text-gray-400">ניסיון עשיר בתחום הכושר הגופני</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-green-500/20">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">בוגר תואר ראשון בחינוך גופני</h3>
-                <p className="text-gray-400">עם הסמכה לאוכלוסייה ייחודית</p>
-              </div>
-            </div>
-            
-            {/* 2. Philosophy */}
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-blue-500/20">
-              <CheckCircle className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
-              <div>
-                <p className="text-white leading-relaxed">
-                  "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
-                </p>
-                <p className="text-gray-400 mt-2">
-                  בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
-                </p>
-              </div>
-            </div>
-
-            {/* 3. Goal */}
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-orange-500/20">
-              <CheckCircle className="w-6 h-6 text-orange-400 flex-shrink-0 mt-1" />
-              <div>
-                <p className="text-white leading-relaxed">
-                  "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
-                </p>
-              </div>
-            </div>
-
-            {/* 4. Invitation */}
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-pink-500/20">
-              <CheckCircle className="w-6 h-6 text-pink-400 flex-shrink-0 mt-1" />
-              <div>
-                <p className="text-white text-lg font-bold leading-relaxed">
-                  אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -274,27 +221,91 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
+      {/* About Shlomi Section */}
+      <section className="py-16 bg-dark-card/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+            הכירו את שלומי קונפינו
+          </h2>
+          
+          <div className="grid grid-cols-1 gap-6">
+            {/* 1. Academic Credentials - All Together */}
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-cyan-500/20">
+              <CheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
+              <div className="space-y-2">
+                <p className="text-white text-lg font-bold">
+                  פיזיולוג מאמץ בוגר תואר שני בפקולטה לרפואה באוניברסיטת תל אביב
+                </p>
+                <p className="text-white text-lg font-bold">
+                  10 שנות ניסיון כמאמן
+                </p>
+                <p className="text-white text-lg font-bold">
+                  בוגר תואר ראשון בחינוך גופני עם הסמכה לאוכלוסייה ייחודית
+                </p>
+              </div>
+            </div>
+            
+            {/* 2. Philosophy & Goal - Combined */}
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-purple-500/20">
+              <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
+              <div className="space-y-4">
+                <p className="text-white text-lg leading-relaxed">
+                  "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
+                </p>
+                <p className="text-gray-400 leading-relaxed">
+                  בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
+                </p>
+                <p className="text-white text-lg leading-relaxed">
+                  "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
+                </p>
+              </div>
+            </div>
+
+            {/* 3. Invitation */}
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-green-500/20">
+              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
+              <div>
+                <p className="text-white text-xl font-bold leading-relaxed">
+                  אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Location Section */}
       <section className="py-16 bg-dark-card/30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+          <div className="text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
               המיקום שלנו
             </h2>
-            <div className="flex items-center justify-center gap-3 text-xl text-gray-300">
+            <div className="flex items-center justify-center gap-3 text-xl text-gray-300 mb-8">
               <MapPin className="w-6 h-6 text-cyan-400" />
-              <span>קיבוץ מעברות, בלב עמק חפר</span>
+              <span>קיבוץ מעברות, עמק חפר</span>
             </div>
-          </div>
 
-          <div className="bg-dark-hover border border-purple-500/30 rounded-xl p-8 max-w-3xl mx-auto">
-            <p className="text-gray-300 text-lg text-center leading-relaxed mb-6">
-              חדר הכושר Beast ממוקם בקיבוץ מעברות בלב עמק חפר. החדר כולל <span className="text-white font-semibold">ציוד מקצועי, מכשירי כוח ואירובי</span> באווירה אינטימית, נינוחה ובגובה העיניים.
-            </p>
-            <div className="text-center">
-              <p className="text-cyan-400 font-bold text-xl">
-                אני מזמין אתכם לפגישת התרשמות בחינם וזמין לכם כאן תמיד
-              </p>
+            {/* Navigation Icons */}
+            <div className="flex gap-4 justify-center">
+              <a
+                href="https://waze.com/ul?q=קיבוץ מעברות"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-16 h-16 bg-[#33CCFF] hover:bg-[#2BB8E8] text-white rounded-xl transition-all shadow-lg"
+                aria-label="נווט עם Waze"
+              >
+                <WazeLogo className="w-8 h-8" />
+              </a>
+              <a
+                href="https://maps.google.com/?q=קיבוץ מעברות"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center w-16 h-16 bg-white hover:bg-gray-100 rounded-xl transition-all shadow-lg"
+                aria-label="נווט עם Google Maps"
+              >
+                <GoogleMapsLogo className="w-8 h-8" />
+              </a>
             </div>
           </div>
         </div>
