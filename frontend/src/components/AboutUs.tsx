@@ -137,15 +137,14 @@ const AboutUs: React.FC = () => {
           <div className="bg-dark-hover border border-cyan-500/30 rounded-2xl overflow-hidden">
             {/* 1. Header - Special Background */}
             <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 p-8 sm:p-12 text-center">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white">
                 הכירו את שלומי קונפינו
               </h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-cyan-500 to-purple-500 mx-auto rounded-full"></div>
             </div>
 
             {/* 2. Credentials - Gray Background */}
             <div className="bg-dark-hover p-8 sm:p-10">
-              <div className="space-y-3 text-gray-400 text-lg leading-relaxed">
+              <div className="space-y-3 text-white text-lg leading-relaxed">
                 <p className="text-xl font-bold">
                   פיזיולוג מאמץ בוגר תואר שני בפקולטה לרפואה באוניברסיטת תל אביב
                 </p>
@@ -160,25 +159,25 @@ const AboutUs: React.FC = () => {
             
             {/* 3. Philosophy - Special Background */}
             <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 p-8 sm:p-10">
-              <p className="text-white text-xl font-semibold mb-4 leading-relaxed">
-                אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך
+              <p className="text-white text-xl leading-relaxed">
+                "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
               </p>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מלאה מהתהליך.
+              <p className="text-white text-lg leading-relaxed mt-4">
+                בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
               </p>
             </div>
 
             {/* 4. Goal - Gray Background */}
             <div className="bg-dark-hover p-8 sm:p-10">
-              <p className="text-gray-400 text-xl font-semibold leading-relaxed">
-                המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים
+              <p className="text-white text-xl leading-relaxed">
+                "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
               </p>
             </div>
 
             {/* 5. Invitation - Special Background with White Text */}
             <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 p-8 sm:p-10 text-center">
               <p className="text-white text-2xl font-bold leading-relaxed">
-                אני מזמין אתכם אליי לבית, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
+                אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
               </p>
             </div>
           </div>
