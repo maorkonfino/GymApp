@@ -12,8 +12,15 @@ const AboutUs: React.FC = () => {
             <img 
               src="/header-logo.svg" 
               alt="BEAST Logo" 
-              className="w-48 sm:w-64 h-auto mx-auto mb-8 animate-fade-in"
+              className="w-96 sm:w-[600px] h-auto mx-auto mb-8 animate-fade-in"
             />
+            <div className="mb-12 animate-fade-in">
+              <img 
+                src="/trainer.jpg" 
+                alt="המאמן" 
+                className="w-64 sm:w-80 h-auto mx-auto rounded-2xl shadow-2xl border-4 border-cyan-500/30"
+              />
+            </div>
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6 animate-fade-in">
               BEAST Training
             </h1>
