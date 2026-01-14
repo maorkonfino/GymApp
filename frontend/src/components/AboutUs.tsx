@@ -238,6 +238,22 @@ const AboutUs: React.FC = () => {
                 <p className="text-gray-400">תכנית האימון תשתנה בהתאם לשינויים בחייכם כך שתמיד תוכלו להתמיד</p>
               </div>
             </div>
+
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-purple-500/20">
+              <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">חלל אינטימי ומקצועי</h3>
+                <p className="text-gray-400">ציוד מקצועי ואווירה ביתית</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-yellow-500/20">
+              <CheckCircle className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">תוצאות מוכחות</h3>
+                <p className="text-gray-400">עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
