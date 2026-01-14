@@ -28,22 +28,13 @@ const AboutUs: React.FC = () => {
           <div className="text-center">
             {/* Logo and Photo - Centered Together */}
             <div className="flex flex-col items-center gap-6 sm:gap-8 mb-8 sm:mb-10 animate-fade-in">
-              {/* Logo - Vertical Stack (Wolf above BEAST text) */}
-              <div className="flex flex-col items-center gap-2">
-                {/* Wolf Icon */}
-                <div className="w-48 sm:w-64 lg:w-80">
-                  <img 
-                    src="/app-icon.svg" 
-                    alt="BEAST Wolf" 
-                    className="w-full h-auto"
-                  />
-                </div>
-                {/* BEAST Text - Using inline SVG for better control */}
-                <div className="text-6xl sm:text-8xl lg:text-9xl font-black tracking-wider">
-                  <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-transparent bg-clip-text drop-shadow-[0_0_30px_rgba(0,255,255,0.5)]">
-                    BEAST
-                  </span>
-                </div>
+              {/* Logo - Large */}
+              <div>
+                <img 
+                  src="/header-logo.svg" 
+                  alt="BEAST Logo" 
+                  className="w-96 sm:w-[600px] lg:w-[700px] h-auto mx-auto"
+                />
               </div>
 
               {/* Trainer Photo - Elegant Integration */}
