@@ -13,9 +13,7 @@ import MyWorkouts from './components/MyWorkouts'
 import LoginPage from './components/LoginPage'
 import ManageUsers from './components/ManageUsers'
 import ForgotPasswordModal from './components/ForgotPasswordModal'
-import ResetPassword from './components/ResetPassword'
 import WorkoutArchive from './components/WorkoutArchive'
-import AboutUs from './components/AboutUs'
 import api from './api'
 
 function AppContent() {
@@ -218,18 +216,6 @@ function AppContent() {
 }
 
 function App() {
-  const location = useLocation()
-  
-  // Public pages - completely separate from the app
-  if (location.pathname === '/aboutUs') {
-    return <AboutUs />
-  }
-  
-  if (location.pathname === '/reset-password') {
-    return <ResetPassword />
-  }
-  
-  // Main app with authentication
   return (
     <AuthProvider>
       <AppContent />
