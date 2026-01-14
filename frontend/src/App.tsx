@@ -98,8 +98,14 @@ function AppContent() {
   const isResetPasswordPage = location.pathname === '/reset-password'
   const isAboutUsPage = location.pathname === '/aboutUs'
 
+  // Debug logging
+  console.log('Current pathname:', location.pathname)
+  console.log('Is About Us page?', isAboutUsPage)
+  console.log('User:', user ? 'logged in' : 'not logged in')
+
   // Public pages (accessible without login) - CHECK FIRST!
   if (isAboutUsPage) {
+    console.log('Rendering AboutUs page')
     return <AboutUs />
   }
 
