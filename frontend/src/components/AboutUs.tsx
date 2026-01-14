@@ -190,43 +190,6 @@ const AboutUs: React.FC = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
             כל מה שמתאמן צריך תחת קורת גג אחת
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-dark-hover border border-cyan-500/30 rounded-xl p-8 text-center hover:border-cyan-500/60 transition-all">
-              <div className="w-16 h-16 bg-cyan-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="w-8 h-8 text-cyan-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">מאמן מוסמך שנמצא במקום</h3>
-              <p className="text-gray-400">תמיד זמין לשאלות, הדרכה ותיקון טכניקות</p>
-            </div>
-
-            <div className="bg-dark-hover border border-purple-500/30 rounded-xl p-8 text-center hover:border-purple-500/60 transition-all">
-              <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Home className="w-8 h-8 text-purple-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">גישה חופשית לחדר הכושר</h3>
-              <p className="text-gray-400">תחת השגחה צמודה וללא הגבלת אימונים</p>
-            </div>
-
-            <div className="bg-dark-hover border border-green-500/30 rounded-xl p-8 text-center hover:border-green-500/60 transition-all">
-              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Target className="w-8 h-8 text-green-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">ליווי אישי ומדויק</h3>
-              <p className="text-gray-400">לך ולמטרות שלך עם מעקב צמוד</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* What You Get Section */}
-      <section className="py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
-            מה מקבלים?
-          </h2>
-          <p className="text-xl text-gray-300 text-center mb-12 max-w-4xl mx-auto">
-            אצלנו בחדר הכושר Beast יש ליווי צמוד בהתאם לתכנית אימון המותאמת למטרות שלך
-          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-cyan-500/20">
               <CheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
