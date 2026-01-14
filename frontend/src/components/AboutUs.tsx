@@ -184,18 +184,6 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
-      {/* Subtitle Section */}
-      <section className="py-12 sm:py-16">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-            מתאמנים חופשי ועצמאית עם שלומי - מאמן אישי מוסמך
-          </h1>
-          <p className="text-xl sm:text-2xl text-gray-300 leading-relaxed">
-            חדר כושר בוטיק עם תכנית אימון מותאמת אישית למטרותיך, השגחה צמודה וללא הגבלת אימונים
-          </p>
-        </div>
-      </section>
-
       {/* All You Need Section */}
       <section className="py-16 bg-dark-card/30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
