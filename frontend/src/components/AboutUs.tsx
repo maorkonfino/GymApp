@@ -131,6 +131,39 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
+      {/* About Shlomi Section */}
+      <section className="py-20 bg-gradient-to-b from-dark-bg to-dark-card/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-dark-hover border border-cyan-500/30 rounded-2xl p-8 sm:p-12">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                הכירו את שלומי קונפינו
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-cyan-500 to-purple-500 mx-auto rounded-full"></div>
+            </div>
+            
+            <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
+              <p>
+                <span className="text-cyan-400 font-bold">אני שלומי קונפינו</span> - מאמן כושר אישי מוסמך, בעל תואר ראשון בחינוך גופני ותואר שני בפיזיולוגיה של המאמץ באוניברסיטת תל אביב. בעל <span className="text-white font-semibold">10 שנות ניסיון</span> בתחום הכושר הגופני.
+              </p>
+              
+              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-r-4 border-cyan-500 rounded-lg p-6">
+                <p className="text-white text-xl font-semibold mb-3">
+                  אני מאמין בתהליכי אימון מבוססי מדע בהתאם למטרות שלך
+                </p>
+                <p>
+                  בין אם זה חיטוב, עליה במשקל, חיזוק הביטחון העצמי והגוף ואפילו לכיף
+                </p>
+              </div>
+
+              <p className="text-xl text-white font-semibold">
+                המטרה שלי היא שהמתאמנים שלי יתמידו ויהנו מהתהליך ולא רק יתאמנו. אני מזמין אתכם להצטרף לבית שלנו
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Subtitle Section */}
       <section className="py-12 sm:py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -318,39 +351,6 @@ const AboutUs: React.FC = () => {
               <h3 className="text-xl font-bold text-white mb-2">יחס אישי ללא אימון אישי</h3>
               <p className="text-gray-300">
                 לכל אורך האימון - תהליך מבוסס מדע שאפשר להתמיד בו ולראות תוצאות אמיתיות לאורך זמן
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* About Shlomi Section */}
-      <section className="py-20 bg-gradient-to-b from-dark-bg to-dark-card/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-dark-hover border border-cyan-500/30 rounded-2xl p-8 sm:p-12">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-                הכירו את שלומי קונפינו
-              </h2>
-              <div className="w-24 h-1 bg-gradient-to-r from-cyan-500 to-purple-500 mx-auto rounded-full"></div>
-            </div>
-            
-            <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
-              <p>
-                <span className="text-cyan-400 font-bold">אני שלומי קונפינו</span> - מאמן כושר אישי מוסמך, בעל תואר ראשון בחינוך גופני ותואר שני בפיזיולוגיה של המאמץ באוניברסיטת תל אביב. בעל <span className="text-white font-semibold">10 שנות ניסיון</span> בתחום הכושר הגופני.
-              </p>
-              
-              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-r-4 border-cyan-500 rounded-lg p-6">
-                <p className="text-white text-xl font-semibold mb-3">
-                  אני מאמין בתהליכי אימון מבוססי מדע בהתאם למטרות שלך
-                </p>
-                <p>
-                  בין אם זה חיטוב, עליה במשקל, חיזוק הביטחון העצמי והגוף ואפילו לכיף
-                </p>
-              </div>
-
-              <p className="text-xl text-white font-semibold">
-                המטרה שלי היא שהמתאמנים שלי יתמידו ויהנו מהתהליך ולא רק יתאמנו. אני מזמין אתכם להצטרף לבית שלנו
               </p>
             </div>
           </div>
