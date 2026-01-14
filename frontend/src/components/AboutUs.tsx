@@ -143,21 +143,33 @@ const AboutUs: React.FC = () => {
             </div>
             
             <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
-              <p>
-                <span className="text-cyan-400 font-bold">אני שלומי קונפינו</span> - מאמן כושר אישי מוסמך, בעל תואר ראשון בחינוך גופני ותואר שני בפיזיולוגיה של המאמץ באוניברסיטת תל אביב. בעל <span className="text-white font-semibold">10 שנות ניסיון</span> בתחום הכושר הגופני.
-              </p>
+              <div className="space-y-3">
+                <p className="text-white text-xl font-bold">
+                  פיזיולוג מאמץ בוגר תואר שני בפקולטה לרפואה באוניברסיטת תל אביב
+                </p>
+                <p className="text-white text-xl font-bold">
+                  10 שנות ניסיון כמאמן
+                </p>
+                <p className="text-white text-xl font-bold">
+                  בוגר תואר ראשון בחינוך גופני עם הסמכה לאוכלוסייה ייחודית
+                </p>
+              </div>
               
               <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-r-4 border-cyan-500 rounded-lg p-6">
                 <p className="text-white text-xl font-semibold mb-3">
-                  אני מאמין בתהליכי אימון מבוססי מדע בהתאם למטרות שלך
+                  אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך
                 </p>
                 <p>
-                  בין אם זה חיטוב, עליה במשקל, חיזוק הביטחון העצמי והגוף ואפילו לכיף
+                  בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכן גם כמפגש חברתי
                 </p>
               </div>
 
               <p className="text-xl text-white font-semibold">
-                המטרה שלי היא שהמתאמנים שלי יתמידו ויהנו מהתהליך ולא רק יתאמנו. אני מזמין אתכם להצטרף לבית שלנו
+                המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים
+              </p>
+
+              <p className="text-2xl text-cyan-400 font-bold text-center mt-8">
+                אני מזמין אתכם אליי לבית, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
               </p>
             </div>
           </div>
