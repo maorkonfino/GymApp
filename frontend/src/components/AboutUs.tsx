@@ -110,7 +110,7 @@ const AboutUs: React.FC = () => {
             
             {/* Main CTA Text */}
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-8 animate-fade-in">
-              רוצה להוציא את ה-BEAST שבך?
+              רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
             </h2>
             
             {/* CTA Buttons - Square Icons Only */}
