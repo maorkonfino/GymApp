@@ -93,26 +93,6 @@ function AppContent() {
     setEditingRegistration(null)
   }
 
-  // Check if we're on public pages (no authentication required)
-  // IMPORTANT: Check public pages FIRST before authentication
-  const isResetPasswordPage = location.pathname === '/reset-password'
-  const isAboutUsPage = location.pathname === '/aboutUs'
-
-  // Debug logging
-  console.log('Current pathname:', location.pathname)
-  console.log('Is About Us page?', isAboutUsPage)
-  console.log('User:', user ? 'logged in' : 'not logged in')
-
-  // Public pages (accessible without login) - CHECK FIRST!
-  if (isAboutUsPage) {
-    console.log('Rendering AboutUs page')
-    return <AboutUs />
-  }
-
-  if (isResetPasswordPage) {
-    return <ResetPassword />
-  }
-
   // Show login page if user is not authenticated
   if (!user) {
     return (
@@ -238,6 +218,18 @@ function AppContent() {
 }
 
 function App() {
+  const location = useLocation()
+  
+  // Public pages - completely separate from the app
+  if (location.pathname === '/aboutUs') {
+    return <AboutUs />
+  }
+  
+  if (location.pathname === '/reset-password') {
+    return <ResetPassword />
+  }
+  
+  // Main app with authentication
   return (
     <AuthProvider>
       <AppContent />
