@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dumbbell, Users, Target, Award, Phone, Mail, MapPin, Clock } from 'lucide-react'
+import { Dumbbell, Users, Target, Award, Phone, Mail, MapPin, Clock, MessageCircle } from 'lucide-react'
 
 const AboutUs: React.FC = () => {
   return (
@@ -37,27 +37,28 @@ const AboutUs: React.FC = () => {
               </div>
             </div>
 
-            {/* Title and Subtitle */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
-              BEAST Training
-            </h1>
-            <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-8 max-w-3xl mx-auto animate-fade-in">
-              המקום שבו תהפוך לגרסה הכי טובה של עצמך
+            {/* Title - Now below photo */}
+            <p className="text-2xl sm:text-3xl lg:text-4xl text-gray-200 mb-12 max-w-4xl mx-auto animate-fade-in leading-relaxed">
+              הבית לאימונים שבו תהפוך לגרסה הטובה ביותר שלך
             </p>
+            
+            {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
               <a
+                href="https://wa.me/972548151103"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-lg transition-all font-bold text-lg shadow-lg"
+              >
+                <MessageCircle className="w-5 h-5" />
+                צור קשר
+              </a>
+              <a
                 href="tel:0547101272"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white rounded-lg transition-all font-bold text-lg shadow-lg"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-dark-hover hover:bg-dark-border text-white rounded-lg transition-all font-bold text-lg border border-cyan-500/30"
               >
                 <Phone className="w-5 h-5" />
                 התקשר עכשיו
-              </a>
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-dark-hover hover:bg-dark-border text-white rounded-lg transition-all font-bold text-lg border border-cyan-500/30"
-              >
-                <Mail className="w-5 h-5" />
-                צור קשר
               </a>
             </div>
           </div>
@@ -204,13 +205,13 @@ const AboutUs: React.FC = () => {
             {/* Contact Info */}
             <div className="space-y-8">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-6 h-6 text-cyan-400" />
+                <div className="w-12 h-12 bg-[#25D366]/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <MessageCircle className="w-6 h-6 text-[#25D366]" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-2">טלפון</h3>
-                  <a href="tel:0547101272" className="text-cyan-400 hover:text-cyan-300 transition-colors text-lg">
-                    054-710-1272
+                  <h3 className="text-xl font-bold text-white mb-2">WhatsApp</h3>
+                  <a href="https://wa.me/972548151103" target="_blank" rel="noopener noreferrer" className="text-[#25D366] hover:text-[#20BD5A] transition-colors text-lg">
+                    054-815-1103
                   </a>
                 </div>
               </div>
@@ -267,11 +268,13 @@ const AboutUs: React.FC = () => {
                 הצטרף אלינו עוד היום והתחל את המסע שלך להיות הגרסה הכי טובה של עצמך
               </p>
               <a
-                href="tel:0547101272"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white rounded-lg transition-all font-bold text-lg shadow-lg"
+                href="https://wa.me/972548151103"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-lg transition-all font-bold text-lg shadow-lg"
               >
-                <Phone className="w-5 h-5" />
-                התקשר עכשיו - 054-710-1272
+                <MessageCircle className="w-5 h-5" />
+                צור קשר - 054-815-1103
               </a>
             </div>
           </div>
