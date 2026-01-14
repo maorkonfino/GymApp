@@ -39,7 +39,7 @@ const AboutUs: React.FC = () => {
 
             {/* Title - Now below photo */}
             <p className="text-2xl sm:text-3xl lg:text-4xl text-gray-200 mb-12 max-w-4xl mx-auto animate-fade-in leading-relaxed">
-              הבית לאימונים שבו תהפוך לגרסה הטובה ביותר שלך
+              Are you ready?
             </p>
             
             {/* CTA Buttons */}
@@ -60,7 +60,7 @@ const AboutUs: React.FC = () => {
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all font-bold text-lg shadow-lg"
               >
                 <Instagram className="w-5 h-5" />
-                עקוב באינסטגרם
+                האינסטה שלנו
               </a>
               <a
                 href="https://share.google/VbA2nUfw3peHiUarh"
@@ -69,7 +69,7 @@ const AboutUs: React.FC = () => {
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-all font-bold text-lg shadow-lg"
               >
                 <Star className="w-5 h-5" />
-                דרג אותנו בגוגל
+                עלינו בגוגל
               </a>
             </div>
           </div>
