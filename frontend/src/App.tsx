@@ -94,11 +94,21 @@ function AppContent() {
   }
 
   // Check if we're on public pages (no authentication required)
+  // IMPORTANT: Check public pages FIRST before authentication
   const isResetPasswordPage = location.pathname === '/reset-password'
   const isAboutUsPage = location.pathname === '/aboutUs'
 
-  // Show login page if user is not authenticated (unless on public pages)
-  if (!user && !isResetPasswordPage && !isAboutUsPage) {
+  // Public pages (accessible without login) - CHECK FIRST!
+  if (isAboutUsPage) {
+    return <AboutUs />
+  }
+
+  if (isResetPasswordPage) {
+    return <ResetPassword />
+  }
+
+  // Show login page if user is not authenticated
+  if (!user) {
     return (
       <>
         <LoginPage 
@@ -119,15 +129,6 @@ function AppContent() {
         />
       </>
     )
-  }
-
-  // Public pages (accessible without login)
-  if (isResetPasswordPage) {
-    return <ResetPassword />
-  }
-
-  if (isAboutUsPage) {
-    return <AboutUs />
   }
 
   return (
