@@ -134,41 +134,50 @@ const AboutUs: React.FC = () => {
       {/* About Shlomi Section */}
       <section className="py-20 bg-gradient-to-b from-dark-bg to-dark-card/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-dark-hover border border-cyan-500/30 rounded-2xl p-8 sm:p-12">
-            <div className="text-center mb-8">
+          <div className="space-y-6">
+            {/* 1. Header - Special Box */}
+            <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/40 rounded-2xl p-8 sm:p-12 text-center">
               <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
                 הכירו את שלומי קונפינו
               </h2>
               <div className="w-24 h-1 bg-gradient-to-r from-cyan-500 to-purple-500 mx-auto rounded-full"></div>
             </div>
-            
-            <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
-              <div className="space-y-3">
-                <p className="text-white text-xl font-bold">
+
+            {/* 2. Credentials - Gray Box */}
+            <div className="bg-dark-hover rounded-2xl p-8 sm:p-10">
+              <div className="space-y-3 text-gray-400 text-lg leading-relaxed">
+                <p className="text-xl font-bold">
                   פיזיולוג מאמץ בוגר תואר שני בפקולטה לרפואה באוניברסיטת תל אביב
                 </p>
-                <p className="text-white text-xl font-bold">
+                <p className="text-xl font-bold">
                   10 שנות ניסיון כמאמן
                 </p>
-                <p className="text-white text-xl font-bold">
+                <p className="text-xl font-bold">
                   בוגר תואר ראשון בחינוך גופני עם הסמכה לאוכלוסייה ייחודית
                 </p>
               </div>
-              
-              <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/40 rounded-xl p-6">
-                <p className="text-white text-xl font-semibold mb-3">
-                  אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך
-                </p>
-                <p className="text-gray-300">
-                  בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מלאה מהתהליך.
-                </p>
-              </div>
+            </div>
+            
+            {/* 3. Philosophy - Special Box */}
+            <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/40 rounded-2xl p-8 sm:p-10">
+              <p className="text-white text-xl font-semibold mb-4 leading-relaxed">
+                אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך
+              </p>
+              <p className="text-gray-300 text-lg leading-relaxed">
+                בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מלאה מהתהליך.
+              </p>
+            </div>
 
-              <p className="text-xl text-white font-semibold">
+            {/* 4. Goal - Gray Box */}
+            <div className="bg-dark-hover rounded-2xl p-8 sm:p-10">
+              <p className="text-gray-400 text-xl font-semibold leading-relaxed">
                 המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים
               </p>
+            </div>
 
-              <p className="text-2xl text-cyan-400 font-bold text-center mt-8">
+            {/* 5. Invitation - Special Box with White Text */}
+            <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/40 rounded-2xl p-8 sm:p-10 text-center">
+              <p className="text-white text-2xl font-bold leading-relaxed">
                 אני מזמין אתכם אליי לבית, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
               </p>
             </div>
