@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Users, Target, Award, Mail, MapPin, Clock, Instagram, TrendingUp, Home, CheckCircle, ChevronDown, ChevronUp, Star } from 'lucide-react'
+import { Mail, MapPin, Clock, Instagram, CheckCircle, ChevronDown, ChevronUp, Star } from 'lucide-react'
 
 // WhatsApp Logo Component
 const WhatsAppLogo = ({ className }: { className?: string }) => (
@@ -253,85 +253,6 @@ const AboutUs: React.FC = () => {
                 <h3 className="text-lg font-bold text-white mb-2">תוצאות מוכחות</h3>
                 <p className="text-gray-400">עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why BEAST Section */}
-      <section className="py-20 bg-dark-card/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
-            למה BEAST?
-          </h2>
-          <p className="text-xl text-gray-300 text-center mb-12 max-w-3xl mx-auto">
-            מה מיוחד ב-Beast? חדר כושר במעטפת אישית - מאמן שתמיד בשטח
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="bg-dark-hover border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-500/50 transition-all">
-              <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center mb-4">
-                <Target className="w-6 h-6 text-cyan-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">אימון מבוסס מדע מותאם אישית</h3>
-              <p className="text-gray-400">
-                בדיוק ליכולת שלך, למטרות שלך ולאורח החיים שלך
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="bg-dark-hover border border-purple-500/20 rounded-xl p-6 hover:border-purple-500/50 transition-all">
-              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4">
-                <Award className="w-6 h-6 text-purple-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">ניסיון ומקצועיות</h3>
-              <p className="text-gray-400">
-                פיזיולוג מאמץ, 10 שנות ניסיון כמאמן, בוגר חינוך גופני ואימון מותאם לאוכלוסייה ייחודית
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="bg-dark-hover border border-green-500/20 rounded-xl p-6 hover:border-green-500/50 transition-all">
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mb-4">
-                <TrendingUp className="w-6 h-6 text-green-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">מעקב אובייקטיבי</h3>
-              <p className="text-gray-400">
-                אפליקציה שעושה סדר ומראה לכם כמה התקדמתם באמת!
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="bg-dark-hover border border-blue-500/20 rounded-xl p-6 hover:border-blue-500/50 transition-all">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
-                <Home className="w-6 h-6 text-blue-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">חלל מקצועי</h3>
-              <p className="text-gray-400">
-                ציוד מתוחזק וברמה גבוהה
-              </p>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="bg-dark-hover border border-orange-500/20 rounded-xl p-6 hover:border-orange-500/50 transition-all">
-              <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-orange-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">תוצאות מוכחות</h3>
-              <p className="text-gray-400">
-                עשרות אנשים שכבר עשו את השינוי הכי גדול בחייהם
-              </p>
-            </div>
-
-            {/* Feature 6 - Special */}
-            <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/40 rounded-xl p-6 hover:border-cyan-500/70 transition-all">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4">
-                <Target className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">יחס אישי ללא אימון אישי</h3>
-              <p className="text-gray-300">
-                לכל אורך האימון - תהליך מבוסס מדע שאפשר להתמיד בו ולראות תוצאות אמיתיות לאורך זמן
-              </p>
             </div>
           </div>
         </div>
