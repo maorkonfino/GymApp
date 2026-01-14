@@ -92,6 +92,11 @@ const AboutUs: React.FC = () => {
               </div>
             </div>
             
+            {/* Main CTA Text */}
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-8 animate-fade-in">
+              רוצה להוציא את ה-BEAST שבך?
+            </h2>
+            
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
               <a
@@ -441,37 +446,6 @@ const AboutUs: React.FC = () => {
                 )}
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-20 bg-gradient-to-b from-dark-bg via-dark-card/50 to-dark-bg">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-5xl font-bold text-white mb-6">
-            רוצה להוציא את ה-BEAST שבך?
-          </h2>
-          <p className="text-xl sm:text-2xl text-gray-300 mb-10">
-            השאר פרטים לשיחת ייעוץ חינם - בלי התחייבות
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="https://wa.me/972548151103"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl transition-all font-bold text-xl shadow-xl"
-            >
-              <WhatsAppLogo className="w-6 h-6" />
-              שיחת ייעוץ חינם
-            </a>
-            <a
-              href="tel:0548151103"
-              className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl transition-all font-bold text-xl shadow-xl"
-            >
-              <Mail className="w-6 h-6" />
-              התקשר עכשיו
-            </a>
           </div>
         </div>
       </section>
