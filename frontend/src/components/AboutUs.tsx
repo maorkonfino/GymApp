@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { MapPin, Instagram, CheckCircle, ChevronDown, ChevronUp, Star } from 'lucide-react'
+import { MapPin, Instagram, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react'
 
 // WhatsApp Logo Component
 const WhatsAppLogo = ({ className }: { className?: string }) => (
@@ -330,19 +330,11 @@ const AboutUs: React.FC = () => {
           </p>
           
           <div className="text-center py-12">
-            <a
-              href="https://share.google/VbA2nUfw3peHiUarh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-10 py-5 bg-white hover:bg-gray-100 text-gray-800 rounded-xl transition-all font-bold text-xl shadow-xl"
-            >
-              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-              <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-              <span className="mr-2">קראו את הביקורות שלנו בגוגל</span>
-            </a>
+            <div className="bg-dark-hover/50 border border-cyan-500/20 rounded-xl p-12">
+              <p className="text-2xl font-bold text-cyan-400">
+                סרטון בקרוב
+              </p>
+            </div>
           </div>
         </div>
       </section>
