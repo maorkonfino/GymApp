@@ -77,10 +77,10 @@ const AboutUs: React.FC = () => {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-b from-dark-bg via-dark-card/30 to-dark-bg">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
           <div className="text-center">
             {/* Logo and Photo - Centered Together */}
-            <div className="flex flex-col items-center gap-6 sm:gap-8 mb-8 sm:mb-10 animate-fade-in">
+            <div className="flex flex-col items-center gap-4 sm:gap-6 mb-6 sm:mb-8 animate-fade-in">
               {/* Logo - Large */}
               <div>
                 <img 
@@ -109,38 +109,38 @@ const AboutUs: React.FC = () => {
             </div>
             
             {/* Main CTA Text */}
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-8 animate-fade-in">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 animate-fade-in px-4">
               רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
             </h2>
             
             {/* CTA Buttons - Square Icons Only */}
-            <div className="flex gap-4 justify-center animate-fade-in">
+            <div className="flex gap-3 justify-center animate-fade-in">
               <a
                 href="https://wa.me/972548151103"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-16 h-16 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl transition-all shadow-lg"
+                className="flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl transition-all shadow-lg"
                 aria-label="צור קשר בוואטסאפ"
               >
-                <WhatsAppLogo className="w-8 h-8" />
+                <WhatsAppLogo className="w-7 h-7" />
               </a>
               <a
                 href="https://www.instagram.com/shlomi_konfino/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all shadow-lg"
+                className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all shadow-lg"
                 aria-label="עקבו באינסטגרם"
               >
-                <Instagram className="w-8 h-8" />
+                <Instagram className="w-7 h-7" />
               </a>
               <a
                 href="https://share.google/VbA2nUfw3peHiUarh"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-16 h-16 bg-white hover:bg-gray-100 text-gray-800 rounded-xl transition-all shadow-lg"
+                className="flex items-center justify-center w-14 h-14 bg-white hover:bg-gray-100 text-gray-800 rounded-xl transition-all shadow-lg"
                 aria-label="עלינו בגוגל"
               >
-                <GoogleLogo className="w-8 h-8" />
+                <GoogleLogo className="w-7 h-7" />
               </a>
             </div>
           </div>
