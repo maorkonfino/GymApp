@@ -26,17 +26,18 @@ const AboutUs: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
           <div className="text-center">
-            {/* Logo */}
-            <div className="mb-8 sm:mb-12 animate-fade-in">
-              <img 
-                src="/header-logo.svg" 
-                alt="BEAST Logo" 
-                className="w-96 sm:w-[600px] lg:w-[700px] h-auto mx-auto"
-              />
-            </div>
+            {/* Logo and Photo - Centered Together */}
+            <div className="flex flex-col items-center gap-4 sm:gap-6 mb-8 sm:mb-10 animate-fade-in">
+              {/* Logo */}
+              <div>
+                <img 
+                  src="/header-logo.svg" 
+                  alt="BEAST Logo" 
+                  className="w-64 sm:w-80 lg:w-96 h-auto mx-auto"
+                />
+              </div>
 
-            {/* Trainer Photo - Elegant Integration */}
-            <div className="mb-8 sm:mb-10 animate-fade-in">
+              {/* Trainer Photo - Elegant Integration */}
               <div className="relative inline-block">
                 {/* Decorative elements */}
                 <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-3xl blur-2xl"></div>
