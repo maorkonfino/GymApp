@@ -155,12 +155,12 @@ const AboutUs: React.FC = () => {
                 </p>
               </div>
               
-              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-r-4 border-cyan-500 rounded-lg p-6">
+              <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/40 rounded-xl p-6">
                 <p className="text-white text-xl font-semibold mb-3">
                   אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך
                 </p>
-                <p>
-                  בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכן גם כמפגש חברתי
+                <p className="text-gray-300">
+                  בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מלאה מהתהליך.
                 </p>
               </div>
 
