@@ -132,17 +132,14 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* About Shlomi Section */}
-      <section className="py-20 bg-gradient-to-b from-dark-bg to-dark-card/50">
+      <section className="py-16 bg-dark-card/30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+            הכירו את שלומי קונפינו
+          </h2>
+          
           <div className="bg-dark-hover border border-cyan-500/30 rounded-2xl overflow-hidden">
-            {/* 1. Header - Special Background */}
-            <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 p-8 sm:p-12 text-center">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white">
-                הכירו את שלומי קונפינו
-              </h2>
-            </div>
-
-            {/* 2. Credentials - Gray Background */}
+            {/* 1. Credentials - Gray Background */}
             <div className="bg-dark-hover p-8 sm:p-10">
               <div className="space-y-3 text-white text-lg leading-relaxed">
                 <p className="text-xl font-bold">
@@ -157,7 +154,7 @@ const AboutUs: React.FC = () => {
               </div>
             </div>
             
-            {/* 3. Philosophy - Special Background */}
+            {/* 2. Philosophy - Special Background */}
             <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 p-8 sm:p-10">
               <p className="text-white text-xl leading-relaxed">
                 "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
@@ -167,14 +164,14 @@ const AboutUs: React.FC = () => {
               </p>
             </div>
 
-            {/* 4. Goal - Gray Background */}
+            {/* 3. Goal - Gray Background */}
             <div className="bg-dark-hover p-8 sm:p-10">
               <p className="text-white text-xl leading-relaxed">
                 "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
               </p>
             </div>
 
-            {/* 5. Invitation - Special Background with White Text */}
+            {/* 4. Invitation - Special Background with White Text */}
             <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 p-8 sm:p-10 text-center">
               <p className="text-white text-2xl font-bold leading-relaxed">
                 אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
