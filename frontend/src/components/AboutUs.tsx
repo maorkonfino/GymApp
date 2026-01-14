@@ -138,44 +138,63 @@ const AboutUs: React.FC = () => {
             הכירו את שלומי קונפינו
           </h2>
           
-          <div className="bg-dark-hover border border-cyan-500/30 rounded-2xl overflow-hidden">
-            {/* 1. Credentials - Gray Background */}
-            <div className="bg-dark-hover p-8 sm:p-10">
-              <div className="space-y-3 text-white text-lg leading-relaxed">
-                <p className="text-xl font-bold">
-                  פיזיולוג מאמץ בוגר תואר שני בפקולטה לרפואה באוניברסיטת תל אביב
-                </p>
-                <p className="text-xl font-bold">
-                  10 שנות ניסיון כמאמן
-                </p>
-                <p className="text-xl font-bold">
-                  בוגר תואר ראשון בחינוך גופני עם הסמכה לאוכלוסייה ייחודית
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 1. Credentials */}
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-cyan-500/20">
+              <CheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">פיזיולוג מאמץ בוגר תואר שני</h3>
+                <p className="text-gray-400">בפקולטה לרפואה באוניברסיטת תל אביב</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-purple-500/20">
+              <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">10 שנות ניסיון כמאמן</h3>
+                <p className="text-gray-400">ניסיון עשיר בתחום הכושר הגופני</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-green-500/20">
+              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="text-lg font-bold text-white mb-2">בוגר תואר ראשון בחינוך גופני</h3>
+                <p className="text-gray-400">עם הסמכה לאוכלוסייה ייחודית</p>
               </div>
             </div>
             
-            {/* 2. Philosophy - Special Background */}
-            <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 p-8 sm:p-10">
-              <p className="text-white text-xl leading-relaxed">
-                "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
-              </p>
-              <p className="text-white text-lg leading-relaxed mt-4">
-                בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
-              </p>
+            {/* 2. Philosophy */}
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-blue-500/20">
+              <CheckCircle className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
+              <div>
+                <p className="text-white leading-relaxed">
+                  "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
+                </p>
+                <p className="text-gray-400 mt-2">
+                  בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
+                </p>
+              </div>
             </div>
 
-            {/* 3. Goal - Gray Background */}
-            <div className="bg-dark-hover p-8 sm:p-10">
-              <p className="text-white text-xl leading-relaxed">
-                "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
-              </p>
+            {/* 3. Goal */}
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-orange-500/20">
+              <CheckCircle className="w-6 h-6 text-orange-400 flex-shrink-0 mt-1" />
+              <div>
+                <p className="text-white leading-relaxed">
+                  "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
+                </p>
+              </div>
             </div>
 
-            {/* 4. Invitation - Special Background with White Text */}
-            <div className="bg-gradient-to-br from-cyan-500/20 to-purple-500/20 p-8 sm:p-10 text-center">
-              <p className="text-white text-2xl font-bold leading-relaxed">
-                אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
-              </p>
+            {/* 4. Invitation */}
+            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-pink-500/20">
+              <CheckCircle className="w-6 h-6 text-pink-400 flex-shrink-0 mt-1" />
+              <div>
+                <p className="text-white text-lg font-bold leading-relaxed">
+                  אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
+                </p>
+              </div>
             </div>
           </div>
         </div>
