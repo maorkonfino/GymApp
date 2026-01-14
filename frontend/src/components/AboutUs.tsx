@@ -19,7 +19,7 @@ const AboutUs: React.FC = () => {
             </div>
 
             {/* Trainer Photo - Elegant Integration */}
-            <div className="mb-12 sm:mb-16 animate-fade-in">
+            <div className="mb-8 sm:mb-10 animate-fade-in">
               <div className="relative inline-block">
                 {/* Decorative elements */}
                 <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-3xl blur-2xl"></div>
@@ -36,11 +36,6 @@ const AboutUs: React.FC = () => {
                 </div>
               </div>
             </div>
-
-            {/* Title - Now below photo */}
-            <p className="text-2xl sm:text-3xl lg:text-4xl text-gray-200 mb-12 max-w-4xl mx-auto animate-fade-in leading-relaxed">
-              Are you ready?
-            </p>
             
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
