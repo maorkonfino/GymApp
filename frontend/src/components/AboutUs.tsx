@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dumbbell, Users, Target, Award, Mail, MapPin, Clock, Instagram } from 'lucide-react'
+import { Users, Target, Award, Mail, MapPin, Clock, Instagram, TrendingUp, Home } from 'lucide-react'
 
 // WhatsApp Logo Component
 const WhatsAppLogo = ({ className }: { className?: string }) => (
@@ -95,48 +95,59 @@ const AboutUs: React.FC = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-16">
             למה BEAST?
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1 */}
             <div className="bg-dark-hover border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-500/50 transition-all">
               <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center mb-4">
-                <Dumbbell className="w-6 h-6 text-cyan-400" />
+                <Target className="w-6 h-6 text-cyan-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">אימונים מותאמים אישית</h3>
+              <h3 className="text-xl font-bold text-white mb-2">אימון מבוסס מדע מותאם אישית</h3>
               <p className="text-gray-400">
-                תוכניות אימון מותאמות במיוחד למטרות שלך ולרמת הכושר שלך
+                בדיוק ליכולת שלך, למטרות שלך ולאורח החיים שלך
               </p>
             </div>
 
             {/* Feature 2 */}
             <div className="bg-dark-hover border border-purple-500/20 rounded-xl p-6 hover:border-purple-500/50 transition-all">
               <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-purple-400" />
+                <Award className="w-6 h-6 text-purple-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">מאמנים מקצועיים</h3>
+              <h3 className="text-xl font-bold text-white mb-2">ניסיון ומקצועיות</h3>
               <p className="text-gray-400">
-                צוות מאמנים מוסמכים ומנוסים שמלווים אותך בכל שלב
+                פיזיולוג מאמץ, 10 שנות ניסיון כמאמן, בוגר חינוך גופני ואימון מותאם לאוכלוסייה ייחודית
               </p>
             </div>
 
             {/* Feature 3 */}
             <div className="bg-dark-hover border border-green-500/20 rounded-xl p-6 hover:border-green-500/50 transition-all">
               <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mb-4">
-                <Target className="w-6 h-6 text-green-400" />
+                <TrendingUp className="w-6 h-6 text-green-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">מעקב והתקדמות</h3>
+              <h3 className="text-xl font-bold text-white mb-2">מעקב אובייקטיבי</h3>
               <p className="text-gray-400">
-                מערכת מעקב דיגיטלית מתקדמת שעוזרת לך לראות תוצאות
+                אפליקציה שעושה סדר ומראה לכם כמה התקדמתם באמת!
               </p>
             </div>
 
             {/* Feature 4 */}
+            <div className="bg-dark-hover border border-blue-500/20 rounded-xl p-6 hover:border-blue-500/50 transition-all">
+              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
+                <Home className="w-6 h-6 text-blue-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">חלל מקצועי</h3>
+              <p className="text-gray-400">
+                ציוד מתוחזק וברמה גבוהה
+              </p>
+            </div>
+
+            {/* Feature 5 */}
             <div className="bg-dark-hover border border-orange-500/20 rounded-xl p-6 hover:border-orange-500/50 transition-all">
               <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
-                <Award className="w-6 h-6 text-orange-400" />
+                <Users className="w-6 h-6 text-orange-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">תוצאות מוכחות</h3>
               <p className="text-gray-400">
-                מאות מתאמנים שהשיגו את המטרות שלהם והגיעו לשיא הכושר
+                עשרות אנשים שכבר עשו את השינוי הכי גדול בחייהם
               </p>
             </div>
           </div>
