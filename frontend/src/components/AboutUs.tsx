@@ -5,26 +5,43 @@ const AboutUs: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-dark-bg via-dark-card to-dark-bg">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
+      <section className="relative overflow-hidden bg-gradient-to-b from-dark-bg via-dark-card/30 to-dark-bg">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
           <div className="text-center">
-            <img 
-              src="/header-logo.svg" 
-              alt="BEAST Logo" 
-              className="w-96 sm:w-[600px] h-auto mx-auto mb-8 animate-fade-in"
-            />
-            <div className="mb-12 animate-fade-in">
+            {/* Logo */}
+            <div className="mb-8 sm:mb-12 animate-fade-in">
               <img 
-                src="/trainer.jpg" 
-                alt="המאמן" 
-                className="w-64 sm:w-80 h-auto mx-auto rounded-2xl shadow-2xl border-4 border-cyan-500/30"
+                src="/header-logo.svg" 
+                alt="BEAST Logo" 
+                className="w-96 sm:w-[600px] lg:w-[700px] h-auto mx-auto"
               />
             </div>
-            <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6 animate-fade-in">
+
+            {/* Trainer Photo - Elegant Integration */}
+            <div className="mb-12 sm:mb-16 animate-fade-in">
+              <div className="relative inline-block">
+                {/* Decorative elements */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-3xl blur-2xl"></div>
+                
+                {/* Photo */}
+                <div className="relative">
+                  <img 
+                    src="/trainer.jpg" 
+                    alt="שלומי - המאמן הראשי" 
+                    className="relative w-80 sm:w-96 lg:w-[450px] h-auto mx-auto rounded-2xl shadow-[0_20px_60px_rgba(0,255,255,0.15)] border border-cyan-500/20"
+                  />
+                  {/* Subtle overlay gradient */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-dark-bg/40 to-transparent pointer-events-none"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Title and Subtitle */}
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
               BEAST Training
             </h1>
-            <p className="text-xl sm:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto animate-fade-in">
+            <p className="text-xl sm:text-2xl lg:text-3xl text-gray-300 mb-8 max-w-3xl mx-auto animate-fade-in">
               המקום שבו תהפוך לגרסה הכי טובה של עצמך
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
