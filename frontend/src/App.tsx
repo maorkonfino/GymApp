@@ -15,6 +15,7 @@ import ManageUsers from './components/ManageUsers'
 import ForgotPasswordModal from './components/ForgotPasswordModal'
 import ResetPassword from './components/ResetPassword'
 import WorkoutArchive from './components/WorkoutArchive'
+import AboutUs from './components/AboutUs'
 import api from './api'
 
 function AppContent() {
@@ -92,11 +93,12 @@ function AppContent() {
     setEditingRegistration(null)
   }
 
-  // Check if we're on the reset password page
+  // Check if we're on public pages (no authentication required)
   const isResetPasswordPage = location.pathname === '/reset-password'
+  const isAboutUsPage = location.pathname === '/aboutUs'
 
-  // Show login page if user is not authenticated (unless on reset password page)
-  if (!user && !isResetPasswordPage) {
+  // Show login page if user is not authenticated (unless on public pages)
+  if (!user && !isResetPasswordPage && !isAboutUsPage) {
     return (
       <>
         <LoginPage 
@@ -119,9 +121,13 @@ function AppContent() {
     )
   }
 
-  // Reset password page (accessible without login)
+  // Public pages (accessible without login)
   if (isResetPasswordPage) {
     return <ResetPassword />
+  }
+
+  if (isAboutUsPage) {
+    return <AboutUs />
   }
 
   return (
