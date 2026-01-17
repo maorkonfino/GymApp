@@ -44,8 +44,25 @@ const AboutUs: React.FC = () => {
     script.async = true
     document.body.appendChild(script)
 
+    // Hide Elfsight default headers after widget loads
+    const hideHeaders = setInterval(() => {
+      const headers = document.querySelectorAll(
+        '.eapps-google-reviews-header, .eapps-google-reviews-header-title, .eapps-google-reviews-header-subtitle, [class*="header-title"], [class*="header-subtitle"]'
+      )
+      headers.forEach((header) => {
+        if (header instanceof HTMLElement) {
+          header.style.display = 'none'
+          header.style.visibility = 'hidden'
+          header.style.height = '0'
+          header.style.overflow = 'hidden'
+        }
+      })
+      // Stop checking after 10 seconds
+      setTimeout(() => clearInterval(hideHeaders), 10000)
+    }, 100)
+
     return () => {
-      // Cleanup script on unmount
+      clearInterval(hideHeaders)
       if (document.body.contains(script)) {
         document.body.removeChild(script)
       }

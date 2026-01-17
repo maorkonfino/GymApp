@@ -164,15 +164,33 @@ table tbody td[rowspan="5"] {
   min-height: 200px !important;
 }
 
-/* Hide Elfsight widget default title and subtitle */
+/* Hide Elfsight widget default title and subtitle - Multiple methods */
 .elfsight-widget-wrapper .eapps-google-reviews-header-title,
 .elfsight-widget-wrapper .eapps-google-reviews-header-subtitle,
 .eapps-google-reviews-header-title,
 .eapps-google-reviews-header-subtitle,
 .eapps-google-reviews-header,
-[class*="eapps-google-reviews-header"] {
+[class*="eapps-google-reviews-header"],
+[class*="header-title"],
+[class*="header-subtitle"],
+.eapps-widget-header,
+[class*="widget-header"] {
   display: none !important;
   visibility: hidden !important;
   height: 0 !important;
+  max-height: 0 !important;
   overflow: hidden !important;
+  opacity: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Hide any element containing 'What our customers say' */
+.elfsight-widget-wrapper *:not(script):not(style) {
+  font-size: inherit;
+}
+
+.elfsight-widget-wrapper [class*="title"]:not([class*="review"]),
+.elfsight-widget-wrapper [class*="heading"]:not([class*="review"]) {
+  display: none !important;
 }
