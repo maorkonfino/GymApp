@@ -375,6 +375,22 @@ const AboutUs: React.FC = () => {
       {/* FAQ Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-4xl mx-auto px-6">
+          {/* CTA Buttons Above FAQ */}
+          <div className="mb-6 space-y-3 max-w-lg mx-auto">
+            <button
+              onClick={scrollToContactForm}
+              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full w-full border-2 border-gray-200"
+            >
+              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST<span className="text-cyan-400">!</span>
+            </button>
+            <button
+              onClick={scrollToContactForm}
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-base py-2 px-8 text-center transition-all shadow-lg rounded-full w-full whitespace-nowrap"
+            >
+              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline<span className="text-white">!</span>
+            </button>
+          </div>
+
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
             שאלות נפוצות
           </h2>
