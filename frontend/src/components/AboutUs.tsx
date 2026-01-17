@@ -163,6 +163,18 @@ const AboutUs: React.FC = () => {
       {/* About Shlomi Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
+          {/* CTA Button Above Title */}
+          <div className="mb-6">
+            <a
+              href="https://wa.me/972548151103"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
+            >
+              אני רוצה להיות BEAST!
+            </a>
+          </div>
+
           <div className="text-center mb-6">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
               הכירו את
@@ -195,20 +207,20 @@ const AboutUs: React.FC = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="p-6 bg-[#2a2a2a] rounded-xl">
-              <p className="text-white text-lg leading-relaxed mb-4">
-                "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
-              </p>
-              <p className="text-gray-300 leading-relaxed">
-                בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
+            <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
+              <p className="text-white text-lg leading-relaxed">
+                ללא קיצוניות מיותרת, בין אם חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי, שיפור התפקוד ובניית גוף חזק ובריא
               </p>
             </div>
 
-            <div className="p-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl">
-              <p className="text-white text-xl font-bold leading-relaxed">
-                אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
-              </p>
-            </div>
+            <a
+              href="https://wa.me/972548151103"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
+            >
+              אני רוצה להיות BEAST!
+            </a>
           </div>
         </div>
       </section>
