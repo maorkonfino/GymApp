@@ -188,7 +188,7 @@ const AboutUs: React.FC = () => {
           <div className="mb-6">
             <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
               <p className="text-white text-lg leading-relaxed">
-                "המטרה שלי היא שתוכלו להתמיד בתהליך, תהנו ממנו, תחוו תוצאות בריאותיות ותקבלו כלים לכל החיים"
+                "המטרה שלי היא שתוכלו להתמיד בתהליך, תהנו ממנו, תחוו תוצאות בריאותיות ותקבלו <span className="text-cyan-400">כלים לכל החיים</span>"
               </p>
             </div>
           </div>
@@ -335,7 +335,7 @@ const AboutUs: React.FC = () => {
 
           <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
             <p className="text-white text-xl font-bold leading-relaxed mb-3">
-              אני מזמין אתכם אל הבית שלי,<br />לעשות את הדבר הכי טוב שתוכלו לעשות למענכם
+              אני מזמין אתכם אל הבית שלי,<br />לעשות את הדבר הכי טוב שתוכלו <span className="text-cyan-400">לעשות למענכם</span>
             </p>
             <p className="text-sm text-gray-300">
               ללא קיצוניות מיותרת, בין אם חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי, שיפור התפקוד ובניית גוף חזק ובריא
