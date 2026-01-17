@@ -174,13 +174,13 @@ const AboutUs: React.FC = () => {
               onClick={scrollToContactForm}
               className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200 w-full"
             >
-              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST!
+              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST<span className="text-cyan-400">!</span>
             </button>
             <button
               onClick={scrollToContactForm}
               className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-base py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full whitespace-nowrap"
             >
-              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline
+              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline<span className="text-white">!</span>
             </button>
           </div>
 
@@ -249,13 +249,13 @@ const AboutUs: React.FC = () => {
               onClick={scrollToContactForm}
               className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200 w-full"
             >
-              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST!
+              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST<span className="text-cyan-400">!</span>
             </button>
             <button
               onClick={scrollToContactForm}
               className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-base py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full whitespace-nowrap"
             >
-              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline
+              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline<span className="text-white">!</span>
             </button>
           </div>
 
@@ -335,7 +335,7 @@ const AboutUs: React.FC = () => {
 
           <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
             <p className="text-white text-xl font-bold leading-relaxed mb-3">
-              אני מזמין אתכם אל הבית שלי,<br />לעשות את הדבר הכי טוב שתוכלו <span className="text-cyan-400">לעשות למענכם</span>
+              אני מזמין אתכם אל הבית שלי,<br />לעשות את הדבר הכי טוב שתוכלו <span className="text-cyan-400">לעשות למענכם</span><span className="text-white">!</span>
             </p>
             <p className="text-sm text-gray-300">
               ללא קיצוניות מיותרת, בין אם חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי, שיפור התפקוד ובניית גוף חזק ובריא
@@ -537,7 +537,7 @@ const AboutUs: React.FC = () => {
               type="submit"
               className="w-full bg-white hover:bg-gray-100 text-black font-bold text-xl py-3 px-8 text-center transition-all shadow-lg rounded-full border-2 border-gray-200"
             >
-              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST!
+              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST<span className="text-cyan-400">!</span>
             </button>
           </form>
         </div>
