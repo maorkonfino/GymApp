@@ -217,11 +217,11 @@ const AboutUs: React.FC = () => {
               { title: "זמינות מרחוק", desc: "זמינות ומעטפת גם מחוץ לאימון להצלחה בתהליך" }
             ].map((item, index) => (
               <div key={index} className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-                <h3 className="text-base font-bold text-white mb-2 flex items-start gap-2">
-                  <span className="text-cyan-400 flex-shrink-0">+</span>
-                  <span>{item.title}</span>
+                <h3 className="text-base font-bold text-white mb-2">
+                  <span className="text-cyan-400">+ </span>
+                  {item.title}
                 </h3>
-                <p className="text-sm text-gray-300 mr-5">{item.desc}</p>
+                <p className="text-sm text-gray-300">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -232,7 +232,7 @@ const AboutUs: React.FC = () => {
               href="https://wa.me/972548151103?text=שלום,%20אני%20מעוניין%20באימונים%20אונליין"
               target="_blank"
               rel="noopener noreferrer"
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-lg py-3 px-6 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-sm py-2 px-6 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
             >
               גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline
             </a>
@@ -287,7 +287,7 @@ const AboutUs: React.FC = () => {
           </div>
 
           {/* Image Carousel */}
-          <div className="relative max-w-md mx-auto mb-6">
+          <div className="relative max-w-xs mx-auto mb-6">
             <div className="relative">
               <img
                 src={carouselImages[currentImageIndex]}
