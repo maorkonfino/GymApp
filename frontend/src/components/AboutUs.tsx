@@ -95,15 +95,17 @@ const AboutUs: React.FC = () => {
           </div>
         </div>
 
-        {/* Full Width CTA Button */}
-        <a
-          href="https://wa.me/972548151103"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-5 text-center transition-all shadow-lg mb-6"
-        >
-          אני רוצה להיות BE<span className="text-[#1a1a1a]">A</span>ST!
-        </a>
+        {/* Rounded CTA Button */}
+        <div className="px-8 mb-6">
+          <a
+            href="https://wa.me/972548151103"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-4 px-8 text-center transition-all shadow-lg rounded-full"
+          >
+            אני רוצה להיות BE<span className="text-cyan-500 border-2 border-white px-1 rounded">A</span>ST!
+          </a>
+        </div>
 
         <div className="max-w-6xl mx-auto px-6">
           {/* Trainer Photo - Below Button */}
