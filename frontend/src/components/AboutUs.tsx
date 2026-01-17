@@ -161,22 +161,36 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* About Shlomi Section */}
-      <section className="py-20 bg-[#252525]">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-16">
+      <section className="bg-[#252525] pb-12">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-6">
             הכירו את שלומי קונפינו
           </h2>
           
-          <div className="space-y-8">
-            <div className="p-8 bg-[#2a2a2a] border-l-4 border-cyan-400">
-              <div className="space-y-3 text-white text-lg font-semibold">
-                <p>פיזיולוג מאמץ בוגר תואר שני בפקולטה לרפואה באוניברסיטת תל אביב</p>
-                <p>10 שנות ניסיון כמאמן</p>
-                <p>בוגר תואר ראשון בחינוך גופני עם הסמכה לאוכלוסייה ייחודית</p>
-              </div>
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
+              <h3 className="text-base font-bold text-white mb-2">פיזיולוג מאמץ</h3>
+              <p className="text-sm text-gray-300">בוגר תואר שני הפקולטה לרפואה אונ' ת"א</p>
             </div>
             
-            <div className="p-8 bg-[#2a2a2a]">
+            <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
+              <h3 className="text-base font-bold text-white mb-2">10 שנות ניסיון כמאמן</h3>
+              <p className="text-sm text-gray-300">ניסיון רב ומוכח בתחום האימון האישי</p>
+            </div>
+            
+            <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
+              <h3 className="text-base font-bold text-white mb-2">בוגר תואר ראשון</h3>
+              <p className="text-sm text-gray-300">חינוך גופני סמינר הקיבוצים</p>
+            </div>
+            
+            <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
+              <h3 className="text-base font-bold text-white mb-2">הסמכה מקצועית</h3>
+              <p className="text-sm text-gray-300">פעילות גופנית לאוכלוסייה ייחודית</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="p-6 bg-[#2a2a2a] rounded-xl">
               <p className="text-white text-lg leading-relaxed mb-4">
                 "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
               </p>
@@ -185,7 +199,7 @@ const AboutUs: React.FC = () => {
               </p>
             </div>
 
-            <div className="p-8 bg-[#2a2a2a] border-2 border-cyan-400 text-center">
+            <div className="p-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl">
               <p className="text-white text-xl font-bold leading-relaxed">
                 אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
               </p>
@@ -195,12 +209,12 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Location Section */}
-      <section className="py-20 bg-[#1a1a1a]">
+      <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             המיקום שלנו
           </h2>
-          <div className="flex items-center justify-center gap-2 text-xl text-gray-300 mb-8">
+          <div className="flex items-center justify-center gap-2 text-xl text-gray-300 mb-6">
             <MapPin className="w-6 h-6 text-cyan-400" />
             <span>קיבוץ מעברות, עמק חפר</span>
           </div>
@@ -230,12 +244,12 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-[#252525]">
+      <section className="bg-[#252525] pb-12">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
             מה אומרים עלינו?
           </h2>
-          <p className="text-xl text-gray-300 text-center mb-12">
+          <p className="text-xl text-gray-300 text-center mb-6">
             ביקורות מתאמנים
           </p>
           
@@ -250,9 +264,9 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-[#1a1a1a]">
+      <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
             שאלות נפוצות
           </h2>
           
@@ -289,9 +303,9 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-[#252525]">
+      <section className="bg-[#252525] pb-12">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 leading-tight">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
             תצטרפו אלינו
           </h2>
           
