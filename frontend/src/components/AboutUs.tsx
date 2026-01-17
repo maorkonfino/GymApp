@@ -385,6 +385,37 @@ const AboutUs: React.FC = () => {
       {/* Contact Form Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-2xl mx-auto px-6">
+          {/* Social Buttons */}
+          <div className="flex gap-4 justify-center mb-8">
+            <a
+              href="https://wa.me/972548151103"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full transition-all shadow-md hover:shadow-lg"
+              aria-label="צור קשר בוואטסאפ"
+            >
+              <WhatsAppLogo className="w-6 h-6" />
+            </a>
+            <a
+              href="https://www.instagram.com/shlomi_konfino/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full transition-all shadow-md hover:shadow-lg"
+              aria-label="עקבו באינסטגרם"
+            >
+              <Instagram className="w-6 h-6" />
+            </a>
+            <a
+              href="https://share.google/VbA2nUfw3peHiUarh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 rounded-full transition-all shadow-md hover:shadow-lg border-2 border-gray-200"
+              aria-label="עלינו בגוגל"
+            >
+              <GoogleLogo className="w-6 h-6" />
+            </a>
+          </div>
+
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-8">
             תשאיר/י פרטים כאן ואחזור אלייך בהקדם!
           </h2>
@@ -445,42 +476,6 @@ const AboutUs: React.FC = () => {
               אני רוצה להיות BEAST!
             </button>
           </form>
-        </div>
-      </section>
-
-      {/* Social Icons Section */}
-      <section className="bg-[#1a1a1a] pb-12">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          {/* Social Buttons */}
-          <div className="flex gap-4 justify-center">
-            <a
-              href="https://wa.me/972548151103"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full transition-all shadow-md hover:shadow-lg"
-              aria-label="צור קשר בוואטסאפ"
-            >
-              <WhatsAppLogo className="w-6 h-6" />
-            </a>
-            <a
-              href="https://www.instagram.com/shlomi_konfino/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full transition-all shadow-md hover:shadow-lg"
-              aria-label="עקבו באינסטגרם"
-            >
-              <Instagram className="w-6 h-6" />
-            </a>
-            <a
-              href="https://share.google/VbA2nUfw3peHiUarh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 rounded-full transition-all shadow-md hover:shadow-lg border-2 border-gray-200"
-              aria-label="עלינו בגוגל"
-            >
-              <GoogleLogo className="w-6 h-6" />
-            </a>
-          </div>
         </div>
       </section>
 
