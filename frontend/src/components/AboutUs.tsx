@@ -185,7 +185,7 @@ const AboutUs: React.FC = () => {
             
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
               <h3 className="text-base font-bold text-white mb-2">הסמכות מקצועיות</h3>
-              <p className="text-sm text-gray-300">פעילות גופנית לאוכלוסייה ייחודית - תזונת ספורט</p>
+              <p className="text-sm text-gray-300">- פעילות גופנית לאוכלוסייה ייחודית<br />- תזונת ספורט</p>
             </div>
           </div>
 
