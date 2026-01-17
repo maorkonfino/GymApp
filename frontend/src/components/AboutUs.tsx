@@ -207,12 +207,6 @@ const AboutUs: React.FC = () => {
           </div>
 
           <div className="space-y-6">
-            <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
-              <p className="text-white text-lg leading-relaxed">
-                ללא קיצוניות מיותרת, בין אם חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי, שיפור התפקוד ובניית גוף חזק ובריא
-              </p>
-            </div>
-
             <a
               href="https://wa.me/972548151103"
               target="_blank"
@@ -221,6 +215,12 @@ const AboutUs: React.FC = () => {
             >
               אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם
             </a>
+
+            <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
+              <p className="text-white text-lg leading-relaxed">
+                ללא קיצוניות מיותרת, בין אם חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי, שיפור התפקוד ובניית גוף חזק ובריא
+              </p>
+            </div>
           </div>
         </div>
       </section>
