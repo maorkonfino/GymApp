@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { MapPin, Instagram, ChevronDown, ChevronUp } from 'lucide-react'
+import { MapPin, Instagram, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react'
 
 // WhatsApp Logo Component
 const WhatsAppLogo = ({ className }: { className?: string }) => (
@@ -36,11 +36,14 @@ const GoogleMapsLogo = ({ className }: { className?: string }) => (
 
 const AboutUs: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
     notes: ''
   })
+
+  const carouselImages = ['/1aboutus.png', '/2aboutus.png']
 
   // Load Elfsight script for Google Reviews
   useEffect(() => {
@@ -280,6 +283,49 @@ const AboutUs: React.FC = () => {
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
               <h3 className="text-base font-bold text-white mb-2">הסמכות מקצועיות</h3>
               <p className="text-sm text-gray-300">- פעילות גופנית לאוכלוסייה ייחודית<br />- תזונת ספורט</p>
+            </div>
+          </div>
+
+          {/* Image Carousel */}
+          <div className="relative max-w-md mx-auto mb-6">
+            <div className="relative">
+              <img
+                src={carouselImages[currentImageIndex]}
+                alt={`תמונה ${currentImageIndex + 1}`}
+                className="w-full h-auto rounded-xl shadow-lg"
+              />
+              
+              {/* Previous Button */}
+              <button
+                onClick={() => setCurrentImageIndex((prev) => (prev === 0 ? carouselImages.length - 1 : prev - 1))}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
+                aria-label="תמונה קודמת"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              
+              {/* Next Button */}
+              <button
+                onClick={() => setCurrentImageIndex((prev) => (prev === carouselImages.length - 1 ? 0 : prev + 1))}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
+                aria-label="תמונה הבאה"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+
+              {/* Dots Indicator */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                {carouselImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      index === currentImageIndex ? 'bg-cyan-400 w-6' : 'bg-gray-400'
+                    }`}
+                    aria-label={`עבור לתמונה ${index + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
