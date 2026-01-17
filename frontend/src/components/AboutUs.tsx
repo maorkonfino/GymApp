@@ -82,13 +82,12 @@ const AboutUs: React.FC = () => {
     e.preventDefault()
     
     // Build WhatsApp message
-    let message = '🔥 *פניה חדשה מאתר BEAST!* 🔥\n\n'
-    message += `👤 *שם מלא:* ${formData.fullName}\n`
-    message += `📱 *טלפון:* ${formData.phone}\n`
-    if (formData.notes) {
-      message += `📝 *הערות:* ${formData.notes}\n`
-    }
-    message += `\n✨ אני רוצה להיות BEAST! ✨`
+    let message = 'שלום, אני רוצה לדעת עוד פרטים על התהליך אצלך, הפרטים שלי הם:\n\n'
+    message += `שם מלא: ${formData.fullName}\n`
+    message += `טלפון: ${formData.phone}\n`
+    message += `הערות: ${formData.notes || 'אין'}\n\n`
+    message += `🐺 אני רוצה להיות BEAST! 🐺\n\n`
+    message += `https://beast-gym.com/aboutUs`
     
     // Encode message for URL
     const encodedMessage = encodeURIComponent(message)
