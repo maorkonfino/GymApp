@@ -164,15 +164,18 @@ const AboutUs: React.FC = () => {
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-6">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-              הכירו את שלומי קונפינו
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
+              הכירו את
+            </h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-cyan-400 leading-tight">
+              שלומי קונפינו
             </h2>
           </div>
           
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
               <h3 className="text-base font-bold text-white mb-2">פיזיולוג מאמץ</h3>
-              <p className="text-sm text-gray-300">בוגר תואר שני הפקולטה לרפואה<br />אוניברסיטת תל אביב</p>
+              <p className="text-sm text-gray-300">תואר שני הפקולטה לרפואה<br />אונ' ת"א</p>
             </div>
             
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
