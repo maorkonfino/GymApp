@@ -214,8 +214,11 @@ const AboutUs: React.FC = () => {
               { title: "זמינות מרחוק", desc: "זמינות ומעטפת גם מחוץ לאימון להצלחה בתהליך" }
             ].map((item, index) => (
               <div key={index} className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-                <h3 className="text-base font-bold text-white mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-300">{item.desc}</p>
+                <h3 className="text-base font-bold text-white mb-2 flex items-start gap-2">
+                  <span className="text-cyan-400 flex-shrink-0">+</span>
+                  <span>{item.title}</span>
+                </h3>
+                <p className="text-sm text-gray-300 mr-5">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -283,7 +286,7 @@ const AboutUs: React.FC = () => {
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
           {/* YouTube Shorts Video */}
-          <div className="max-w-xs mx-auto mb-8">
+          <div className="max-w-[200px] mx-auto mb-8">
             <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
