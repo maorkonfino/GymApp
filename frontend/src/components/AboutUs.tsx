@@ -129,7 +129,7 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* What You Get Section */}
-      <section className="bg-[#1a1a1a] pb-6">
+      <section className="bg-[#1a1a1a] pb-3">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-6">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
@@ -175,7 +175,7 @@ const AboutUs: React.FC = () => {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
               <h3 className="text-base font-bold text-white mb-2">פיזיולוג מאמץ</h3>
-              <p className="text-sm text-gray-300">תואר שני הפקולטה לרפואה<br />אונ' ת"א</p>
+              <p className="text-sm text-gray-300">תואר שני הפקולטה לרפואה אונ' ת"א</p>
             </div>
             
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
