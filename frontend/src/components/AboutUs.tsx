@@ -103,7 +103,7 @@ const AboutUs: React.FC = () => {
             rel="noopener noreferrer"
             className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-4 px-8 text-center transition-all shadow-lg rounded-full"
           >
-            אני רוצה להיות BE<span className="text-cyan-500 border-2 border-white px-1 rounded">A</span>ST!
+            אני רוצה להיות BEAST!
           </a>
         </div>
 
