@@ -85,21 +85,12 @@ const AboutUs: React.FC = () => {
       {/* Hero Header Section */}
       <section className="relative bg-[#1a1a1a] py-6">
         <div className="max-w-6xl mx-auto px-6">
-          {/* Logo - Top Right */}
-          <div className="flex justify-end mb-6">
+          {/* Logo - Centered & Larger */}
+          <div className="text-center mb-6">
             <img 
               src="/header-logo.svg" 
               alt="BEAST Logo" 
-              className="w-40 md:w-52 h-auto"
-            />
-          </div>
-
-          {/* Trainer Photo - Smaller & Centered */}
-          <div className="max-w-xs mx-auto mb-6">
-            <img 
-              src="/trainer.jpg" 
-              alt="שלומי קונפינו - המאמן" 
-              className="w-full h-auto rounded-2xl shadow-lg"
+              className="w-64 md:w-80 h-auto mx-auto"
             />
           </div>
         </div>
@@ -109,10 +100,21 @@ const AboutUs: React.FC = () => {
           href="https://wa.me/972548151103"
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-5 text-center transition-all shadow-lg"
+          className="block w-full bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-5 text-center transition-all shadow-lg mb-6"
         >
           אני רוצה להיות BE<span className="text-[#1a1a1a]">A</span>ST!
         </a>
+
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Trainer Photo - Below Button */}
+          <div className="max-w-xs mx-auto">
+            <img 
+              src="/trainer.jpg" 
+              alt="שלומי קונפינו - המאמן" 
+              className="w-full h-auto rounded-2xl shadow-lg"
+            />
+          </div>
+        </div>
       </section>
 
       {/* What You Get Section */}
