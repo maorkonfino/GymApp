@@ -95,24 +95,24 @@ const AboutUs: React.FC = () => {
           </div>
         </div>
 
-        {/* Rounded CTA Button */}
-        <div className="px-8 mb-6">
-          <a
-            href="https://wa.me/972548151103"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-4 px-8 text-center transition-all shadow-lg rounded-full"
-          >
-            אני רוצה להיות BEAST!
-          </a>
-        </div>
-
         <div className="max-w-6xl mx-auto px-6">
-          {/* Goal Quote - Above Photo */}
-          <div className="max-w-2xl mx-auto mb-6">
+          {/* Rounded CTA Button - Aligned with photo width */}
+          <div className="max-w-xs mx-auto mb-6">
+            <a
+              href="https://wa.me/972548151103"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full"
+            >
+              אני רוצה להיות BEAST!
+            </a>
+          </div>
+
+          {/* Goal Quote - Above Photo - Aligned with photo width */}
+          <div className="max-w-xs mx-auto mb-6">
             <div className="p-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl">
               <p className="text-white text-lg leading-relaxed">
-                "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
+                "המטרה שלי היא שתוכלו להתמיד בתהליך, תהנו ממנו, תחוו תוצאות בריאותיות ותקבלו כלים לכל החיים"
               </p>
             </div>
           </div>
