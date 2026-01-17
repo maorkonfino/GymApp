@@ -161,7 +161,7 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* About Shlomi Section */}
-      <section className="bg-[#252525] pb-12">
+      <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-6">
             הכירו את שלומי קונפינו
@@ -170,12 +170,12 @@ const AboutUs: React.FC = () => {
           <div className="grid grid-cols-2 gap-4 mb-8">
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
               <h3 className="text-base font-bold text-white mb-2">פיזיולוג מאמץ</h3>
-              <p className="text-sm text-gray-300">בוגר תואר שני הפקולטה לרפואה אונ' ת"א</p>
+              <p className="text-sm text-gray-300">בוגר תואר שני<br />הפקולטה לרפואה אונ' ת"א</p>
             </div>
             
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-              <h3 className="text-base font-bold text-white mb-2">10 שנות ניסיון כמאמן</h3>
-              <p className="text-sm text-gray-300">ניסיון רב ומוכח בתחום האימון האישי</p>
+              <h3 className="text-base font-bold text-white mb-2">10 שנות ניסיון</h3>
+              <p className="text-sm text-gray-300">ניסיון רב ומוכח בתחום האימון וליווי תהליכים</p>
             </div>
             
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
@@ -184,8 +184,8 @@ const AboutUs: React.FC = () => {
             </div>
             
             <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-              <h3 className="text-base font-bold text-white mb-2">הסמכה מקצועית</h3>
-              <p className="text-sm text-gray-300">פעילות גופנית לאוכלוסייה ייחודית</p>
+              <h3 className="text-base font-bold text-white mb-2">הסמכות מקצועיות</h3>
+              <p className="text-sm text-gray-300">פעילות גופנית לאוכלוסייה ייחודית - תזונת ספורט</p>
             </div>
           </div>
 
@@ -244,7 +244,7 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="bg-[#252525] pb-12">
+      <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
             מה אומרים עלינו?
@@ -303,7 +303,7 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Final CTA Section */}
-      <section className="bg-[#252525] pb-12">
+      <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
             תצטרפו אלינו
@@ -343,7 +343,7 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 py-8">
+      <footer className="bg-[#1a1a1a] py-8">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-gray-400">
             © 2026 BEAST Training. All rights reserved.
