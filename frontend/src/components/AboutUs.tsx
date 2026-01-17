@@ -86,7 +86,7 @@ const AboutUs: React.FC = () => {
       <section className="relative bg-[#1a1a1a] py-6">
         <div className="max-w-6xl mx-auto px-6">
           {/* Logo - Centered & Larger */}
-          <div className="text-center mb-6">
+          <div className="text-center mb-3">
             <img 
               src="/header-logo.svg" 
               alt="BEAST Logo" 
@@ -108,7 +108,16 @@ const AboutUs: React.FC = () => {
         </div>
 
         <div className="max-w-6xl mx-auto px-6">
-          {/* Trainer Photo - Below Button */}
+          {/* Goal Quote - Above Photo */}
+          <div className="max-w-2xl mx-auto mb-6">
+            <div className="p-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl">
+              <p className="text-white text-lg leading-relaxed">
+                "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
+              </p>
+            </div>
+          </div>
+
+          {/* Trainer Photo - Below Quote */}
           <div className="max-w-xs mx-auto">
             <img 
               src="/trainer.jpg" 
@@ -168,12 +177,6 @@ const AboutUs: React.FC = () => {
               </p>
               <p className="text-gray-300 leading-relaxed">
                 בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
-              </p>
-            </div>
-
-            <div className="p-8 bg-[#2a2a2a]">
-              <p className="text-white text-lg leading-relaxed">
-                "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
               </p>
             </div>
 
