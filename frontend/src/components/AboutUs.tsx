@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { MapPin, Instagram, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { MapPin, Instagram, ChevronDown, ChevronUp } from 'lucide-react'
 
 // WhatsApp Logo Component
 const WhatsAppLogo = ({ className }: { className?: string }) => (
@@ -81,256 +81,180 @@ const AboutUs: React.FC = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-dark-bg via-dark-card to-dark-bg">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-dark-bg via-dark-card/30 to-dark-bg">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
-          <div className="text-center">
-            {/* Logo and Photo - Centered Together */}
-            <div className="flex flex-col items-center gap-4 sm:gap-6 mb-6 sm:mb-8 animate-fade-in">
-              {/* Logo - Large */}
-              <div>
-                <img 
-                  src="/header-logo.svg" 
-                  alt="BEAST Logo" 
-                  className="w-96 sm:w-[600px] lg:w-[700px] h-auto mx-auto"
-                />
-              </div>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section - Clean & Minimal */}
+      <section className="relative bg-gradient-to-b from-gray-50 to-white py-16 md:py-24">
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Logo */}
+          <div className="text-center mb-12">
+            <img 
+              src="/header-logo.svg" 
+              alt="BEAST Logo" 
+              className="w-64 md:w-96 h-auto mx-auto mb-8"
+            />
+          </div>
 
-              {/* Trainer Photo - Elegant Integration */}
-              <div className="relative inline-block">
-                {/* Decorative elements */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-3xl blur-2xl"></div>
-                
-                {/* Photo */}
-                <div className="relative">
-                  <img 
-                    src="/trainer.jpg" 
-                    alt="שלומי - המאמן הראשי" 
-                    className="relative w-80 sm:w-96 lg:w-[450px] h-auto mx-auto rounded-2xl shadow-[0_20px_60px_rgba(0,255,255,0.15)] border border-cyan-500/20"
-                  />
-                  {/* Subtle overlay gradient */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-dark-bg/40 to-transparent pointer-events-none"></div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Main CTA Text */}
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 animate-fade-in px-4">
-              רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
-            </h2>
-            
-            {/* CTA Buttons - Square Icons Only */}
-            <div className="flex gap-3 justify-center animate-fade-in">
-              <a
-                href="https://wa.me/972548151103"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl transition-all shadow-lg"
-                aria-label="צור קשר בוואטסאפ"
-              >
-                <WhatsAppLogo className="w-7 h-7" />
-              </a>
-              <a
-                href="https://www.instagram.com/shlomi_konfino/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all shadow-lg"
-                aria-label="עקבו באינסטגרם"
-              >
-                <Instagram className="w-7 h-7" />
-              </a>
-              <a
-                href="https://share.google/VbA2nUfw3peHiUarh"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-14 h-14 bg-white hover:bg-gray-100 text-gray-800 rounded-xl transition-all shadow-lg"
-                aria-label="עלינו בגוגל"
-              >
-                <GoogleLogo className="w-7 h-7" />
-              </a>
-            </div>
+          {/* Trainer Photo */}
+          <div className="max-w-md mx-auto mb-12">
+            <img 
+              src="/trainer.jpg" 
+              alt="שלומי קונפינו - המאמן" 
+              className="w-full h-auto rounded-2xl shadow-lg"
+            />
+          </div>
+
+          {/* Hero Title */}
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 text-center mb-8 leading-tight">
+            רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
+          </h1>
+
+          {/* CTA Buttons */}
+          <div className="flex gap-4 justify-center">
+            <a
+              href="https://wa.me/972548151103"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full transition-all shadow-md hover:shadow-lg"
+              aria-label="צור קשר בוואטסאפ"
+            >
+              <WhatsAppLogo className="w-6 h-6" />
+            </a>
+            <a
+              href="https://www.instagram.com/shlomi_konfino/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full transition-all shadow-md hover:shadow-lg"
+              aria-label="עקבו באינסטגרם"
+            >
+              <Instagram className="w-6 h-6" />
+            </a>
+            <a
+              href="https://share.google/VbA2nUfw3peHiUarh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 rounded-full transition-all shadow-md hover:shadow-lg border-2 border-gray-200"
+              aria-label="עלינו בגוגל"
+            >
+              <GoogleLogo className="w-6 h-6" />
+            </a>
           </div>
         </div>
       </section>
 
-      {/* All You Need Section */}
-      <section className="py-16 bg-dark-card/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+      {/* What You Get Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16">
             כל מה שמתאמן צריך תחת קורת גג אחת
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-cyan-500/20">
-              <CheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">תכנית אימון מותאמת אישית</h3>
-                <p className="text-gray-400">למטרות שלך, ליכולות שלך ולאורח החיים שלך</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              { title: "תכנית אימון מותאמת אישית", desc: "למטרות שלך, ליכולות שלך ולאורח החיים שלך" },
+              { title: "נוכחות מאמן מוסמך", desc: "ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת" },
+              { title: "מעקב אובייקטיבי", desc: "אפליקציה המרכזת את הכל ועושה סדר, מראה לכם כמה התקדמתם בתהליך" },
+              { title: "זמינות מרחוק", desc: "זמינות ומעטפת גם מחוץ לאימון להצלחה בתהליך" },
+              { title: "ליווי תזונתי", desc: "תזונה תומכת אימון, מטרה וביצועים" },
+              { title: "גמישות מלאה", desc: "תכנית האימון תשתנה בהתאם לשינויים בחייכם כך שתמיד תוכלו להתמיד" },
+              { title: "חלל אינטימי ומקצועי", desc: "ציוד מקצועי ואווירה ביתית" },
+              { title: "תוצאות מוכחות", desc: "עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם" }
+            ].map((item, index) => (
+              <div key={index} className="p-6 border-l-4 border-cyan-400 bg-gray-50 hover:bg-gray-100 transition-colors">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.desc}</p>
               </div>
-            </div>
-
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-purple-500/20">
-              <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">נוכחות מאמן מוסמך</h3>
-                <p className="text-gray-400">ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-green-500/20">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">מעקב אובייקטיבי</h3>
-                <p className="text-gray-400">אפליקציה המרכזת את הכל ועושה סדר, מראה לכם כמה התקדמתם בתהליך</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-blue-500/20">
-              <CheckCircle className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">זמינות מרחוק</h3>
-                <p className="text-gray-400">זמינות ומעטפת גם מחוץ לאימון להצלחה בתהליך</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-orange-500/20">
-              <CheckCircle className="w-6 h-6 text-orange-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">ליווי תזונתי</h3>
-                <p className="text-gray-400">תזונה תומכת אימון, מטרה וביצועים</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-pink-500/20">
-              <CheckCircle className="w-6 h-6 text-pink-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">גמישות מלאה</h3>
-                <p className="text-gray-400">תכנית האימון תשתנה בהתאם לשינויים בחייכם כך שתמיד תוכלו להתמיד</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-purple-500/20">
-              <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">חלל אינטימי ומקצועי</h3>
-                <p className="text-gray-400">ציוד מקצועי ואווירה ביתית</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-yellow-500/20">
-              <CheckCircle className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2">תוצאות מוכחות</h3>
-                <p className="text-gray-400">עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* About Shlomi Section */}
-      <section className="py-16 bg-dark-card/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16">
             הכירו את שלומי קונפינו
           </h2>
           
-          <div className="grid grid-cols-1 gap-6">
-            {/* 1. Academic Credentials - All Together */}
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-cyan-500/20">
-              <CheckCircle className="w-6 h-6 text-cyan-400 flex-shrink-0 mt-1" />
-              <div className="space-y-2">
-                <p className="text-white text-lg font-bold">
-                  פיזיולוג מאמץ בוגר תואר שני בפקולטה לרפואה באוניברסיטת תל אביב
-                </p>
-                <p className="text-white text-lg font-bold">
-                  10 שנות ניסיון כמאמן
-                </p>
-                <p className="text-white text-lg font-bold">
-                  בוגר תואר ראשון בחינוך גופני עם הסמכה לאוכלוסייה ייחודית
-                </p>
+          <div className="space-y-8">
+            <div className="p-8 bg-white border-l-4 border-cyan-400">
+              <div className="space-y-3 text-gray-900 text-lg font-semibold">
+                <p>פיזיולוג מאמץ בוגר תואר שני בפקולטה לרפואה באוניברסיטת תל אביב</p>
+                <p>10 שנות ניסיון כמאמן</p>
+                <p>בוגר תואר ראשון בחינוך גופני עם הסמכה לאוכלוסייה ייחודית</p>
               </div>
             </div>
             
-            {/* 2. Philosophy & Goal - Combined */}
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-purple-500/20">
-              <CheckCircle className="w-6 h-6 text-purple-400 flex-shrink-0 mt-1" />
-              <div className="space-y-4">
-                <p className="text-white text-lg leading-relaxed">
-                  "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
-                </p>
-                <p className="text-gray-400 leading-relaxed">
-                  בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
-                </p>
-                <p className="text-white text-lg leading-relaxed">
-                  "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
-                </p>
-              </div>
+            <div className="p-8 bg-white">
+              <p className="text-gray-700 text-lg leading-relaxed mb-4">
+                "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
+              </p>
             </div>
 
-            {/* 3. Invitation */}
-            <div className="flex items-start gap-4 bg-dark-hover/50 rounded-xl p-6 border border-green-500/20">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
-              <div>
-                <p className="text-white text-xl font-bold leading-relaxed">
-                  אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
-                </p>
-              </div>
+            <div className="p-8 bg-white">
+              <p className="text-gray-700 text-lg leading-relaxed">
+                "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
+              </p>
+            </div>
+
+            <div className="p-8 bg-cyan-50 border-2 border-cyan-400 text-center">
+              <p className="text-gray-900 text-xl font-bold leading-relaxed">
+                אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Location Section */}
-      <section className="py-16 bg-dark-card/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              המיקום שלנו
-            </h2>
-            <div className="flex items-center justify-center gap-3 text-xl text-gray-300 mb-8">
-              <MapPin className="w-6 h-6 text-cyan-400" />
-              <span>קיבוץ מעברות, עמק חפר</span>
-            </div>
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            המיקום שלנו
+          </h2>
+          <div className="flex items-center justify-center gap-2 text-xl text-gray-600 mb-8">
+            <MapPin className="w-6 h-6 text-cyan-400" />
+            <span>קיבוץ מעברות, עמק חפר</span>
+          </div>
 
-            {/* Navigation Icons */}
-            <div className="flex gap-4 justify-center">
-              <a
-                href="https://waze.com/ul?q=קיבוץ מעברות"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-16 h-16 bg-[#33CCFF] hover:bg-[#2BB8E8] text-white rounded-xl transition-all shadow-lg"
-                aria-label="נווט עם Waze"
-              >
-                <WazeLogo className="w-8 h-8" />
-              </a>
-              <a
-                href="https://maps.google.com/?q=קיבוץ מעברות"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-16 h-16 bg-white hover:bg-gray-100 rounded-xl transition-all shadow-lg"
-                aria-label="נווט עם Google Maps"
-              >
-                <GoogleMapsLogo className="w-8 h-8" />
-              </a>
-            </div>
+          {/* Navigation Icons */}
+          <div className="flex gap-4 justify-center">
+            <a
+              href="https://waze.com/ul?q=קיבוץ מעברות"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-[#33CCFF] hover:bg-[#2BB8E8] text-white rounded-full transition-all shadow-md hover:shadow-lg"
+              aria-label="נווט עם Waze"
+            >
+              <WazeLogo className="w-6 h-6" />
+            </a>
+            <a
+              href="https://maps.google.com/?q=קיבוץ מעברות"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-white hover:bg-gray-50 rounded-full transition-all shadow-md hover:shadow-lg border-2 border-gray-200"
+              aria-label="נווט עם Google Maps"
+            >
+              <GoogleMapsLogo className="w-6 h-6" />
+            </a>
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
             מה אומרים עלינו?
           </h2>
-          <p className="text-xl text-gray-300 text-center mb-12">
+          <p className="text-xl text-gray-600 text-center mb-12">
             ביקורות מתאמנים
           </p>
           
-          <div className="text-center py-12">
-            <div className="bg-dark-hover/50 border border-cyan-500/20 rounded-xl p-12">
+          <div className="text-center">
+            <div className="bg-white border-2 border-gray-200 rounded-xl p-16">
               <p className="text-2xl font-bold text-cyan-400">
                 סרטון בקרוב
               </p>
@@ -340,9 +264,9 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-dark-card/50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16">
             שאלות נפוצות
           </h2>
           
@@ -350,13 +274,13 @@ const AboutUs: React.FC = () => {
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="bg-dark-hover border border-cyan-500/20 rounded-xl overflow-hidden hover:border-cyan-500/40 transition-all"
+                className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:border-cyan-400 transition-all"
               >
                 <button
                   onClick={() => toggleFAQ(index)}
                   className="w-full flex items-center justify-between p-6 text-right"
                 >
-                  <div className="text-lg font-bold text-white pr-2">
+                  <div className="text-lg font-bold text-gray-900 pr-2">
                     {faq.question}
                   </div>
                   {openFAQ === index ? (
@@ -366,8 +290,8 @@ const AboutUs: React.FC = () => {
                   )}
                 </button>
                 {openFAQ === index && (
-                  <div className="px-6 pb-6">
-                    <p className="text-gray-300 text-lg leading-relaxed">
+                  <div className="px-6 pb-6 border-t-2 border-gray-100 pt-4">
+                    <p className="text-gray-700 text-lg leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
@@ -379,51 +303,48 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-16 bg-dark-card/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            {/* CTA Text */}
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 animate-fade-in px-4">
-              רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
-            </h2>
-            
-            {/* CTA Buttons - Square Icons Only */}
-            <div className="flex gap-3 justify-center animate-fade-in">
-              <a
-                href="https://wa.me/972548151103"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl transition-all shadow-lg"
-                aria-label="צור קשר בוואטסאפ"
-              >
-                <WhatsAppLogo className="w-7 h-7" />
-              </a>
-              <a
-                href="https://www.instagram.com/shlomi_konfino/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all shadow-lg"
-                aria-label="עקבו באינסטגרם"
-              >
-                <Instagram className="w-7 h-7" />
-              </a>
-              <a
-                href="https://share.google/VbA2nUfw3peHiUarh"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-14 h-14 bg-white hover:bg-gray-100 text-gray-800 rounded-xl transition-all shadow-lg"
-                aria-label="עלינו בגוגל"
-              >
-                <GoogleLogo className="w-7 h-7" />
-              </a>
-            </div>
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-8 leading-tight">
+            רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
+          </h2>
+          
+          {/* CTA Buttons */}
+          <div className="flex gap-4 justify-center">
+            <a
+              href="https://wa.me/972548151103"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full transition-all shadow-md hover:shadow-lg"
+              aria-label="צור קשר בוואטסאפ"
+            >
+              <WhatsAppLogo className="w-6 h-6" />
+            </a>
+            <a
+              href="https://www.instagram.com/shlomi_konfino/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full transition-all shadow-md hover:shadow-lg"
+              aria-label="עקבו באינסטגרם"
+            >
+              <Instagram className="w-6 h-6" />
+            </a>
+            <a
+              href="https://share.google/VbA2nUfw3peHiUarh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-14 h-14 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 rounded-full transition-all shadow-md hover:shadow-lg border-2 border-gray-200"
+              aria-label="עלינו בגוגל"
+            >
+              <GoogleLogo className="w-6 h-6" />
+            </a>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-dark-card border-t border-dark-border py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <footer className="bg-gray-900 py-8">
+        <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-gray-400">
             © 2026 BEAST Training. All rights reserved.
           </p>
