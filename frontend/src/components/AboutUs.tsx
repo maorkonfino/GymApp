@@ -129,13 +129,13 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* What You Get Section */}
-      <section className="bg-[#1a1a1a]">
+      <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-6">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
               כל מה שמתאמן צריך
             </h2>
-            <h2 className="text-2xl sm:text-3xl font-bold text-cyan-400 leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-cyan-400 leading-tight">
               תחת קורת גג אחת
             </h2>
           </div>
