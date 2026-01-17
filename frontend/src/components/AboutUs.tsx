@@ -215,21 +215,14 @@ const AboutUs: React.FC = () => {
             </p>
           </div>
 
-          {/* YouTube Video */}
+          {/* Video Placeholder */}
           <div className="max-w-lg mx-auto mb-6">
-            <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
-              <iframe
-                className="absolute top-0 left-0 w-full h-full rounded-xl shadow-lg"
-                src="https://www.youtube.com/embed/Sl9eKv4WQ1A"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+            <div className="py-12 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl">
+              <p className="text-white text-2xl font-bold">סרטון בקרוב</p>
             </div>
           </div>
 
-          {/* CTA Button Below Video */}
+          {/* CTA Button Below Video Placeholder */}
           <div className="mb-6">
             <a
               href="https://wa.me/972548151103"
@@ -238,6 +231,72 @@ const AboutUs: React.FC = () => {
               className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
             >
               אני רוצה להיות BEAST!
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="bg-[#1a1a1a] pb-12">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
+            מה אומרים עלינו
+          </h2>
+          
+          {/* Google Reviews Container */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            {/* Review 1 */}
+            <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-700">
+              <div className="flex items-center mb-4">
+                <div className="flex text-yellow-400 text-xl">
+                  ★★★★★
+                </div>
+              </div>
+              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                "מאמן מעולה! שלומי ממש יודע את העבודה שלו, מקצועי ומסור. הרגשתי התקדמות אמיתית תוך זמן קצר."
+              </p>
+              <p className="text-gray-400 text-xs font-semibold">- לקוח מרוצה</p>
+            </div>
+
+            {/* Review 2 */}
+            <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-700">
+              <div className="flex items-center mb-4">
+                <div className="flex text-yellow-400 text-xl">
+                  ★★★★★
+                </div>
+              </div>
+              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                "חדר כושר נעים ואינטימי, ציוד מעולה ויחס אישי שלא מקבלים בשום מקום. ממליץ בחום!"
+              </p>
+              <p className="text-gray-400 text-xs font-semibold">- לקוח מרוצה</p>
+            </div>
+
+            {/* Review 3 */}
+            <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-700">
+              <div className="flex items-center mb-4">
+                <div className="flex text-yellow-400 text-xl">
+                  ★★★★★
+                </div>
+              </div>
+              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                "הגעתי בלי ניסיון בכלל באימוני כוח, שלומי לימד אותי הכל מההתחלה בסבלנות ובמקצועיות."
+              </p>
+              <p className="text-gray-400 text-xs font-semibold">- לקוח מרוצה</p>
+            </div>
+          </div>
+
+          {/* Google Reviews Link */}
+          <div className="text-center">
+            <a
+              href="https://share.google.com/VbA2nUfw3peHiUarh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+            >
+              <span className="text-lg font-semibold">ראו עוד ביקורות בגוגל</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </a>
           </div>
         </div>
@@ -274,26 +333,6 @@ const AboutUs: React.FC = () => {
             >
               <GoogleMapsLogo className="w-6 h-6" />
             </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="bg-[#1a1a1a] pb-12">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
-            מה אומרים עלינו?
-          </h2>
-          <p className="text-xl text-gray-300 text-center mb-6">
-            ביקורות מתאמנים
-          </p>
-          
-          <div className="text-center">
-            <div className="bg-[#2a2a2a] border-2 border-cyan-400/30 rounded-xl p-16">
-              <p className="text-2xl font-bold text-cyan-400">
-                סרטון בקרוב
-              </p>
-            </div>
           </div>
         </div>
       </section>
