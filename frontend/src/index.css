@@ -163,3 +163,11 @@ table tbody td[rowspan="5"] {
   max-height: 200px !important;
   min-height: 200px !important;
 }
+
+/* Hide Elfsight widget default title and subtitle */
+.elfsight-widget-wrapper .eapps-google-reviews-header-title,
+.elfsight-widget-wrapper .eapps-google-reviews-header-subtitle,
+.eapps-google-reviews-header-title,
+.eapps-google-reviews-header-subtitle {
+  display: none !important;
+}

@@ -254,7 +254,9 @@ const AboutUs: React.FC = () => {
           </h2>
 
           {/* Elfsight Google Reviews Widget */}
-          <div className="elfsight-app-352e8cfb-3e65-4fa9-ba94-0d6c292a3335" data-elfsight-app-lazy></div>
+          <div className="elfsight-widget-wrapper">
+            <div className="elfsight-app-352e8cfb-3e65-4fa9-ba94-0d6c292a3335" data-elfsight-app-lazy></div>
+          </div>
         </div>
       </section>
 
