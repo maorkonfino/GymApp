@@ -222,6 +222,18 @@ const AboutUs: React.FC = () => {
               </div>
             ))}
           </div>
+
+          {/* Online Training CTA Button */}
+          <div className="mt-8">
+            <a
+              href="https://wa.me/972548151103?text=שלום,%20אני%20מעוניין%20באימונים%20אונליין"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-lg py-3 px-6 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
+            >
+              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline
+            </a>
+          </div>
         </div>
       </section>
 
