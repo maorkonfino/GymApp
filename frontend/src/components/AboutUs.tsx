@@ -219,7 +219,7 @@ const AboutUs: React.FC = () => {
               rel="noopener noreferrer"
               className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
             >
-              אני רוצה להיות BEAST!
+              אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם
             </a>
           </div>
         </div>
