@@ -165,9 +165,9 @@ const AboutUs: React.FC = () => {
               href="https://wa.me/972548151103"
               target="_blank"
               rel="noopener noreferrer"
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
+              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200"
             >
-              אני רוצה להיות BEAST!
+              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST!
             </a>
           </div>
 
@@ -232,9 +232,9 @@ const AboutUs: React.FC = () => {
               href="https://wa.me/972548151103"
               target="_blank"
               rel="noopener noreferrer"
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
+              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200"
             >
-              אני רוצה להיות BEAST!
+              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST!
             </a>
           </div>
 
@@ -359,7 +359,7 @@ const AboutUs: React.FC = () => {
           </div>
 
           {/* Navigation Icons */}
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-4 justify-center mb-4">
             <a
               href="https://waze.com/ul?q=קיבוץ מעברות"
               target="_blank"
@@ -379,14 +379,9 @@ const AboutUs: React.FC = () => {
               <GoogleMapsLogo className="w-6 h-6" />
             </a>
           </div>
-        </div>
-      </section>
 
-      {/* Contact Form Section */}
-      <section className="bg-[#1a1a1a] pb-12">
-        <div className="max-w-2xl mx-auto px-6">
-          {/* Social Buttons */}
-          <div className="flex gap-4 justify-center mb-8">
+          {/* Social Icons */}
+          <div className="flex gap-4 justify-center">
             <a
               href="https://wa.me/972548151103"
               target="_blank"
@@ -415,7 +410,12 @@ const AboutUs: React.FC = () => {
               <GoogleLogo className="w-6 h-6" />
             </a>
           </div>
+        </div>
+      </section>
 
+      {/* Contact Form Section */}
+      <section className="bg-[#1a1a1a] pb-12">
+        <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-8">
             תשאיר/י פרטים כאן ואחזור אלייך בהקדם!
           </h2>
@@ -471,9 +471,9 @@ const AboutUs: React.FC = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-3 px-8 text-center transition-all shadow-lg rounded-full"
+              className="w-full bg-white hover:bg-gray-100 text-black font-bold text-xl py-3 px-8 text-center transition-all shadow-lg rounded-full border-2 border-gray-200"
             >
-              אני רוצה להיות BEAST!
+              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST!
             </button>
           </form>
         </div>
