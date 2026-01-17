@@ -178,7 +178,7 @@ const AboutUs: React.FC = () => {
             </button>
             <button
               onClick={scrollToContactForm}
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full"
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-base py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full whitespace-nowrap"
             >
               גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline
             </button>
@@ -253,7 +253,7 @@ const AboutUs: React.FC = () => {
             </button>
             <button
               onClick={scrollToContactForm}
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full"
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-base py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full whitespace-nowrap"
             >
               גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline
             </button>
