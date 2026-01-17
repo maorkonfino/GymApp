@@ -81,9 +81,9 @@ const AboutUs: React.FC = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#1a1a1a]">
       {/* Hero Section - Clean & Minimal */}
-      <section className="relative bg-gradient-to-b from-gray-50 to-white py-16 md:py-24">
+      <section className="relative bg-gradient-to-b from-[#1a1a1a] to-[#1a1a1a] py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-6">
           {/* Logo */}
           <div className="text-center mb-12">
@@ -104,7 +104,7 @@ const AboutUs: React.FC = () => {
           </div>
 
           {/* Hero Title */}
-          <h1 className="text-3xl md:text-5xl font-bold text-gray-900 text-center mb-8 leading-tight">
+          <h1 className="text-3xl md:text-5xl font-bold text-white text-center mb-8 leading-tight">
             רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
           </h1>
 
@@ -142,9 +142,9 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* What You Get Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-16">
             כל מה שמתאמן צריך תחת קורת גג אחת
           </h2>
           
@@ -159,9 +159,9 @@ const AboutUs: React.FC = () => {
               { title: "חלל אינטימי ומקצועי", desc: "ציוד מקצועי ואווירה ביתית" },
               { title: "תוצאות מוכחות", desc: "עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם" }
             ].map((item, index) => (
-              <div key={index} className="p-6 border-l-4 border-cyan-400 bg-gray-50 hover:bg-gray-100 transition-colors">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.desc}</p>
+              <div key={index} className="p-6 border-l-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
+                <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-gray-300">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -169,38 +169,38 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* About Shlomi Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-[#252525]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-16">
             הכירו את שלומי קונפינו
           </h2>
           
           <div className="space-y-8">
-            <div className="p-8 bg-white border-l-4 border-cyan-400">
-              <div className="space-y-3 text-gray-900 text-lg font-semibold">
+            <div className="p-8 bg-[#2a2a2a] border-l-4 border-cyan-400">
+              <div className="space-y-3 text-white text-lg font-semibold">
                 <p>פיזיולוג מאמץ בוגר תואר שני בפקולטה לרפואה באוניברסיטת תל אביב</p>
                 <p>10 שנות ניסיון כמאמן</p>
                 <p>בוגר תואר ראשון בחינוך גופני עם הסמכה לאוכלוסייה ייחודית</p>
               </div>
             </div>
             
-            <div className="p-8 bg-white">
-              <p className="text-gray-700 text-lg leading-relaxed mb-4">
+            <div className="p-8 bg-[#2a2a2a]">
+              <p className="text-white text-lg leading-relaxed mb-4">
                 "אני מאמין בתהליך אימון מבוסס מדע וניסיון המותאם לאורח החיים האישי שלך"
               </p>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-300 leading-relaxed">
                 בין אם זה חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי וכל זה בהנאה מהתהליך.
               </p>
             </div>
 
-            <div className="p-8 bg-white">
-              <p className="text-gray-700 text-lg leading-relaxed">
+            <div className="p-8 bg-[#2a2a2a]">
+              <p className="text-white text-lg leading-relaxed">
                 "המטרה שלי היא שהמתאמנים שלי יתמידו, יהנו מהתהליך, יחוו תוצאות בריאותיות ויקבלו כלים לכל החיים"
               </p>
             </div>
 
-            <div className="p-8 bg-cyan-50 border-2 border-cyan-400 text-center">
-              <p className="text-gray-900 text-xl font-bold leading-relaxed">
+            <div className="p-8 bg-[#2a2a2a] border-2 border-cyan-400 text-center">
+              <p className="text-white text-xl font-bold leading-relaxed">
                 אני מזמין אתכם אל הבית שלי, לעשות את הדבר הכי טוב שתוכלו לעשות למענכם.
               </p>
             </div>
@@ -209,12 +209,12 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Location Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             המיקום שלנו
           </h2>
-          <div className="flex items-center justify-center gap-2 text-xl text-gray-600 mb-8">
+          <div className="flex items-center justify-center gap-2 text-xl text-gray-300 mb-8">
             <MapPin className="w-6 h-6 text-cyan-400" />
             <span>קיבוץ מעברות, עמק חפר</span>
           </div>
@@ -244,17 +244,17 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-[#252525]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
             מה אומרים עלינו?
           </h2>
-          <p className="text-xl text-gray-600 text-center mb-12">
+          <p className="text-xl text-gray-300 text-center mb-12">
             ביקורות מתאמנים
           </p>
           
           <div className="text-center">
-            <div className="bg-white border-2 border-gray-200 rounded-xl p-16">
+            <div className="bg-[#2a2a2a] border-2 border-cyan-400/30 rounded-xl p-16">
               <p className="text-2xl font-bold text-cyan-400">
                 סרטון בקרוב
               </p>
@@ -264,9 +264,9 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[#1a1a1a]">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-16">
             שאלות נפוצות
           </h2>
           
@@ -274,13 +274,13 @@ const AboutUs: React.FC = () => {
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden hover:border-cyan-400 transition-all"
+                className="bg-[#2a2a2a] border-2 border-gray-700 rounded-lg overflow-hidden hover:border-cyan-400 transition-all"
               >
                 <button
                   onClick={() => toggleFAQ(index)}
                   className="w-full flex items-center justify-between p-6 text-right"
                 >
-                  <div className="text-lg font-bold text-gray-900 pr-2">
+                  <div className="text-lg font-bold text-white pr-2">
                     {faq.question}
                   </div>
                   {openFAQ === index ? (
@@ -290,8 +290,8 @@ const AboutUs: React.FC = () => {
                   )}
                 </button>
                 {openFAQ === index && (
-                  <div className="px-6 pb-6 border-t-2 border-gray-100 pt-4">
-                    <p className="text-gray-700 text-lg leading-relaxed">
+                  <div className="px-6 pb-6 border-t-2 border-gray-700 pt-4">
+                    <p className="text-gray-300 text-lg leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
@@ -303,9 +303,9 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-[#252525]">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-8 leading-tight">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 leading-tight">
             רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
           </h2>
           
