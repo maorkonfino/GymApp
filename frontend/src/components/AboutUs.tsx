@@ -221,32 +221,13 @@ const AboutUs: React.FC = () => {
             </div>
           </div>
 
-          <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto mb-6">
+          <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
             <p className="text-white text-xl font-bold leading-relaxed mb-3">
               אני מזמין אתכם אל הבית שלי,<br />לעשות את הדבר הכי טוב שתוכלו לעשות למענכם
             </p>
             <p className="text-sm text-gray-300">
               ללא קיצוניות מיותרת, בין אם חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי, שיפור התפקוד ובניית גוף חזק ובריא
             </p>
-          </div>
-
-          {/* Video Placeholder */}
-          <div className="max-w-lg mx-auto mb-6">
-            <div className="py-12 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl">
-              <p className="text-white text-2xl font-bold">סרטון בקרוב</p>
-            </div>
-          </div>
-
-          {/* CTA Button Below Video Placeholder */}
-          <div className="mb-6">
-            <a
-              href="https://wa.me/972548151103"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
-            >
-              אני רוצה להיות BEAST!
-            </a>
           </div>
         </div>
       </section>
@@ -258,6 +239,13 @@ const AboutUs: React.FC = () => {
             מה אומרים עלינו
           </h2>
           
+          {/* Video Placeholder */}
+          <div className="max-w-lg mx-auto mb-6">
+            <div className="py-12 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl">
+              <p className="text-white text-2xl font-bold">סרטון בקרוב</p>
+            </div>
+          </div>
+
           {/* Elfsight Google Reviews Widget */}
           <div className="elfsight-app-352e8cfb-3e65-4fa9-ba94-0d6c292a3335" data-elfsight-app-lazy></div>
         </div>
