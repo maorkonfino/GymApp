@@ -206,13 +206,39 @@ const AboutUs: React.FC = () => {
             </div>
           </div>
 
-          <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
+          <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto mb-6">
             <p className="text-white text-xl font-bold leading-relaxed mb-3">
               אני מזמין אתכם אל הבית שלי,<br />לעשות את הדבר הכי טוב שתוכלו לעשות למענכם
             </p>
             <p className="text-sm text-gray-300">
               ללא קיצוניות מיותרת, בין אם חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי, שיפור התפקוד ובניית גוף חזק ובריא
             </p>
+          </div>
+
+          {/* YouTube Video */}
+          <div className="max-w-lg mx-auto mb-6">
+            <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
+              <iframe
+                className="absolute top-0 left-0 w-full h-full rounded-xl shadow-lg"
+                src="https://www.youtube.com/embed/Sl9eKv4WQ1A"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+
+          {/* CTA Button Below Video */}
+          <div className="mb-6">
+            <a
+              href="https://wa.me/972548151103"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
+            >
+              אני רוצה להיות BEAST!
+            </a>
           </div>
         </div>
       </section>
