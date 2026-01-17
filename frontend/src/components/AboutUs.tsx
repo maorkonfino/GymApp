@@ -129,22 +129,22 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* What You Get Section */}
-      <section className="py-6 bg-[#1a1a1a]">
+      <section className="py-2 bg-[#1a1a1a]">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-8">
+          <h2 className="text-lg sm:text-xl font-bold text-white text-center mb-6">
             כל מה שמתאמן צריך תחת קורת גג אחת
           </h2>
           
           <div className="grid grid-cols-2 gap-4">
             {[
               { title: "תכנית אימון מותאמת אישית", desc: "למטרות שלך, ליכולות שלך ולאורח החיים שלך" },
-              { title: "נוכחות מאמן מוסמך", desc: "ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת" },
-              { title: "מעקב אובייקטיבי", desc: "אפליקציה המרכזת את הכל ועושה סדר, מראה לכם כמה התקדמתם בתהליך" },
-              { title: "זמינות מרחוק", desc: "זמינות ומעטפת גם מחוץ לאימון להצלחה בתהליך" },
-              { title: "ליווי תזונתי", desc: "תזונה תומכת אימון, מטרה וביצועים" },
-              { title: "גמישות מלאה", desc: "תכנית האימון תשתנה בהתאם לשינויים בחייכם כך שתמיד תוכלו להתמיד" },
+              { title: "נוכחות מאמן בכל האימונים", desc: "ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת" },
               { title: "חלל אינטימי ומקצועי", desc: "ציוד מקצועי ואווירה ביתית" },
-              { title: "תוצאות מוכחות", desc: "עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם" }
+              { title: "מעקב אובייקטיבי", desc: "אפליקציה המרכזת את הכל ועושה סדר, מראה לכם כמה התקדמתם בתהליך" },
+              { title: "ליווי תזונתי", desc: "תזונה תומכת אימון, מטרה וביצועים" },
+              { title: "תוצאות מוכחות", desc: "עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם" },
+              { title: "גמישות מלאה", desc: "תכנית האימון תשתנה בהתאם לשינויים בחייכם כך שתמיד תוכלו להתמיד" },
+              { title: "זמינות מרחוק", desc: "זמינות ומעטפת גם מחוץ לאימון להצלחה בתהליך" }
             ].map((item, index) => (
               <div key={index} className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
                 <h3 className="text-base font-bold text-white mb-2">{item.title}</h3>
