@@ -129,16 +129,21 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* What You Get Section */}
-      <section className="py-2 bg-[#1a1a1a]">
+      <section className="bg-[#1a1a1a]">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-lg sm:text-xl font-bold text-white text-center mb-6">
-            כל מה שמתאמן צריך תחת קורת גג אחת
-          </h2>
+          <div className="text-center mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+              כל מה שמתאמן צריך
+            </h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-cyan-400 leading-tight">
+              תחת קורת גג אחת
+            </h2>
+          </div>
           
           <div className="grid grid-cols-2 gap-4">
             {[
               { title: "תכנית אימון מותאמת אישית", desc: "למטרות שלך, ליכולות שלך ולאורח החיים שלך" },
-              { title: "נוכחות מאמן בכל האימונים", desc: "ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת" },
+              { title: "נוכחות מאמן בכל האימון שלכם", desc: "ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת" },
               { title: "חלל אינטימי ומקצועי", desc: "ציוד מקצועי ואווירה ביתית" },
               { title: "מעקב אובייקטיבי", desc: "אפליקציה המרכזת את הכל ועושה סדר, מראה לכם כמה התקדמתם בתהליך" },
               { title: "ליווי תזונתי", desc: "תזונה תומכת אימון, מטרה וביצועים" },
