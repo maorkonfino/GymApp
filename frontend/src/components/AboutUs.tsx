@@ -82,63 +82,37 @@ const AboutUs: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#1a1a1a]">
-      {/* Hero Section - Clean & Minimal */}
-      <section className="relative bg-gradient-to-b from-[#1a1a1a] to-[#1a1a1a] py-16 md:py-24">
+      {/* Hero Header Section */}
+      <section className="relative bg-[#1a1a1a] py-6">
         <div className="max-w-6xl mx-auto px-6">
-          {/* Logo */}
-          <div className="text-center mb-12">
+          {/* Logo - Top Right */}
+          <div className="flex justify-end mb-6">
             <img 
               src="/header-logo.svg" 
               alt="BEAST Logo" 
-              className="w-64 md:w-96 h-auto mx-auto mb-8"
+              className="w-40 md:w-52 h-auto"
             />
           </div>
 
-          {/* Trainer Photo */}
-          <div className="max-w-md mx-auto mb-12">
+          {/* Trainer Photo - Smaller & Centered */}
+          <div className="max-w-xs mx-auto mb-6">
             <img 
               src="/trainer.jpg" 
               alt="שלומי קונפינו - המאמן" 
               className="w-full h-auto rounded-2xl shadow-lg"
             />
           </div>
-
-          {/* Hero Title */}
-          <h1 className="text-3xl md:text-5xl font-bold text-white text-center mb-8 leading-tight">
-            רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
-          </h1>
-
-          {/* CTA Buttons */}
-          <div className="flex gap-4 justify-center">
-            <a
-              href="https://wa.me/972548151103"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full transition-all shadow-md hover:shadow-lg"
-              aria-label="צור קשר בוואטסאפ"
-            >
-              <WhatsAppLogo className="w-6 h-6" />
-            </a>
-            <a
-              href="https://www.instagram.com/shlomi_konfino/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full transition-all shadow-md hover:shadow-lg"
-              aria-label="עקבו באינסטגרם"
-            >
-              <Instagram className="w-6 h-6" />
-            </a>
-            <a
-              href="https://share.google/VbA2nUfw3peHiUarh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 rounded-full transition-all shadow-md hover:shadow-lg border-2 border-gray-200"
-              aria-label="עלינו בגוגל"
-            >
-              <GoogleLogo className="w-6 h-6" />
-            </a>
-          </div>
         </div>
+
+        {/* Full Width CTA Button */}
+        <a
+          href="https://wa.me/972548151103"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-5 text-center transition-all shadow-lg"
+        >
+          אני רוצה להיות BE<span className="text-[#1a1a1a]">A</span>ST!
+        </a>
       </section>
 
       {/* What You Get Section */}
@@ -305,11 +279,11 @@ const AboutUs: React.FC = () => {
       {/* Final CTA Section */}
       <section className="py-20 bg-[#252525]">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 leading-tight">
-            רוצה להוציא את ה-BE<span className="text-cyan-400">A</span>ST שבך?
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 leading-tight">
+            תצטרפו אלינו
           </h2>
           
-          {/* CTA Buttons */}
+          {/* Social Buttons */}
           <div className="flex gap-4 justify-center">
             <a
               href="https://wa.me/972548151103"
