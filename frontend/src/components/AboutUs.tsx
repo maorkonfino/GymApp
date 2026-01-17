@@ -239,10 +239,17 @@ const AboutUs: React.FC = () => {
             מה אומרים עלינו
           </h2>
           
-          {/* Video Placeholder */}
-          <div className="max-w-lg mx-auto mb-6">
-            <div className="py-12 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl">
-              <p className="text-white text-2xl font-bold">סרטון בקרוב</p>
+          {/* YouTube Shorts Video */}
+          <div className="max-w-lg mx-auto mb-8">
+            <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
+              <iframe
+                className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
+                src="https://www.youtube.com/embed/Sl9eKv4wq1A"
+                title="Be The Beast"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
           </div>
 
