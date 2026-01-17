@@ -81,6 +81,13 @@ const AboutUs: React.FC = () => {
     setOpenFAQ(openFAQ === index ? null : index)
   }
 
+  const scrollToContactForm = () => {
+    const formElement = document.getElementById('contact-form')
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -161,16 +168,20 @@ const AboutUs: React.FC = () => {
         </div>
 
         <div className="max-w-6xl mx-auto px-6">
-          {/* Rounded CTA Button - Wide */}
-          <div className="mb-6">
-            <a
-              href="https://wa.me/972548151103"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200"
+          {/* CTA Buttons */}
+          <div className="mb-6 space-y-3">
+            <button
+              onClick={scrollToContactForm}
+              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200 w-full"
             >
               אני רוצה להיות BE<span className="text-cyan-400">A</span>ST!
-            </a>
+            </button>
+            <button
+              onClick={scrollToContactForm}
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full"
+            >
+              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline
+            </button>
           </div>
 
           {/* Goal Quote - Above Photo - Wide */}
@@ -226,33 +237,26 @@ const AboutUs: React.FC = () => {
             ))}
           </div>
 
-          {/* Online Training CTA Button */}
-          <div className="mt-8">
-            <a
-              href="https://wa.me/972548151103?text=שלום,%20אני%20מעוניין%20באימונים%20אונליין"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-sm py-2 px-6 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto"
-            >
-              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline
-            </a>
-          </div>
         </div>
       </section>
 
       {/* About Shlomi Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
-          {/* CTA Button Above Title */}
-          <div className="mb-6">
-            <a
-              href="https://wa.me/972548151103"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200"
+          {/* CTA Buttons Above Title */}
+          <div className="mb-6 space-y-3">
+            <button
+              onClick={scrollToContactForm}
+              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200 w-full"
             >
               אני רוצה להיות BE<span className="text-cyan-400">A</span>ST!
-            </a>
+            </button>
+            <button
+              onClick={scrollToContactForm}
+              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full"
+            >
+              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline
+            </button>
           </div>
 
           <div className="text-center mb-6">
@@ -474,7 +478,7 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* Contact Form Section */}
-      <section className="bg-[#1a1a1a] pb-12">
+      <section id="contact-form" className="bg-[#1a1a1a] pb-12">
         <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-8">
             תשאיר/י פרטים כאן ואחזור אלייך בהקדם!
