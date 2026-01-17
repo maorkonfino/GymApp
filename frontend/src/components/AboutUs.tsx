@@ -36,6 +36,11 @@ const GoogleMapsLogo = ({ className }: { className?: string }) => (
 
 const AboutUs: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phone: '',
+    notes: ''
+  })
 
   // Load Elfsight script for Google Reviews
   useEffect(() => {
@@ -71,6 +76,32 @@ const AboutUs: React.FC = () => {
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Build WhatsApp message
+    let message = '🔥 *פניה חדשה מאתר BEAST!* 🔥\n\n'
+    message += `👤 *שם מלא:* ${formData.fullName}\n`
+    message += `📱 *טלפון:* ${formData.phone}\n`
+    if (formData.notes) {
+      message += `📝 *הערות:* ${formData.notes}\n`
+    }
+    message += `\n✨ אני רוצה להיות BEAST! ✨`
+    
+    // Encode message for URL
+    const encodedMessage = encodeURIComponent(message)
+    
+    // Open WhatsApp with message
+    window.open(`https://wa.me/972548151103?text=${encodedMessage}`, '_blank')
+    
+    // Reset form
+    setFormData({
+      fullName: '',
+      phone: '',
+      notes: ''
+    })
   }
 
   const faqs = [
@@ -351,18 +382,75 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
-      {/* Final CTA Section */}
+      {/* Contact Form Section */}
+      <section className="bg-[#1a1a1a] pb-12">
+        <div className="max-w-2xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-8">
+            תשאיר/י פרטים כאן ואחזור אלייך בהקדם!
+          </h2>
+          
+          <form onSubmit={handleSubmit} className="bg-[#2a2a2a] border-2 border-cyan-400 rounded-xl p-6 md:p-8">
+            {/* Full Name */}
+            <div className="mb-6">
+              <label htmlFor="fullName" className="block text-white font-bold mb-2 text-right">
+                שם מלא *
+              </label>
+              <input
+                type="text"
+                id="fullName"
+                required
+                value={formData.fullName}
+                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                className="w-full px-4 py-3 bg-[#1a1a1a] text-white border-2 border-gray-600 rounded-lg focus:border-cyan-400 focus:outline-none transition-colors"
+                placeholder="הכנס שם מלא"
+              />
+            </div>
+
+            {/* Phone */}
+            <div className="mb-6">
+              <label htmlFor="phone" className="block text-white font-bold mb-2 text-right">
+                טלפון נייד *
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                required
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className="w-full px-4 py-3 bg-[#1a1a1a] text-white border-2 border-gray-600 rounded-lg focus:border-cyan-400 focus:outline-none transition-colors"
+                placeholder="05X-XXXXXXX"
+              />
+            </div>
+
+            {/* Notes */}
+            <div className="mb-6">
+              <label htmlFor="notes" className="block text-white font-bold mb-2 text-right">
+                הערות (אופציונלי)
+              </label>
+              <textarea
+                id="notes"
+                rows={4}
+                value={formData.notes}
+                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                className="w-full px-4 py-3 bg-[#1a1a1a] text-white border-2 border-gray-600 rounded-lg focus:border-cyan-400 focus:outline-none transition-colors resize-none"
+                placeholder="ספר/י לנו קצת על עצמך, המטרות שלך, או כל שאלה..."
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-3 px-8 text-center transition-all shadow-lg rounded-full"
+            >
+              אני רוצה להיות BEAST!
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* Social Icons Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <a
-            href="https://wa.me/972548151103"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto mb-6"
-          >
-            אני רוצה להיות BEAST!
-          </a>
-
           {/* Social Buttons */}
           <div className="flex gap-4 justify-center">
             <a
