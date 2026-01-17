@@ -235,12 +235,8 @@ const AboutUs: React.FC = () => {
       {/* Testimonials Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
-            מה אומרים עלינו
-          </h2>
-          
           {/* YouTube Shorts Video */}
-          <div className="max-w-lg mx-auto mb-8">
+          <div className="max-w-xs mx-auto mb-8">
             <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
@@ -252,6 +248,10 @@ const AboutUs: React.FC = () => {
               ></iframe>
             </div>
           </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
+            מה אומרים עלינו
+          </h2>
 
           {/* Elfsight Google Reviews Widget */}
           <div className="elfsight-app-352e8cfb-3e65-4fa9-ba94-0d6c292a3335" data-elfsight-app-lazy></div>
