@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MapPin, Instagram, ChevronDown, ChevronUp } from 'lucide-react'
 
 // WhatsApp Logo Component
@@ -36,6 +36,21 @@ const GoogleMapsLogo = ({ className }: { className?: string }) => (
 
 const AboutUs: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
+
+  // Load Elfsight script for Google Reviews
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://elfsightcdn.com/platform.js'
+    script.async = true
+    document.body.appendChild(script)
+
+    return () => {
+      // Cleanup script on unmount
+      if (document.body.contains(script)) {
+        document.body.removeChild(script)
+      }
+    }
+  }, [])
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index)
@@ -243,62 +258,8 @@ const AboutUs: React.FC = () => {
             מה אומרים עלינו
           </h2>
           
-          {/* Google Reviews Container */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-            {/* Review 1 */}
-            <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-700">
-              <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400 text-xl">
-                  ★★★★★
-                </div>
-              </div>
-              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
-                "מאמן מעולה! שלומי ממש יודע את העבודה שלו, מקצועי ומסור. הרגשתי התקדמות אמיתית תוך זמן קצר."
-              </p>
-              <p className="text-gray-400 text-xs font-semibold">- לקוח מרוצה</p>
-            </div>
-
-            {/* Review 2 */}
-            <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-700">
-              <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400 text-xl">
-                  ★★★★★
-                </div>
-              </div>
-              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
-                "חדר כושר נעים ואינטימי, ציוד מעולה ויחס אישי שלא מקבלים בשום מקום. ממליץ בחום!"
-              </p>
-              <p className="text-gray-400 text-xs font-semibold">- לקוח מרוצה</p>
-            </div>
-
-            {/* Review 3 */}
-            <div className="bg-[#2a2a2a] p-6 rounded-xl border border-gray-700">
-              <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400 text-xl">
-                  ★★★★★
-                </div>
-              </div>
-              <p className="text-gray-300 text-sm mb-4 leading-relaxed">
-                "הגעתי בלי ניסיון בכלל באימוני כוח, שלומי לימד אותי הכל מההתחלה בסבלנות ובמקצועיות."
-              </p>
-              <p className="text-gray-400 text-xs font-semibold">- לקוח מרוצה</p>
-            </div>
-          </div>
-
-          {/* Google Reviews Link */}
-          <div className="text-center">
-            <a
-              href="https://share.google.com/VbA2nUfw3peHiUarh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
-            >
-              <span className="text-lg font-semibold">ראו עוד ביקורות בגוגל</span>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
-          </div>
+          {/* Elfsight Google Reviews Widget */}
+          <div className="elfsight-app-352e8cfb-3e65-4fa9-ba94-0d6c292a3335" data-elfsight-app-lazy></div>
         </div>
       </section>
 
