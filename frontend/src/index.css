@@ -168,6 +168,11 @@ table tbody td[rowspan="5"] {
 .elfsight-widget-wrapper .eapps-google-reviews-header-title,
 .elfsight-widget-wrapper .eapps-google-reviews-header-subtitle,
 .eapps-google-reviews-header-title,
-.eapps-google-reviews-header-subtitle {
+.eapps-google-reviews-header-subtitle,
+.eapps-google-reviews-header,
+[class*="eapps-google-reviews-header"] {
   display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
