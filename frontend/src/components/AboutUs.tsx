@@ -110,7 +110,7 @@ const AboutUs: React.FC = () => {
 
           {/* Goal Quote - Above Photo - Wide */}
           <div className="mb-6">
-            <div className="p-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
+            <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
               <p className="text-white text-lg leading-relaxed">
                 "המטרה שלי היא שתוכלו להתמיד בתהליך, תהנו ממנו, תחוו תוצאות בריאותיות ותקבלו כלים לכל החיים"
               </p>
@@ -129,13 +129,13 @@ const AboutUs: React.FC = () => {
       </section>
 
       {/* What You Get Section */}
-      <section className="py-20 bg-[#1a1a1a]">
+      <section className="py-6 bg-[#1a1a1a]">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-16">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white text-center mb-8">
             כל מה שמתאמן צריך תחת קורת גג אחת
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 gap-4">
             {[
               { title: "תכנית אימון מותאמת אישית", desc: "למטרות שלך, ליכולות שלך ולאורח החיים שלך" },
               { title: "נוכחות מאמן מוסמך", desc: "ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת" },
@@ -146,9 +146,9 @@ const AboutUs: React.FC = () => {
               { title: "חלל אינטימי ומקצועי", desc: "ציוד מקצועי ואווירה ביתית" },
               { title: "תוצאות מוכחות", desc: "עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם" }
             ].map((item, index) => (
-              <div key={index} className="p-6 border-l-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-                <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                <p className="text-gray-300">{item.desc}</p>
+              <div key={index} className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
+                <h3 className="text-base font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-sm text-gray-300">{item.desc}</p>
               </div>
             ))}
           </div>
