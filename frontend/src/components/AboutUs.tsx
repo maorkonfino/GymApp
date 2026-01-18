@@ -409,7 +409,7 @@ const AboutUs: React.FC = () => {
                 onClick={() => setCurrentTestimonialIndex((prev) => 
                   prev === 0 ? testimonialItems.length - 1 : prev - 1
                 )}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
                 aria-label="תמונה קודמת"
               >
                 <ChevronLeft className="w-6 h-6" />
@@ -420,7 +420,7 @@ const AboutUs: React.FC = () => {
                 onClick={() => setCurrentTestimonialIndex((prev) => 
                   prev === testimonialItems.length - 1 ? 0 : prev + 1
                 )}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
                 aria-label="תמונה הבאה"
               >
                 <ChevronRight className="w-6 h-6" />
