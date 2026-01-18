@@ -18,24 +18,14 @@ const GoogleLogo = ({ className }: { className?: string }) => (
   </svg>
 )
 
-// Waze Logo Component (Simplified)
+// Waze Logo Component (Official Image)
 const WazeLogo = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 64 64" fill="none">
-    <circle cx="32" cy="32" r="30" fill="#00B8E6"/>
-    <circle cx="24" cy="26" r="3" fill="white"/>
-    <circle cx="40" cy="26" r="3" fill="white"/>
-    <path d="M20 38 Q32 44 44 38" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none"/>
-  </svg>
+  <img src="/waze-logo.png" alt="Waze" className={className} />
 )
 
-// Google Maps Logo Component (Simplified Pin)
+// Google Maps Logo Component (Official Image)
 const GoogleMapsLogo = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 48 48" fill="none">
-    <path d="M24 4C15.163 4 8 11.163 8 20c0 13.5 16 24 16 24s16-10.5 16-24c0-8.837-7.163-16-16-16z" fill="#EA4335"/>
-    <path d="M24 4v40s16-10.5 16-24c0-8.837-7.163-16-16-16z" fill="#FBBC05"/>
-    <circle cx="24" cy="20" r="7" fill="#FFFFFF"/>
-    <circle cx="24" cy="20" r="5" fill="#4285F4"/>
-  </svg>
+  <img src="/googlemaps-logo.png" alt="Google Maps" className={className} />
 )
 
 const AboutUs: React.FC = () => {
