@@ -41,6 +41,7 @@ const GoogleMapsLogo = ({ className }: { className?: string }) => (
 const AboutUs: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0)
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -48,6 +49,10 @@ const AboutUs: React.FC = () => {
   })
 
   const carouselImages = ['/1aboutus.png', '/2aboutus.png']
+  const testimonialItems = [
+    { type: 'image', src: '/halal1.webp' },
+    { type: 'video', src: 'https://www.youtube.com/embed/3WDRN70Y5nc' }
+  ]
 
   // Load Elfsight script for Google Reviews
   useEffect(() => {
@@ -385,17 +390,63 @@ const AboutUs: React.FC = () => {
       {/* Testimonials Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
-          {/* YouTube Shorts Video */}
-          <div className="max-w-[200px] mx-auto mb-8">
-            <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
-              <iframe
-                className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
-                src="https://www.youtube.com/embed/3WDRN70Y5nc"
-                title="Be The Beast"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+          {/* Testimonials Carousel - Image & Video */}
+          <div className="relative max-w-xs mx-auto mb-8">
+            <div className="relative">
+              {testimonialItems[currentTestimonialIndex].type === 'image' ? (
+                <img
+                  src={testimonialItems[currentTestimonialIndex].src}
+                  alt="ביקורת"
+                  className="w-full h-auto rounded-xl shadow-lg"
+                />
+              ) : (
+                <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
+                    src={testimonialItems[currentTestimonialIndex].src}
+                    title="Be The Beast"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              )}
+              
+              {/* Previous Button */}
+              <button
+                onClick={() => setCurrentTestimonialIndex((prev) => 
+                  prev === 0 ? testimonialItems.length - 1 : prev - 1
+                )}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
+                aria-label="תמונה קודמת"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              
+              {/* Next Button */}
+              <button
+                onClick={() => setCurrentTestimonialIndex((prev) => 
+                  prev === testimonialItems.length - 1 ? 0 : prev + 1
+                )}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all"
+                aria-label="תמונה הבאה"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
+            
+            {/* Dots Navigation */}
+            <div className="flex justify-center gap-2 mt-4">
+              {testimonialItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonialIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    index === currentTestimonialIndex ? 'bg-cyan-400 w-6' : 'bg-gray-500'
+                  }`}
+                  aria-label={`עבור לפריט ${index + 1}`}
+                />
+              ))}
             </div>
           </div>
 
