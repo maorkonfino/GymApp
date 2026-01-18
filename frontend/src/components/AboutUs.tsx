@@ -105,7 +105,7 @@ const AboutUs: React.FC = () => {
     message += `שם מלא: ${formData.fullName}\n`
     message += `טלפון: ${formData.phone}\n`
     message += `הערות: ${formData.notes || 'אין'}\n\n`
-    message += `🐺 אני רוצה להיות BEAST! 🐺\n\n`
+    message += '🐺 אני רוצה להיות BEAST! 🐺\n\n'
     message += `https://beast-gym.com/aboutUs`
     
     // Encode message for URL
