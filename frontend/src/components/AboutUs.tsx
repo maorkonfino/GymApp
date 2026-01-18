@@ -18,19 +18,24 @@ const GoogleLogo = ({ className }: { className?: string }) => (
   </svg>
 )
 
-// Waze Logo Component
+// Waze Logo Component (Official)
 const WazeLogo = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3-7c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm6 0c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm-3 4c1.93 0 3.5-1.43 3.5-3.2h-7c0 1.77 1.57 3.2 3.5 3.2z"/>
+  <svg className={className} viewBox="0 0 48 48" fill="none">
+    <path d="M47.5 24C47.5 36.9787 36.9787 47.5 24 47.5C11.0213 47.5 0.5 36.9787 0.5 24C0.5 11.0213 11.0213 0.5 24 0.5C36.9787 0.5 47.5 11.0213 47.5 24Z" fill="#33CCFF"/>
+    <path d="M33.6 19.2C33.6 18.32 32.88 17.6 32 17.6C31.12 17.6 30.4 18.32 30.4 19.2C30.4 20.08 31.12 20.8 32 20.8C32.88 20.8 33.6 20.08 33.6 19.2Z" fill="white"/>
+    <path d="M17.6 19.2C17.6 18.32 16.88 17.6 16 17.6C15.12 17.6 14.4 18.32 14.4 19.2C14.4 20.08 15.12 20.8 16 20.8C16.88 20.8 17.6 20.08 17.6 19.2Z" fill="white"/>
+    <path d="M24 11.2C18.032 11.2 13.12 15.68 12.416 21.44C12.288 22.56 12.96 23.584 14.048 23.872C14.208 23.904 14.368 23.936 14.528 23.936C15.408 23.936 16.192 23.328 16.416 22.432C16.896 20.32 18.784 18.72 21.088 18.368C21.728 18.272 22.368 18.208 23.008 18.208C28.48 18.208 32.992 22.72 32.992 28.192C32.992 29.12 33.76 29.888 34.688 29.888C35.616 29.888 36.384 29.12 36.384 28.192C36.384 20.96 30.24 15.104 23.008 15.104C21.984 15.104 20.992 15.2 20 15.392C20.8 13.344 22.72 11.904 24.992 11.904C27.264 11.904 29.184 13.344 29.984 15.392C30.304 16.256 31.264 16.704 32.128 16.384C32.992 16.064 33.44 15.104 33.12 14.24C31.84 10.816 28.64 8.512 24.992 8.512C21.344 8.512 18.144 10.816 16.864 14.24C16.544 15.104 16.992 16.064 17.856 16.384C18.72 16.704 19.68 16.256 20 15.392C20.8 13.344 22.72 11.904 24.992 11.904C24.992 11.904 24 11.2 24 11.2Z" fill="white"/>
+    <path d="M24 35.2C20.912 35.2 18.176 33.344 17.12 30.56C16.8 29.696 15.84 29.248 14.976 29.568C14.112 29.888 13.664 30.848 13.984 31.712C15.52 35.872 19.456 38.592 24 38.592C28.544 38.592 32.48 35.872 34.016 31.712C34.336 30.848 33.888 29.888 33.024 29.568C32.16 29.248 31.2 29.696 30.88 30.56C29.824 33.344 27.088 35.2 24 35.2Z" fill="white"/>
   </svg>
 )
 
-// Google Maps Logo Component  
+// Google Maps Logo Component (Official)
 const GoogleMapsLogo = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none">
-    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#EA4335"/>
-    <path d="M12 11.5c1.38 0 2.5-1.12 2.5-2.5S13.38 6.5 12 6.5 9.5 7.62 9.5 9s1.12 2.5 2.5 2.5z" fill="#FBBC05"/>
-    <path d="M12 2c-3.87 0-7 3.13-7 7 0 5.25 7 13 7 13V2z" fill="#34A853"/>
+  <svg className={className} viewBox="0 0 48 48" fill="none">
+    <path d="M30.8571 19.0286C30.8571 22.2286 27.8857 25.2 24 25.2C20.1143 25.2 17.1429 22.2286 17.1429 19.0286C17.1429 15.8286 20.1143 12.8571 24 12.8571C27.8857 12.8571 30.8571 15.8286 30.8571 19.0286Z" fill="#1A73E8"/>
+    <path d="M24 6.85714C16.8 6.85714 11.1429 12.5143 11.1429 19.7143C11.1429 26.9143 17.7429 38.4 23.1429 45.6C23.5714 46.1143 24 46.2857 24.4286 46.2857C24.8571 46.2857 25.2857 46.1143 25.7143 45.6C31.1143 38.4 37.7143 26.9143 37.7143 19.7143C36.8571 12.5143 31.2 6.85714 24 6.85714ZM24 26.0571C19.2 26.0571 15.4286 22.2857 15.4286 17.4857C15.4286 12.6857 19.2 8.91429 24 8.91429C28.8 8.91429 32.5714 12.6857 32.5714 17.4857C32.5714 22.2857 28.8 26.0571 24 26.0571Z" fill="#EA4335"/>
+    <path d="M24 1.71429C16.8 1.71429 11.1429 7.37143 11.1429 14.5714C11.1429 21.7714 17.7429 33.2571 23.1429 40.4571C23.5714 40.9714 24 41.1429 24.4286 41.1429C24.8571 41.1429 25.2857 40.9714 25.7143 40.4571C31.1143 33.2571 36.8571 21.7714 36.8571 14.5714C36.8571 7.37143 31.2 1.71429 24 1.71429ZM24 20.9143C20.5714 20.9143 17.7143 18.0571 17.7143 14.6286C17.7143 11.2 20.5714 8.34286 24 8.34286C27.4286 8.34286 30.2857 11.2 30.2857 14.6286C30.2857 18.0571 27.4286 20.9143 24 20.9143Z" fill="#FBBC05"/>
+    <path d="M24 6.85714C16.8 6.85714 11.1429 12.5143 11.1429 19.7143C11.1429 26.9143 17.7429 38.4 23.1429 45.6C23.5714 46.1143 24 46.2857 24 46.2857V8.91429C19.2 8.91429 15.4286 12.6857 15.4286 17.4857C15.4286 22.2857 19.2 26.0571 24 26.0571V6.85714Z" fill="#34A853"/>
   </svg>
 )
 
@@ -154,6 +159,28 @@ const AboutUs: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#1a1a1a]">
+      {/* Floating Social Buttons - Fixed on Right Side */}
+      <div className="fixed top-20 right-4 z-50 flex flex-col gap-3">
+        <a
+          href="https://wa.me/972548151103"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-14 h-14 flex items-center justify-center bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-110"
+          aria-label="צור קשר בוואטסאפ"
+        >
+          <WhatsAppLogo className="w-7 h-7" />
+        </a>
+        <a
+          href="https://www.instagram.com/shlomi_konfino/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full transition-all shadow-lg hover:shadow-xl hover:scale-110"
+          aria-label="עקבו באינסטגרם"
+        >
+          <Instagram className="w-7 h-7" />
+        </a>
+      </div>
+
       {/* Hero Header Section */}
       <section className="relative bg-[#1a1a1a] py-6">
         <div className="max-w-6xl mx-auto px-6">
@@ -352,7 +379,7 @@ const AboutUs: React.FC = () => {
             <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
-                src="https://www.youtube.com/embed/Sl9eKv4wq1A"
+                src="https://www.youtube.com/embed/3WDRN70Y5nc"
                 title="Be The Beast"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -361,9 +388,20 @@ const AboutUs: React.FC = () => {
             </div>
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
-            מה אומרים עלינו
-          </h2>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center">
+              מה אומרים עלינו
+            </h2>
+            <a
+              href="https://share.google/VbA2nUfw3peHiUarh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 rounded-full transition-all shadow-md hover:shadow-lg border-2 border-gray-200"
+              aria-label="עלינו בגוגל"
+            >
+              <GoogleLogo className="w-5 h-5" />
+            </a>
+          </div>
 
           {/* Elfsight Google Reviews Widget */}
           <div className="elfsight-widget-wrapper">
@@ -460,36 +498,6 @@ const AboutUs: React.FC = () => {
             </a>
           </div>
 
-          {/* Social Icons */}
-          <div className="flex gap-4 justify-center">
-            <a
-              href="https://wa.me/972548151103"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full transition-all shadow-md hover:shadow-lg"
-              aria-label="צור קשר בוואטסאפ"
-            >
-              <WhatsAppLogo className="w-6 h-6" />
-            </a>
-            <a
-              href="https://www.instagram.com/shlomi_konfino/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full transition-all shadow-md hover:shadow-lg"
-              aria-label="עקבו באינסטגרם"
-            >
-              <Instagram className="w-6 h-6" />
-            </a>
-            <a
-              href="https://share.google/VbA2nUfw3peHiUarh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-14 h-14 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-800 rounded-full transition-all shadow-md hover:shadow-lg border-2 border-gray-200"
-              aria-label="עלינו בגוגל"
-            >
-              <GoogleLogo className="w-6 h-6" />
-            </a>
-          </div>
         </div>
       </section>
 
