@@ -50,8 +50,10 @@ const AboutUs: React.FC = () => {
 
   const carouselImages = ['/1aboutus.png', '/2aboutus.png']
   const testimonialItems = [
+    { type: 'video', src: 'https://www.youtube.com/embed/3WDRN70Y5nc' },
     { type: 'image', src: '/halal1.webp' },
-    { type: 'video', src: 'https://www.youtube.com/embed/3WDRN70Y5nc' }
+    { type: 'image', src: '/halal2.webp' },
+    { type: 'image', src: '/halal3.webp' }
   ]
 
   // Load Elfsight script for Google Reviews
