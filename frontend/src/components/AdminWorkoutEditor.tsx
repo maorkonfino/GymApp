@@ -133,6 +133,46 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
     onClose()
   }
 
+  // Clean empty weeks when switching to flexible mode
+  useEffect(() => {
+    if (numberOfWeeks === 'flexible') {
+      const cleanedWorkouts = workouts.map(workout => ({
+        ...workout,
+        exercises: workout.exercises.map(exercise => {
+          // Keep only week 1 data, remove all other empty weeks
+          const cleanedWeeklyData: { [key: number]: Array<{ weight: string; reps: string }> } = {}
+          
+          // Always keep week 1
+          if (exercise.weeklyData[1]) {
+            cleanedWeeklyData[1] = exercise.weeklyData[1]
+          }
+          
+          // Keep other weeks only if they have actual data
+          Object.keys(exercise.weeklyData).forEach(weekStr => {
+            const week = parseInt(weekStr)
+            if (week > 1 && exercise.weeklyData[week]) {
+              const hasData = exercise.weeklyData[week].some(
+                set => set.weight.trim() !== '' || set.reps.trim() !== ''
+              )
+              if (hasData) {
+                cleanedWeeklyData[week] = exercise.weeklyData[week]
+              }
+            }
+          })
+          
+          return {
+            ...exercise,
+            weeklyData: cleanedWeeklyData
+          }
+        })
+      }))
+      
+      // Reset userAddedWeeks to 0 since we're starting fresh
+      setUserAddedWeeks(0)
+      setWorkouts(cleanedWorkouts)
+    }
+  }, [numberOfWeeks])
+
   // Auto-save when workouts or numberOfWeeks change (with debounce)
   useEffect(() => {
     if (!user || workouts.length === 0) return
@@ -481,11 +521,11 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                         <tr className="bg-dark-card">
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8">סדר</th>
                           <th className="border border-dark-border px-1 py-1 text-gray-300 font-semibold text-right w-[120px] sm:w-[180px] md:w-[220px]">תרגיל</th>
-                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">סטים</th>
-                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">חזרות</th>
-                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">מנוחה</th>
-                          <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">RIR</th>
-                          {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).map(week => (
+                          <th className="border border-dark-border px-2 py-1 text-gray-300 font-semibold text-center min-w-[60px]">סטים</th>
+                          <th className="border border-dark-border px-2 py-1 text-gray-300 font-semibold text-center min-w-[80px]">חזרות</th>
+                          <th className="border border-dark-border px-2 py-1 text-gray-300 font-semibold text-center min-w-[80px]">מנוחה</th>
+                          <th className="border border-dark-border px-2 py-1 text-gray-300 font-semibold text-center min-w-[60px]">RIR</th>
+                          {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).reverse().map(week => (
                             <th key={week} className="border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center w-16 sm:w-20">
                               שבוע {week}
                             </th>
@@ -533,43 +573,43 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                                   className="w-full bg-transparent text-white text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-1 py-1"
                                 />
                               </td>
-                              <td className="border border-dark-border px-0.5 py-0.5">
+                              <td className="border border-dark-border px-2 py-1">
                                 <input
                                   type="text"
                                   placeholder="3"
                                   value={exercise.sets}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'sets', e.target.value)}
-                                  className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
+                                  className="w-full bg-dark-card text-white text-xs sm:text-sm text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
                                 />
                               </td>
-                              <td className="border border-dark-border px-0.5 py-0.5">
+                              <td className="border border-dark-border px-2 py-1">
                                 <input
                                   type="text"
                                   placeholder="8-12"
                                   value={exercise.repsRange}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'repsRange', e.target.value)}
-                                  className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
+                                  className="w-full bg-dark-card text-white text-xs sm:text-sm text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
                                 />
                               </td>
-                              <td className="border border-dark-border px-0.5 py-0.5">
+                              <td className="border border-dark-border px-2 py-1">
                                 <input
                                   type="text"
                                   placeholder="90s"
                                   value={exercise.rest}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'rest', e.target.value)}
-                                  className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
+                                  className="w-full bg-dark-card text-white text-xs sm:text-sm text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
                                 />
                               </td>
-                              <td className="border border-dark-border px-0.5 py-0.5">
+                              <td className="border border-dark-border px-2 py-1">
                                 <input
                                   type="text"
                                   placeholder="2"
                                   value={exercise.rir}
                                   onChange={(e) => updateExerciseField(workoutIndex, exerciseIndex, 'rir', e.target.value)}
-                                  className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
+                                  className="w-full bg-dark-card text-white text-xs sm:text-sm text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1"
                                 />
                               </td>
-                              {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).map(week => (
+                              {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).reverse().map(week => (
                                 <td key={week} className="border border-dark-border px-0.5 py-0.5">
                                   <div className="space-y-0.5">
                                     {Array.from({ length: numSets }, (_, setIdx) => {
