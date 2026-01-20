@@ -355,6 +355,29 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
     return exercise.weeklyData[week]?.[setIndex] || { weight: '', reps: '' }
   }
 
+  // Get maximum week number from all exercises' data
+  const getMaxWeekNumber = () => {
+    if (numberOfWeeks !== 'flexible') {
+      return numberOfWeeks as number
+    }
+    
+    let maxWeek = 1
+    workouts.forEach(workout => {
+      workout.exercises.forEach(exercise => {
+        const weeks = Object.keys(exercise.weeklyData).map(Number)
+        if (weeks.length > 0) {
+          const exerciseMaxWeek = Math.max(...weeks)
+          if (exerciseMaxWeek > maxWeek) {
+            maxWeek = exerciseMaxWeek
+          }
+        }
+      })
+    })
+    
+    // Show at least userAddedWeeks + 1, but also any week with data
+    return Math.max(maxWeek, userAddedWeeks + 1)
+  }
+
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-dark-card border border-dark-border rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
@@ -485,7 +508,7 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">חזרות</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">מנוחה</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">RIR</th>
-                          {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).reverse().map(week => (
+                          {Array.from({ length: getMaxWeekNumber() }, (_, i) => i + 1).reverse().map(week => (
                             <th key={week} className="border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center w-16 sm:w-20">
                               שבוע {week}
                             </th>
@@ -569,7 +592,7 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                                   className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
                                 />
                               </td>
-                              {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).reverse().map(week => (
+                              {Array.from({ length: getMaxWeekNumber() }, (_, i) => i + 1).reverse().map(week => (
                                 <td key={week} className="border border-dark-border px-0.5 py-0.5">
                                   <div className="space-y-0.5">
                                     {Array.from({ length: numSets }, (_, setIdx) => {
