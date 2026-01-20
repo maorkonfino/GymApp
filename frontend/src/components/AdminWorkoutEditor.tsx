@@ -485,7 +485,7 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">חזרות</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">מנוחה</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">RIR</th>
-                          {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).map(week => (
+                          {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).reverse().map(week => (
                             <th key={week} className="border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center w-16 sm:w-20">
                               שבוע {week}
                             </th>
@@ -569,7 +569,7 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                                   className="w-full bg-dark-card text-white text-[7px] sm:text-[9px] text-center focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-0.5 py-0.5"
                                 />
                               </td>
-                              {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).map(week => (
+                              {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).reverse().map(week => (
                                 <td key={week} className="border border-dark-border px-0.5 py-0.5">
                                   <div className="space-y-0.5">
                                     {Array.from({ length: numSets }, (_, setIdx) => {
