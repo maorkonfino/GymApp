@@ -1125,19 +1125,21 @@ const sendWorkoutReminders = async () => {
   }
 };
 
+// DISABLED: Workout reminders cron job
+// Uncomment to re-enable automatic workout reminders
 // Run reminder check every hour at minute 0
 // Format: "0 * * * *" means: at minute 0 of every hour
-cron.schedule('0 * * * *', sendWorkoutReminders, {
-  timezone: 'Asia/Jerusalem'
-});
+// cron.schedule('0 * * * *', sendWorkoutReminders, {
+//   timezone: 'Asia/Jerusalem'
+// });
 
-console.log('⏰ Workout reminders cron job scheduled (runs every hour) via SendGrid');
+console.log('🔕 Workout reminders cron job is DISABLED');
 
-// Also run once on startup (after a small delay to ensure DB is ready)
-setTimeout(() => {
-  console.log('🚀 Running initial workout reminders check...');
-  sendWorkoutReminders();
-}, 5000);
+// DISABLED: Also run once on startup (after a small delay to ensure DB is ready)
+// setTimeout(() => {
+//   console.log('🚀 Running initial workout reminders check...');
+//   sendWorkoutReminders();
+// }, 5000);
 
 // Temporary Admin Password Reset Endpoint (for debugging)
 app.post('/api/admin/reset-user-password', async (req: Request, res: Response) => {
