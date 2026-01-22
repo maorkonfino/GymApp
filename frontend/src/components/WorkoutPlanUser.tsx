@@ -152,6 +152,30 @@ const WorkoutPlanUser: React.FC = () => {
     
     exercise.weeklyData[week][setIndex][field] = value
     setPlan(newPlan)
+
+    // Auto-open new week if current week is fully completed
+    if (plan.numberOfWeeks === 'flexible' && week === userAddedWeeks) {
+      // Check if all exercises in the current week (highest week) are complete
+      const isCurrentWeekComplete = newPlan.workouts.every(workout => 
+        workout.exercises.every(ex => {
+          const numSets = parseInt(ex.sets) || 3
+          // Check if all sets have both weight and reps
+          return Array.from({ length: numSets }, (_, i) => i).every(setIdx => {
+            const data = ex.weeklyData[week]?.[setIdx]
+            return data && data.weight && data.weight.trim() !== '' && data.reps && data.reps.trim() !== ''
+          })
+        })
+      )
+
+      if (isCurrentWeekComplete) {
+        const newUserWeeks = userAddedWeeks + 1
+        setUserAddedWeeks(newUserWeeks)
+        if (user) {
+          localStorage.setItem(`workout-user-weeks-${user.email}`, newUserWeeks.toString())
+        }
+        console.log(`🎉 שבוע ${week} הושלם! נפתח שבוע ${newUserWeeks} אוטומטית`)
+      }
+    }
   }
 
   const toggleWorkoutCollapse = (workoutIndex: number) => {
