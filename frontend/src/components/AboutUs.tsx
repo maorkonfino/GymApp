@@ -181,34 +181,16 @@ const AboutUs: React.FC = () => {
       <section className="relative bg-[#1a1a1a] py-6">
         <div className="max-w-6xl mx-auto px-6">
           {/* Logo - Centered & Larger */}
-          <div className="text-center mb-3">
+          <div className="text-center mb-4">
             <img 
               src="/header-logo.svg" 
               alt="BEAST Logo" 
               className="w-64 md:w-80 h-auto mx-auto"
             />
           </div>
-        </div>
-
-        <div className="max-w-6xl mx-auto px-6">
-          {/* CTA Buttons */}
-          <div className="mb-6 space-y-3">
-            <button
-              onClick={scrollToContactForm}
-              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200 w-full"
-            >
-              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST<span className="text-cyan-400">!</span>
-            </button>
-            <button
-              onClick={scrollToContactForm}
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-base py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full whitespace-nowrap"
-            >
-              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline<span className="text-white">!</span>
-            </button>
-          </div>
 
           {/* Goal Quote - Above Photo - Wide */}
-          <div className="mb-6">
+          <div className="mb-4">
             <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
               <p className="text-white text-lg leading-relaxed">
                 "המטרה שלי היא שתוכלו להתמיד בתהליך, תהנו ממנו, תחוו תוצאות בריאותיות ותקבלו <span className="text-cyan-400">כלים לכל החיים</span>"
@@ -217,20 +199,16 @@ const AboutUs: React.FC = () => {
           </div>
 
           {/* Trainer Photo - Below Quote - Smaller */}
-          <div className="max-w-xs mx-auto">
+          <div className="max-w-xs mx-auto mb-4">
             <img 
               src="/trainer.jpg" 
               alt="שלומי קונפינו - המאמן" 
               className="w-full h-auto rounded-2xl shadow-lg"
             />
           </div>
-        </div>
-      </section>
 
-      {/* What You Get Section */}
-      <section className="bg-[#1a1a1a] pb-3">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-6">
+          {/* What You Get Section */}
+          <div className="text-center mb-4">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
               כל מה שמתאמן צריך
             </h2>
@@ -259,7 +237,6 @@ const AboutUs: React.FC = () => {
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
