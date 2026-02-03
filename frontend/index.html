@@ -22,6 +22,16 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/icon-512.png" />
     
+    <!-- Performance: Preconnect to external domains -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://www.youtube.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/header-logo.svg" as="image" fetchpriority="high" />
+    <link rel="preload" href="/trainer.webp" as="image" fetchpriority="high" />
+    
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://beast-members.vercel.app/" />
@@ -41,23 +51,24 @@
     <meta name="twitter:title" content="BEAST - בית לאימון מבוסס מדע" />
     <meta name="twitter:description" content="מערכת ניהול אימונים אישיים, מעקב תזונה והתקדמות מתקדמת. הצטרף אלינו והתחל את המסע שלך להיות BEAST! 💪🔥" />
     <meta name="twitter:image" content="https://beast-members.vercel.app/beast-logo-512.png" />
-    
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-T5X5XT4B');</script>
-    <!-- End Google Tag Manager -->
   </head>
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T5X5XT4B"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Google Tag Manager (Deferred) -->
+    <script>
+    window.addEventListener('load', function() {
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-T5X5XT4B');
+    });
+    </script>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T5X5XT4B"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager -->
   </body>
 </html>
 

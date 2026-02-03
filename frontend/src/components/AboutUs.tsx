@@ -126,6 +126,8 @@ const Carousel = memo(({ items, currentIndex, onIndexChange, isTestimonial = fal
         <img
           src={items[currentIndex].src}
           alt={isTestimonial ? "ביקורת" : `תמונה ${currentIndex + 1}`}
+          width="400"
+          height="600"
           className="w-full h-auto rounded-xl shadow-lg"
           loading="lazy"
         />
@@ -247,7 +249,7 @@ const AboutUs: React.FC = () => {
       <section className="relative bg-[#1a1a1a] py-6">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-4">
-            <img src="/header-logo.svg" alt="BEAST Logo" className="w-64 md:w-80 h-auto mx-auto" />
+            <img src="/header-logo.svg" alt="BEAST Logo" width="320" height="80" className="w-64 md:w-80 h-auto mx-auto" fetchPriority="high" />
           </div>
 
           <div className="mb-4">
@@ -259,7 +261,14 @@ const AboutUs: React.FC = () => {
           </div>
 
           <div className="max-w-xs mx-auto mb-4">
-            <img src="/trainer.webp" alt="שלומי קונפינו - המאמן" className="w-full h-auto rounded-2xl shadow-lg" loading="lazy" />
+            <img 
+              src="/trainer.webp" 
+              alt="שלומי קונפינו - המאמן" 
+              width="400" 
+              height="600" 
+              className="w-full h-auto rounded-2xl shadow-lg" 
+              fetchPriority="high"
+            />
           </div>
 
           <div className="text-center mb-4">
