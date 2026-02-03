@@ -1,33 +1,191 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { MapPin, Instagram, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react'
 
-// WhatsApp Logo Component
-const WhatsAppLogo = ({ className }: { className?: string }) => (
+// ============ LOGO COMPONENTS ============
+const WhatsAppLogo = memo(({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
   </svg>
-)
+))
 
-// Google Logo Component
-const GoogleLogo = ({ className }: { className?: string }) => (
+const GoogleLogo = memo(({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
   </svg>
-)
+))
 
-// Waze Logo Component (Official Image)
-const WazeLogo = ({ className }: { className?: string }) => (
-  <img src="/waze-logo.png" alt="Waze" className={className} />
-)
+const WazeLogo = memo(({ className }: { className?: string }) => (
+  <img src="/waze-logo.webp" alt="Waze" className={className} loading="lazy" />
+))
 
-// Google Maps Logo Component (Official Image)
-const GoogleMapsLogo = ({ className }: { className?: string }) => (
-  <img src="/googlemaps-logo.png" alt="Google Maps" className={className} />
-)
+const GoogleMapsLogo = memo(({ className }: { className?: string }) => (
+  <img src="/googlemaps-logo.webp" alt="Google Maps" className={className} loading="lazy" />
+))
 
+// ============ DATA CONSTANTS (Outside component) ============
+const CAROUSEL_IMAGES = ['/1aboutus.webp', '/2aboutus.webp']
+const TESTIMONIAL_ITEMS = [
+  { type: 'video' as const, src: 'https://www.youtube.com/embed/3WDRN70Y5nc' },
+  { type: 'image' as const, src: '/halal1.webp' },
+  { type: 'image' as const, src: '/halal2.webp' },
+  { type: 'image' as const, src: '/halal3.webp' }
+]
+
+const FEATURE_BOXES = [
+  { title: "תכנית אימון מותאמת אישית", desc: "למטרות שלך, ליכולות שלך ולאורח החיים שלך" },
+  { title: "נוכחות מאמן בכל האימונים שלכם", desc: "ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת" },
+  { title: "חלל אינטימי ומקצועי", desc: "ציוד מקצועי ואווירה ביתית" },
+  { title: "אפליקציה ייחודית", desc: "אפליקציה שמרכזת הכל, עושה סדר בתהליך ומשקפת לכם מעקב אובייקטיבי בתהליך שלכם" },
+  { title: "ליווי תזונתי", desc: "תזונה תומכת אימון, מטרה וביצועים" },
+  { title: "תוצאות מוכחות", desc: "עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם" },
+  { title: "גמישות מלאה", desc: "תכנית האימון תשתנה בהתאם לשינויים בחייכם כך שתמיד תוכלו להתמיד" },
+  { title: "זמינות מרחוק", desc: "זמינות ומעטפת גם מחוץ לאימון להצלחה בתהליך" }
+]
+
+const CREDENTIALS = [
+  { title: "פיזיולוג מאמץ", desc: "תואר שני הפקולטה לרפואה אונ' ת\"א" },
+  { title: "10 שנות ניסיון", desc: "ניסיון רב ומוכח בתחום האימון וליווי תהליכים" },
+  { title: "חינוך גופני", desc: "בוגר תואר ראשון סמינר הקיבוצים" },
+  { title: "הסמכות מקצועיות", desc: "- פעילות גופנית לאוכלוסייה ייחודית<br />- תזונת ספורט" }
+]
+
+const FAQS = [
+  {
+    question: (
+      <span>
+        למי חדר הכושר <span>BE<span className="text-cyan-400">A</span>ST</span> מתאים?
+      </span>
+    ),
+    answer: "לכולם! לנערים ונערות, נשים וגברים, מגיל 10 ועד 120 ובכל מצב גופני. אימוני כוח הם לכולם!"
+  },
+  {
+    question: "האם יש הגבלה בכמות האימונים בשבוע?",
+    answer: "אין מגבלה! המנוי מקנה כניסה חופשית אל החלל בתאום מראש דרך האפליקציה ותכנית האימון תהיה מותאמת לכמות האימונים שתוכלו לבצע בשבוע."
+  },
+  {
+    question: "האם האימון אישי או עם עוד מתאמנים?",
+    answer: "החלל פתוח לכולם, האימון הוא עצמאי וכל אחד עובד עם תוכנית האימון האישית שלו אך במקביל לנרשמים הנוספים בחלל כך שלפעמים אולי תזכו לאימון 1 על 1 איתי ולפעמים תזכו להכיר מתאמנים נוספים ולקבל יחס אישי ממני גם בזמן שעוד מתאמנים נמצאים."
+  },
+  {
+    question: "איך נבנת תכנית האימון?",
+    answer: "מפגש היכירות וניתוח מצב נוכחי, בניית תכנית אימון מותאמת אישית אליכם, מפגשים בחדר הכושר ללמידה טכנית ועקרונות האימון והכל בהאתם ליכולתכם, מצבכם, למדע עדכני וניסיון רב."
+  },
+  {
+    question: "כמה זמן לוקח לראות תוצאות?",
+    answer: "תוצאות ראשוניות רואים די מיידית, תוצאות למטרות ארוכות טווח רואים לאחר זמן התמדה ומשך הזמן יכול להשתנות בהתאם להמון גורמים עליהם נדבר כשנתחיל."
+  },
+  {
+    question: (
+      <span>
+        מה ההבדל בין <span>BE<span className="text-cyan-400">A</span>ST</span> לחדר כושר מסחרי או אימונים אישיים?
+      </span>
+    ),
+    answer: "אצלנו תחת מחיר אחד תקבלו גישה אל חלל מאובזר אך אינטימי ללא מגבלה של כמות האימונים, תכנית אימון מותאמת אישית, נוכחות מאמן בכל האימונים שלכם עם יחס אישי, לימוד טכני ודיוק מרבי, זמינות מחוץ לשעות האימון וליווי תזונתי תומך."
+  },
+  {
+    question: "אני בן 14, כדאי לי להתחיל להתאמן?",
+    answer: "ברור! חובה! אימוני כוח מומלצים ומאושרים כבר מגיל 6, הגיל אינו קובע אלא היכולות הגופניות שלך, אני כאן להתאים תכנית אימון מותאמת אליך, להשגיח ולהביא אותך לביצועים ברמה הכי גבוהה שאפשר!"
+  }
+]
+
+// ============ REUSABLE COMPONENTS ============
+const CTAButtons = memo(({ onBeastClick, onOnlineClick }: { 
+  onBeastClick: () => void
+  onOnlineClick: () => void 
+}) => (
+  <div className="mb-6 space-y-3 max-w-lg mx-auto">
+    <button
+      onClick={onBeastClick}
+      className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full w-full border-2 border-gray-200"
+    >
+      אני רוצה להיות BE<span className="text-cyan-400">A</span>ST<span className="text-cyan-400">!</span>
+    </button>
+    <button
+      onClick={onOnlineClick}
+      className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-base py-2 px-8 text-center transition-all shadow-lg rounded-full w-full whitespace-nowrap"
+    >
+      גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline<span className="text-white">!</span>
+    </button>
+  </div>
+))
+
+interface CarouselProps {
+  items: { type: 'image' | 'video'; src: string }[]
+  currentIndex: number
+  onIndexChange: (index: number) => void
+  isTestimonial?: boolean
+}
+
+const Carousel = memo(({ items, currentIndex, onIndexChange, isTestimonial = false }: CarouselProps) => (
+  <div className="relative max-w-xs mx-auto mb-8">
+    <div className="relative">
+      {items[currentIndex].type === 'image' ? (
+        <img
+          src={items[currentIndex].src}
+          alt={isTestimonial ? "ביקורת" : `תמונה ${currentIndex + 1}`}
+          className="w-full h-auto rounded-xl shadow-lg"
+          loading="lazy"
+        />
+      ) : (
+        <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
+          <iframe
+            className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
+            src={items[currentIndex].src}
+            title="Be The Beast"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            loading="lazy"
+          />
+        </div>
+      )}
+      
+      <button
+        onClick={() => onIndexChange(currentIndex === 0 ? items.length - 1 : currentIndex - 1)}
+        className="absolute left-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
+        aria-label="תמונה קודמת"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+      
+      <button
+        onClick={() => onIndexChange(currentIndex === items.length - 1 ? 0 : currentIndex + 1)}
+        className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
+        aria-label="תמונה הבאה"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
+    </div>
+    
+    <div className="flex justify-center gap-2 mt-4">
+      {items.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => onIndexChange(index)}
+          className={`w-2 h-2 rounded-full transition-all ${
+            index === currentIndex ? 'bg-cyan-400 w-6' : 'bg-gray-500'
+          }`}
+          aria-label={`עבור לפריט ${index + 1}`}
+        />
+      ))}
+    </div>
+  </div>
+))
+
+const FeatureBox = memo(({ title, desc }: { title: string; desc: string }) => (
+  <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
+    <h3 className="text-base font-bold text-white mb-2">
+      <span className="text-cyan-400">+ </span>
+      {title}
+    </h3>
+    <p className="text-sm text-gray-300" dangerouslySetInnerHTML={{ __html: desc }} />
+  </div>
+))
+
+// ============ MAIN COMPONENT ============
 const AboutUs: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -37,19 +195,6 @@ const AboutUs: React.FC = () => {
     phone: '',
     notes: ''
   })
-
-  const carouselImages = ['/1aboutus.png', '/2aboutus.png']
-  const testimonialItems = [
-    { type: 'video', src: 'https://www.youtube.com/embed/3WDRN70Y5nc' },
-    { type: 'image', src: '/halal1.webp' },
-    { type: 'image', src: '/halal2.webp' },
-    { type: 'image', src: '/halal3.webp' }
-  ]
-
-
-  const toggleFAQ = (index: number) => {
-    setOpenFAQ(openFAQ === index ? null : index)
-  }
 
   const scrollToContactForm = () => {
     const formElement = document.getElementById('contact-form')
@@ -61,7 +206,6 @@ const AboutUs: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Build WhatsApp message
     let message = 'שלום, אני רוצה לדעת עוד פרטים על התהליך אצלך, הפרטים שלי הם:\n\n'
     message += `שם מלא: ${formData.fullName}\n`
     message += `טלפון: ${formData.phone}\n`
@@ -69,62 +213,15 @@ const AboutUs: React.FC = () => {
     message += '🐺 אני רוצה להיות BEAST! 🐺\n\n'
     message += `https://beast-gym.com/aboutUs`
     
-    // Encode message for URL
     const encodedMessage = encodeURIComponent(message)
-    
-    // Open WhatsApp with message
     window.open(`https://wa.me/972548151103?text=${encodedMessage}`, '_blank')
     
-    // Reset form
-    setFormData({
-      fullName: '',
-      phone: '',
-      notes: ''
-    })
+    setFormData({ fullName: '', phone: '', notes: '' })
   }
-
-  const faqs = [
-    {
-      question: (
-        <span>
-          למי חדר הכושר <span>BE<span className="text-cyan-400">A</span>ST</span> מתאים?
-        </span>
-      ),
-      answer: "לכולם! לנערים ונערות, נשים וגברים, מגיל 10 ועד 120 ובכל מצב גופני. אימוני כוח הם לכולם!"
-    },
-    {
-      question: "האם יש הגבלה בכמות האימונים בשבוע?",
-      answer: "אין מגבלה! המנוי מקנה כניסה חופשית אל החלל בתאום מראש דרך האפליקציה ותכנית האימון תהיה מותאמת לכמות האימונים שתוכלו לבצע בשבוע."
-    },
-    {
-      question: "האם האימון אישי או עם עוד מתאמנים?",
-      answer: "החלל פתוח לכולם, האימון הוא עצמאי וכל אחד עובד עם תוכנית האימון האישית שלו אך במקביל לנרשמים הנוספים בחלל כך שלפעמים אולי תזכו לאימון 1 על 1 איתי ולפעמים תזכו להכיר מתאמנים נוספים ולקבל יחס אישי ממני גם בזמן שעוד מתאמנים נמצאים."
-    },
-    {
-      question: "איך נבנת תכנית האימון?",
-      answer: "מפגש היכירות וניתוח מצב נוכחי, בניית תכנית אימון מותאמת אישית אליכם, מפגשים בחדר הכושר ללמידה טכנית ועקרונות האימון והכל בהאתם ליכולתכם, מצבכם, למדע עדכני וניסיון רב."
-    },
-    {
-      question: "כמה זמן לוקח לראות תוצאות?",
-      answer: "תוצאות ראשוניות רואים די מיידית, תוצאות למטרות ארוכות טווח רואים לאחר זמן התמדה ומשך הזמן יכול להשתנות בהתאם להמון גורמים עליהם נדבר כשנתחיל."
-    },
-    {
-      question: (
-        <span>
-          מה ההבדל בין <span>BE<span className="text-cyan-400">A</span>ST</span> לחדר כושר מסחרי או אימונים אישיים?
-        </span>
-      ),
-      answer: "אצלנו תחת מחיר אחד תקבלו גישה אל חלל מאובזר אך אינטימי ללא מגבלה של כמות האימונים, תכנית אימון מותאמת אישית, נוכחות מאמן בכל האימונים שלכם עם יחס אישי, לימוד טכני ודיוק מרבי, זמינות מחוץ לשעות האימון וליווי תזונתי תומך."
-    },
-    {
-      question: "אני בן 14, כדאי לי להתחיל להתאמן?",
-      answer: "ברור! חובה! אימוני כוח מומלצים ומאושרים כבר מגיל 6, הגיל אינו קובע אלא היכולות הגופניות שלך, אני כאן להתאים תכנית אימון מותאמת אליך, להשגיח ולהביא אותך לביצועים ברמה הכי גבוהה שאפשר!"
-    }
-  ]
 
   return (
     <div className="min-h-screen bg-[#1a1a1a]">
-      {/* Floating Social Buttons - Fixed on Right Side */}
+      {/* Floating Social Buttons */}
       <div className="fixed top-20 right-4 z-50 flex flex-col gap-3">
         <a
           href="https://wa.me/972548151103"
@@ -146,19 +243,13 @@ const AboutUs: React.FC = () => {
         </a>
       </div>
 
-      {/* Hero Header Section */}
+      {/* Hero Section */}
       <section className="relative bg-[#1a1a1a] py-6">
         <div className="max-w-6xl mx-auto px-6">
-          {/* Logo - Centered & Larger */}
           <div className="text-center mb-4">
-            <img 
-              src="/header-logo.svg" 
-              alt="BEAST Logo" 
-              className="w-64 md:w-80 h-auto mx-auto"
-            />
+            <img src="/header-logo.svg" alt="BEAST Logo" className="w-64 md:w-80 h-auto mx-auto" />
           </div>
 
-          {/* Goal Quote - Above Photo - Wide */}
           <div className="mb-4">
             <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
               <p className="text-white text-lg leading-relaxed">
@@ -167,16 +258,10 @@ const AboutUs: React.FC = () => {
             </div>
           </div>
 
-          {/* Trainer Photo - Below Quote - Smaller */}
           <div className="max-w-xs mx-auto mb-4">
-            <img 
-              src="/trainer.jpg" 
-              alt="שלומי קונפינו - המאמן" 
-              className="w-full h-auto rounded-2xl shadow-lg"
-            />
+            <img src="/trainer.webp" alt="שלומי קונפינו - המאמן" className="w-full h-auto rounded-2xl shadow-lg" loading="lazy" />
           </div>
 
-          {/* What You Get Section */}
           <div className="text-center mb-4">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
               כל מה שמתאמן צריך
@@ -187,23 +272,8 @@ const AboutUs: React.FC = () => {
           </div>
           
           <div className="grid grid-cols-2 gap-4">
-            {[
-              { title: "תכנית אימון מותאמת אישית", desc: "למטרות שלך, ליכולות שלך ולאורח החיים שלך" },
-              { title: "נוכחות מאמן בכל האימונים שלכם", desc: "ליווי והכוונה צמודים, לימוד ותיקון טכניקה בזמן אמת" },
-              { title: "חלל אינטימי ומקצועי", desc: "ציוד מקצועי ואווירה ביתית" },
-              { title: "אפליקציה ייחודית", desc: "אפליקציה שמרכזת הכל, עושה סדר בתהליך ומשקפת לכם מעקב אובייקטיבי בתהליך שלכם" },
-              { title: "ליווי תזונתי", desc: "תזונה תומכת אימון, מטרה וביצועים" },
-              { title: "תוצאות מוכחות", desc: "עשרות אנשים שכבר עשו את השינוי הטוב ביותר עבורם" },
-              { title: "גמישות מלאה", desc: "תכנית האימון תשתנה בהתאם לשינויים בחייכם כך שתמיד תוכלו להתמיד" },
-              { title: "זמינות מרחוק", desc: "זמינות ומעטפת גם מחוץ לאימון להצלחה בתהליך" }
-            ].map((item, index) => (
-              <div key={index} className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-                <h3 className="text-base font-bold text-white mb-2">
-                  <span className="text-cyan-400">+ </span>
-                  {item.title}
-                </h3>
-                <p className="text-sm text-gray-300">{item.desc}</p>
-              </div>
+            {FEATURE_BOXES.map((item, index) => (
+              <FeatureBox key={index} {...item} />
             ))}
           </div>
         </div>
@@ -212,111 +282,28 @@ const AboutUs: React.FC = () => {
       {/* About Shlomi Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
-          {/* CTA Buttons Above Title */}
-          <div className="mb-6 space-y-3">
-            <button
-              onClick={scrollToContactForm}
-              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto border-2 border-gray-200 w-full"
-            >
-              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST<span className="text-cyan-400">!</span>
-            </button>
-            <button
-              onClick={scrollToContactForm}
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-base py-2 px-8 text-center transition-all shadow-lg rounded-full max-w-lg mx-auto w-full whitespace-nowrap"
-            >
-              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline<span className="text-white">!</span>
-            </button>
-          </div>
+          <CTAButtons onBeastClick={scrollToContactForm} onOnlineClick={scrollToContactForm} />
 
           <div className="text-center mb-6">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
-              הכירו את
-            </h2>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-cyan-400 leading-tight">
-              שלומי קונפינו
-            </h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">הכירו את</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-cyan-400 leading-tight">שלומי קונפינו</h2>
           </div>
           
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-              <h3 className="text-base font-bold text-white mb-2">
-                <span className="text-cyan-400">+ </span>
-                פיזיולוג מאמץ
-              </h3>
-              <p className="text-sm text-gray-300">תואר שני הפקולטה לרפואה אונ' ת"א</p>
-            </div>
-            
-            <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-              <h3 className="text-base font-bold text-white mb-2">
-                <span className="text-cyan-400">+ </span>
-                10 שנות ניסיון
-              </h3>
-              <p className="text-sm text-gray-300">ניסיון רב ומוכח בתחום האימון וליווי תהליכים</p>
-            </div>
-            
-            <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-              <h3 className="text-base font-bold text-white mb-2">
-                <span className="text-cyan-400">+ </span>
-                חינוך גופני
-              </h3>
-              <p className="text-sm text-gray-300">בוגר תואר ראשון סמינר הקיבוצים</p>
-            </div>
-            
-            <div className="p-4 border-r-4 border-cyan-400 bg-[#2a2a2a] hover:bg-[#333333] transition-colors">
-              <h3 className="text-base font-bold text-white mb-2">
-                <span className="text-cyan-400">+ </span>
-                הסמכות מקצועיות
-              </h3>
-              <p className="text-sm text-gray-300">- פעילות גופנית לאוכלוסייה ייחודית<br />- תזונת ספורט</p>
-            </div>
+            {CREDENTIALS.map((item, index) => (
+              <FeatureBox key={index} {...item} />
+            ))}
           </div>
 
-          {/* Image Carousel */}
-          <div className="relative max-w-xs mx-auto mb-6">
-            <div className="relative">
-              <img
-                src={carouselImages[currentImageIndex]}
-                alt={`תמונה ${currentImageIndex + 1}`}
-                className="w-full h-auto rounded-xl shadow-lg"
-              />
-              
-              {/* Previous Button */}
-              <button
-                onClick={() => setCurrentImageIndex((prev) => (prev === 0 ? carouselImages.length - 1 : prev - 1))}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
-                aria-label="תמונה קודמת"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              
-              {/* Next Button */}
-              <button
-                onClick={() => setCurrentImageIndex((prev) => (prev === carouselImages.length - 1 ? 0 : prev + 1))}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
-                aria-label="תמונה הבאה"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-
-              {/* Dots Indicator */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {carouselImages.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      index === currentImageIndex ? 'bg-cyan-400 w-6' : 'bg-gray-400'
-                    }`}
-                    aria-label={`עבור לתמונה ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
+          <Carousel 
+            items={CAROUSEL_IMAGES.map(src => ({ type: 'image' as const, src }))}
+            currentIndex={currentImageIndex}
+            onIndexChange={setCurrentImageIndex}
+          />
 
           <div className="py-3 px-6 bg-[#2a2a2a] border-2 border-cyan-400 text-center rounded-xl max-w-lg mx-auto">
             <p className="text-white text-xl font-bold leading-relaxed mb-3">
-              אני מזמין אתכם אל הבית שלי,<br />לעשות את הדבר הכי טוב שתוכלו <span className="text-cyan-400 text-2xl">לעשות למענכם!</span>
+              אני מזמין אתכם אל הבית שלי,<br />לעשות את הדבר הכי טוב שתוכלו <span className="text-cyan-400 text-2xl">לעשות למענכם<span className="text-cyan-400">!</span></span>
             </p>
             <p className="text-sm text-gray-300">
               ללא קיצוניות מיותרת, בין אם חיטוב, עלייה במסת השריר, חיזוק הביטחון העצמי, שיפור התפקוד ובניית גוף חזק ובריא
@@ -328,10 +315,7 @@ const AboutUs: React.FC = () => {
       {/* Google Reviews Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
-            מה אומרים עלינו
-          </h2>
-          
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">מה אומרים עלינו</h2>
           <div className="flex justify-center">
             <a
               href="https://share.google/VbA2nUfw3peHiUarh"
@@ -347,107 +331,36 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
-      {/* Testimonials Carousel Section */}
+      {/* Testimonials Carousel */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-6xl mx-auto px-6">
-          {/* Testimonials Carousel - Image & Video */}
-          <div className="relative max-w-xs mx-auto mb-8">
-            <div className="relative">
-              {testimonialItems[currentTestimonialIndex].type === 'image' ? (
-                <img
-                  src={testimonialItems[currentTestimonialIndex].src}
-                  alt="ביקורת"
-                  className="w-full h-auto rounded-xl shadow-lg"
-                />
-              ) : (
-                <div className="relative w-full" style={{ paddingBottom: '177.78%' }}>
-                  <iframe
-                    className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
-                    src={testimonialItems[currentTestimonialIndex].src}
-                    title="Be The Beast"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              )}
-              
-              {/* Previous Button */}
-              <button
-                onClick={() => setCurrentTestimonialIndex((prev) => 
-                  prev === 0 ? testimonialItems.length - 1 : prev - 1
-                )}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
-                aria-label="תמונה קודמת"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              
-              {/* Next Button */}
-              <button
-                onClick={() => setCurrentTestimonialIndex((prev) => 
-                  prev === testimonialItems.length - 1 ? 0 : prev + 1
-                )}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-400 hover:bg-cyan-500 text-white p-2 rounded-full shadow-lg transition-all"
-                aria-label="תמונה הבאה"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-            </div>
-            
-            {/* Dots Navigation */}
-            <div className="flex justify-center gap-2 mt-4">
-              {testimonialItems.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTestimonialIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    index === currentTestimonialIndex ? 'bg-cyan-400 w-6' : 'bg-gray-500'
-                  }`}
-                  aria-label={`עבור לפריט ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
+          <Carousel 
+            items={TESTIMONIAL_ITEMS}
+            currentIndex={currentTestimonialIndex}
+            onIndexChange={setCurrentTestimonialIndex}
+            isTestimonial
+          />
         </div>
       </section>
 
       {/* FAQ Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-4xl mx-auto px-6">
-          {/* CTA Buttons Above FAQ */}
-          <div className="mb-6 space-y-3 max-w-lg mx-auto">
-            <button
-              onClick={scrollToContactForm}
-              className="block bg-white hover:bg-gray-100 text-black font-bold text-xl py-2 px-8 text-center transition-all shadow-lg rounded-full w-full border-2 border-gray-200"
-            >
-              אני רוצה להיות BE<span className="text-cyan-400">A</span>ST<span className="text-cyan-400">!</span>
-            </button>
-            <button
-              onClick={scrollToContactForm}
-              className="block bg-cyan-400 hover:bg-cyan-500 text-[#1a1a1a] font-bold text-base py-2 px-8 text-center transition-all shadow-lg rounded-full w-full whitespace-nowrap"
-            >
-              גר\ה רחוק? בוא\י להיות BE<span className="text-white">A</span>ST בOnline<span className="text-white">!</span>
-            </button>
-          </div>
+          <CTAButtons onBeastClick={scrollToContactForm} onOnlineClick={scrollToContactForm} />
 
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">
-            שאלות נפוצות
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-6">שאלות נפוצות</h2>
           
           <div className="space-y-4">
-            {faqs.map((faq, index) => (
+            {FAQS.map((faq, index) => (
               <div
                 key={index}
                 className="bg-[#2a2a2a] border-2 border-gray-700 rounded-lg overflow-hidden hover:border-cyan-400 transition-all"
               >
                 <button
-                  onClick={() => toggleFAQ(index)}
+                  onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
                   className="w-full flex items-center justify-between p-6 text-right"
                 >
-                  <div className="text-lg font-bold text-white pr-2">
-                    {faq.question}
-                  </div>
+                  <div className="text-lg font-bold text-white pr-2">{faq.question}</div>
                   {openFAQ === index ? (
                     <ChevronUp className="w-6 h-6 text-cyan-400 flex-shrink-0" />
                   ) : (
@@ -456,9 +369,7 @@ const AboutUs: React.FC = () => {
                 </button>
                 {openFAQ === index && (
                   <div className="px-6 pb-6 border-t-2 border-gray-700 pt-4">
-                    <p className="text-gray-300 text-lg leading-relaxed">
-                      {faq.answer}
-                    </p>
+                    <p className="text-gray-300 text-lg leading-relaxed">{faq.answer}</p>
                   </div>
                 )}
               </div>
@@ -470,15 +381,12 @@ const AboutUs: React.FC = () => {
       {/* Location Section */}
       <section className="bg-[#1a1a1a] pb-12">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            המיקום שלנו
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">המיקום שלנו</h2>
           <div className="flex items-center justify-center gap-2 text-xl text-gray-300 mb-6">
             <MapPin className="w-6 h-6 text-cyan-400" />
             <span>קיבוץ מעברות, עמק חפר</span>
           </div>
 
-          {/* Navigation Icons */}
           <div className="flex gap-4 justify-center mb-4">
             <a
               href="https://waze.com/ul?q=קיבוץ מעברות"
@@ -499,11 +407,10 @@ const AboutUs: React.FC = () => {
               <GoogleMapsLogo className="w-6 h-6" />
             </a>
           </div>
-
         </div>
       </section>
 
-      {/* Contact Form Section */}
+      {/* Contact Form */}
       <section id="contact-form" className="bg-[#1a1a1a] pb-12">
         <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-8">
@@ -511,11 +418,8 @@ const AboutUs: React.FC = () => {
           </h2>
           
           <form onSubmit={handleSubmit} className="bg-[#2a2a2a] border-2 border-cyan-400 rounded-xl p-6 md:p-8">
-            {/* Full Name */}
             <div className="mb-6">
-              <label htmlFor="fullName" className="block text-white font-bold mb-2 text-right">
-                שם מלא *
-              </label>
+              <label htmlFor="fullName" className="block text-white font-bold mb-2 text-right">שם מלא *</label>
               <input
                 type="text"
                 id="fullName"
@@ -527,11 +431,8 @@ const AboutUs: React.FC = () => {
               />
             </div>
 
-            {/* Phone */}
             <div className="mb-6">
-              <label htmlFor="phone" className="block text-white font-bold mb-2 text-right">
-                טלפון נייד *
-              </label>
+              <label htmlFor="phone" className="block text-white font-bold mb-2 text-right">טלפון נייד *</label>
               <input
                 type="tel"
                 id="phone"
@@ -543,11 +444,8 @@ const AboutUs: React.FC = () => {
               />
             </div>
 
-            {/* Notes */}
             <div className="mb-6">
-              <label htmlFor="notes" className="block text-white font-bold mb-2 text-right">
-                הערות (אופציונלי)
-              </label>
+              <label htmlFor="notes" className="block text-white font-bold mb-2 text-right">הערות (אופציונלי)</label>
               <textarea
                 id="notes"
                 rows={4}
@@ -558,7 +456,6 @@ const AboutUs: React.FC = () => {
               />
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-white hover:bg-gray-100 text-black font-bold text-xl py-3 px-8 text-center transition-all shadow-lg rounded-full border-2 border-gray-200"
@@ -572,9 +469,7 @@ const AboutUs: React.FC = () => {
       {/* Footer */}
       <footer className="bg-[#1a1a1a] py-8">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-gray-400">
-            © 2026 BEAST Training. All rights reserved.
-          </p>
+          <p className="text-gray-400">© 2026 BEAST Training. All rights reserved.</p>
         </div>
       </footer>
     </div>
@@ -582,3 +477,4 @@ const AboutUs: React.FC = () => {
 }
 
 export default AboutUs
+
