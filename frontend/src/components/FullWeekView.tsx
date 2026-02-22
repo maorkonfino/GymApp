@@ -457,15 +457,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
                                 }`}
                                 onClick={() => onCellClick && onCellClick(date, timeRange)}
                               >
-                                {/* "More" button - top left corner - always shown when there are registrations */}
-                                <button
-                                  onClick={(e) => handleShowAllClick(sortedRegs, e)}
-                                  className="absolute top-0 left-0 z-10 text-white hover:text-cyan-400 transition-colors p-0.5"
-                                  title={`צפה בכל הרשומים (${sortedRegs.length})`}
-                                >
-                                  <ChevronDown className="w-3 h-3" />
-                                </button>
-                                
                                 {/* Display up to 2 names - one below the other */}
                                 <div className="flex flex-col items-center justify-center h-full gap-0.5 text-[9px] font-medium leading-tight">
                                   {sortedRegs.slice(0, 2).map((reg) => (
