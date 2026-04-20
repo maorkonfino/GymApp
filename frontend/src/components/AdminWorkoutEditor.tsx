@@ -112,7 +112,8 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
     try {
       const planData: WorkoutPlan = {
         numberOfWeeks,
-        workouts
+        workouts,
+        ...(numberOfWeeks === 'flexible' ? { userAddedWeeks } : {})
       }
       await api.post('/workout-plans', {
         userId: user.id,
@@ -155,7 +156,7 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
         clearTimeout(timeout)
       }
     }
-  }, [workouts, numberOfWeeks])
+  }, [workouts, numberOfWeeks, userAddedWeeks])
 
   const addWorkout = () => {
     setWorkouts([
@@ -293,6 +294,50 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
     const temp = exercises[exerciseIndex]
     exercises[exerciseIndex] = exercises[exerciseIndex + 1]
     exercises[exerciseIndex + 1] = temp
+    setWorkouts(newWorkouts)
+  }
+
+  const deleteWeek = (weekNumber: number) => {
+    const totalWeeks = numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks
+    if (totalWeeks <= 1) return
+
+    if (!window.confirm(`האם אתה בטוח שברצונך למחוק את שבוע ${weekNumber}? כל הנתונים של שבוע זה יימחקו לצמיתות.`)) return
+
+    const newWorkouts = workouts.map(workout => ({
+      ...workout,
+      exercises: workout.exercises.map(exercise => {
+        const newWeeklyData: WeeklyTracking = {}
+        for (const key of Object.keys(exercise.weeklyData)) {
+          const k = parseInt(key)
+          if (k === weekNumber) continue
+          if (k > weekNumber) {
+            newWeeklyData[k - 1] = exercise.weeklyData[k]
+          } else {
+            newWeeklyData[k] = exercise.weeklyData[k]
+          }
+        }
+        return { ...exercise, weeklyData: newWeeklyData }
+      })
+    }))
+
+    setWorkouts(newWorkouts)
+    if (numberOfWeeks === 'flexible') {
+      setUserAddedWeeks(Math.max(0, userAddedWeeks - 1))
+    } else {
+      setNumberOfWeeks((numberOfWeeks as number) - 1)
+    }
+  }
+
+  const moveExerciseToWorkout = (sourceWorkoutIndex: number, exerciseIndex: number, targetWorkoutIndex: number) => {
+    if (sourceWorkoutIndex === targetWorkoutIndex) return
+    const newWorkouts = [...workouts].map(w => ({ ...w, exercises: [...w.exercises] }))
+    const [exercise] = newWorkouts[sourceWorkoutIndex].exercises.splice(exerciseIndex, 1)
+    newWorkouts[targetWorkoutIndex].exercises.push(exercise)
+    if (newWorkouts[sourceWorkoutIndex].exercises.length === 0) {
+      newWorkouts[sourceWorkoutIndex].exercises.push({
+        name: '', sets: '', repsRange: '', rest: '', rir: '', weeklyData: {}
+      })
+    }
     setWorkouts(newWorkouts)
   }
 
@@ -485,18 +530,32 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">חזרות</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-8 sm:w-12">מנוחה</th>
                           <th className="border border-dark-border px-0.5 py-0.5 text-gray-300 font-semibold text-center w-6 sm:w-8">RIR</th>
-                          {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).map(week => (
-                            <th key={week} className="border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center w-16 sm:w-20">
-                              שבוע {week}
-                            </th>
-                          ))}
+                          {Array.from({ length: numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks }, (_, i) => i + 1).map(week => {
+                            const totalWeeks = numberOfWeeks === 'flexible' ? (userAddedWeeks + 1) : numberOfWeeks
+                            return (
+                              <th key={week} className="border border-dark-border px-0.5 py-0.5 text-cyan-300 font-semibold text-center w-16 sm:w-20">
+                                <div className="flex items-center justify-center gap-0.5">
+                                  <span>שבוע {week}</span>
+                                  {totalWeeks > 1 && (
+                                    <button
+                                      onClick={() => deleteWeek(week)}
+                                      className="p-0.5 hover:bg-red-500/20 text-gray-500 hover:text-red-300 rounded transition-all"
+                                      title={`מחק שבוע ${week}`}
+                                    >
+                                      <X className="w-3 h-3" />
+                                    </button>
+                                  )}
+                                </div>
+                              </th>
+                            )
+                          })}
                           {/* Admin sees user's weeks but cannot add more - this is view only */}
                           {false && numberOfWeeks === 'flexible' && (
                             <th className="border border-dark-border px-0.5 py-0.5 text-purple-300 font-semibold text-center w-16 sm:w-20">
                               ...גמיש
                             </th>
                           )}
-                          <th className="border border-dark-border px-0.5 py-0.5 w-8"></th>
+                          <th className="border border-dark-border px-0.5 py-0.5 w-16"></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -599,15 +658,37 @@ const AdminWorkoutEditor: React.FC<AdminWorkoutEditorProps> = ({ user, onClose }
                                 </td>
                               ))}
                               <td className="border border-dark-border px-0.5 py-0.5 text-center">
-                                {workout.exercises.length > 1 && (
-                                  <button
-                                    onClick={() => removeExercise(workoutIndex, exerciseIndex)}
-                                    className="p-0.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded transition-all"
-                                    title="מחק תרגיל"
-                                  >
-                                    <Trash2 className="w-3 h-3" />
-                                  </button>
-                                )}
+                                <div className="flex flex-col items-center gap-0.5">
+                                  {workouts.length > 1 && (
+                                    <select
+                                      value=""
+                                      onChange={(e) => {
+                                        const targetIdx = parseInt(e.target.value)
+                                        if (!isNaN(targetIdx)) {
+                                          moveExerciseToWorkout(workoutIndex, exerciseIndex, targetIdx)
+                                        }
+                                      }}
+                                      className="w-14 bg-dark-card text-cyan-300 text-[7px] sm:text-[8px] border border-dark-border rounded px-0.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer"
+                                      title="העבר לאימון אחר"
+                                    >
+                                      <option value="" disabled>העבר...</option>
+                                      {workouts.map((w, i) =>
+                                        i !== workoutIndex ? (
+                                          <option key={i} value={i}>{w.name}</option>
+                                        ) : null
+                                      )}
+                                    </select>
+                                  )}
+                                  {workout.exercises.length > 1 && (
+                                    <button
+                                      onClick={() => removeExercise(workoutIndex, exerciseIndex)}
+                                      className="p-0.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded transition-all"
+                                      title="מחק תרגיל"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
+                                  )}
+                                </div>
                               </td>
                             </tr>
                           )
