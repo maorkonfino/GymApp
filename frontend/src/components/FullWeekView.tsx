@@ -150,13 +150,6 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     }
   }
 
-  // Handle "Show All" modal
-  const handleShowAllClick = (regs: Registration[], e: React.MouseEvent) => {
-    e.stopPropagation()
-    setSelectedCellRegistrations(regs)
-    setShowAllModal(true)
-  }
-
   // Handle day workouts modal
   const handleShowDayWorkouts = (date: Date, e: React.MouseEvent) => {
     e.stopPropagation()
