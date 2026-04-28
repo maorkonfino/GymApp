@@ -4,24 +4,8 @@ import { Apple, Trash2, LineChart, ChevronDown, ChevronUp } from 'lucide-react'
 import { format } from 'date-fns'
 import { he } from 'date-fns/locale'
 import WeightGraph from './WeightGraph'
-import NotesModal from './NotesModal'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
-
-interface NutritionGoals {
-  regularDay: {
-    protein: number
-    fat: number
-    carbs: number
-    calories: number
-  }
-  loadingDay: {
-    protein: number
-    fat: number
-    carbs: number
-    calories: number
-  }
-}
 
 interface DailyEntry {
   date: string
@@ -37,7 +21,6 @@ interface DailyEntry {
 const NutritionTracking: React.FC = () => {
   const { user, isAdmin } = useAuth()
   const [activeTab, setActiveTab] = useState<'tracking' | 'graph'>('tracking')
-  const [editingGoals, setEditingGoals] = useState(false)
   const [hasNutritionPlan, setHasNutritionPlan] = useState<boolean | null>(null) // null = loading, true = has plan, false = no plan
 
   // Check if user has a nutrition plan
@@ -79,56 +62,6 @@ const NutritionTracking: React.FC = () => {
     checkNutritionPlan()
   }, [user, isAdmin])
 
-  // חישוב קלוריות אוטומטי
-  const calculateCalories = (protein: number, fat: number, carbs: number) => {
-    return (protein * 4) + (fat * 9) + (carbs * 4)
-  }
-
-  const [goals, setGoals] = useState<NutritionGoals>({
-    regularDay: { protein: 0, fat: 0, carbs: 0, calories: 0 },
-    loadingDay: { protein: 0, fat: 0, carbs: 0, calories: 0 }
-  })
-
-  // Load nutrition goals from server
-  useEffect(() => {
-    const loadGoals = async () => {
-      if (!user) return
-
-      try {
-        const response = await fetch(`${API_URL}/nutrition-goals/${user.email}`)
-        const data = await response.json()
-        
-        if (data) {
-          const regularProtein = data.regular_day_protein || 0
-          const regularFat = data.regular_day_fat || 0
-          const regularCarbs = data.regular_day_carbs || 0
-          const loadingProtein = data.loading_day_protein || 0
-          const loadingFat = data.loading_day_fat || 0
-          const loadingCarbs = data.loading_day_carbs || 0
-
-          setGoals({
-            regularDay: {
-              protein: regularProtein,
-              fat: regularFat,
-              carbs: regularCarbs,
-              calories: calculateCalories(regularProtein, regularFat, regularCarbs)
-            },
-            loadingDay: {
-              protein: loadingProtein,
-              fat: loadingFat,
-              carbs: loadingCarbs,
-              calories: calculateCalories(loadingProtein, loadingFat, loadingCarbs)
-            }
-          })
-        }
-      } catch (error) {
-        console.error('Error loading nutrition goals:', error)
-      }
-    }
-
-    loadGoals()
-  }, [user])
-
   const [entries, setEntries] = useState<DailyEntry[]>([])
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
@@ -137,14 +70,6 @@ const NutritionTracking: React.FC = () => {
     const saved = localStorage.getItem('nutrition-collapsed-weeks')
     return saved ? new Set(JSON.parse(saved)) : new Set()
   })
-  const [goalsCollapsed, setGoalsCollapsed] = useState(() => {
-    // Load goals collapsed state from localStorage
-    const saved = localStorage.getItem('nutrition-goals-collapsed')
-    return saved === 'true'
-  })
-  const [notesModalOpen, setNotesModalOpen] = useState(false)
-  const [notesModalIndex, setNotesModalIndex] = useState<number>(-1)
-  const [notesModalValue, setNotesModalValue] = useState('')
 
   // Load daily tracking entries from server
   useEffect(() => {
@@ -262,10 +187,6 @@ const NutritionTracking: React.FC = () => {
     localStorage.setItem('nutrition-collapsed-weeks', JSON.stringify(Array.from(collapsedWeeks)))
   }, [collapsedWeeks])
 
-  // Save goals collapsed state to localStorage
-  useEffect(() => {
-    localStorage.setItem('nutrition-goals-collapsed', goalsCollapsed.toString())
-  }, [goalsCollapsed])
 
 
   const removeRow = (index: number) => {
@@ -287,36 +208,6 @@ const NutritionTracking: React.FC = () => {
     setEntries(newEntries)
   }
 
-  const updateGoals = (day: 'regularDay' | 'loadingDay', field: 'protein' | 'fat' | 'carbs', value: number) => {
-    const newGoals = { ...goals }
-    newGoals[day][field] = value
-    newGoals[day].calories = calculateCalories(
-      newGoals[day].protein,
-      newGoals[day].fat,
-      newGoals[day].carbs
-    )
-    setGoals(newGoals)
-  }
-
-  const openNotesModal = (index: number) => {
-    if (index < 0 || index >= entries.length) return
-    setNotesModalIndex(index)
-    setNotesModalValue(entries[index].notes)
-    setNotesModalOpen(true)
-  }
-
-  const closeNotesModal = () => {
-    setNotesModalOpen(false)
-    setNotesModalIndex(-1)
-    setNotesModalValue('')
-  }
-
-  const saveNotesModal = (newNotes: string) => {
-    if (notesModalIndex !== -1) {
-      updateEntry(notesModalIndex, 'notes', newNotes)
-    }
-    closeNotesModal()
-  }
 
   // Get week number for a date (Sunday = start of week)
   const getWeekKey = (dateStr: string) => {
@@ -686,15 +577,6 @@ const NutritionTracking: React.FC = () => {
         />
       )}
 
-      {/* Notes Modal */}
-      {notesModalOpen && (
-        <NotesModal
-          isOpen={notesModalOpen}
-          onClose={closeNotesModal}
-          onSave={saveNotesModal}
-          initialNotes={notesModalValue}
-        />
-      )}
     </div>
   )
 }
