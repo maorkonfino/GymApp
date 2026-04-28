@@ -15,6 +15,7 @@ import ManageUsers from './components/ManageUsers'
 import ForgotPasswordModal from './components/ForgotPasswordModal'
 import WorkoutArchive from './components/WorkoutArchive'
 import api from './api'
+import { fetchTeenBeastRestrictions } from './utils/timeRestrictions'
 
 function AppContent() {
   const { user, login, register } = useAuth()
@@ -32,7 +33,7 @@ function AppContent() {
   const [refreshTrigger, setRefreshTrigger] = useState(0)
   const [editingRegistration, setEditingRegistration] = useState<any>(null)
 
-  // Cleanup old registrations on app load
+  // Cleanup old registrations and fetch restrictions on app load
   useEffect(() => {
     const cleanupOldRegistrations = async () => {
       try {
@@ -43,6 +44,7 @@ function AppContent() {
       }
     }
     cleanupOldRegistrations()
+    fetchTeenBeastRestrictions()
   }, [])
 
   // Reset weekOffset to 0 when switching to home/registration view

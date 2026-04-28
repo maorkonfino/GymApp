@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { X, Users, Edit2, Dumbbell, Apple, Search, Settings, Bell, Trash2 } from 'lucide-react'
+import { X, Users, Edit2, Dumbbell, Apple, Search, Settings, Bell, Trash2, Clock } from 'lucide-react'
 import { User } from '../types'
 import api from '../api'
 import AdminWorkoutEditor from './AdminWorkoutEditor'
 import AdminNutritionEditor from './AdminNutritionEditor'
+import { fetchTeenBeastRestrictions } from '../utils/timeRestrictions'
 
 interface ManageUsersProps {
   isOpen: boolean
@@ -32,6 +33,15 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
     message_24h: 'תזכורת: יש לך אימון מחר ב-{time}',
     message_4h: 'תזכורת: יש לך אימון בעוד 4 שעות'
   })
+  const [teenBeastRestrictions, setTeenBeastRestrictions] = useState<Array<{ day_of_week: number; start_time: string; end_time: string }>>([
+    { day_of_week: 0, start_time: '15:30', end_time: '18:30' },
+    { day_of_week: 1, start_time: '15:30', end_time: '18:30' },
+    { day_of_week: 2, start_time: '15:30', end_time: '17:30' },
+    { day_of_week: 3, start_time: '15:30', end_time: '18:30' },
+    { day_of_week: 4, start_time: '15:30', end_time: '18:30' },
+    { day_of_week: 5, start_time: '12:00', end_time: '14:00' },
+    { day_of_week: 6, start_time: '', end_time: '' },
+  ])
 
   useEffect(() => {
     if (isOpen) {
@@ -59,6 +69,46 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
     } catch (error) {
       console.error('Error fetching reminder settings:', error)
     }
+  }
+
+  const fetchTeenBeastSettings = async () => {
+    try {
+      const response = await api.get('/role-time-restrictions/teenbeast')
+      if (response.data && response.data.length > 0) {
+        setTeenBeastRestrictions(response.data)
+      }
+    } catch (error) {
+      console.error('Error fetching TeenBeast restrictions:', error)
+    }
+  }
+
+  const handleSaveTeenBeastRestrictions = async () => {
+    try {
+      await api.put('/role-time-restrictions/teenbeast', { restrictions: teenBeastRestrictions })
+      await fetchTeenBeastRestrictions()
+      alert('שעות TeenBEAST עודכנו בהצלחה!')
+    } catch (error) {
+      console.error('Error saving TeenBeast restrictions:', error)
+      alert('שגיאה בשמירת שעות TeenBEAST')
+    }
+  }
+
+  const updateRestriction = (dayOfWeek: number, field: 'start_time' | 'end_time', value: string) => {
+    setTeenBeastRestrictions(prev =>
+      prev.map(r => r.day_of_week === dayOfWeek ? { ...r, [field]: value } : r)
+    )
+  }
+
+  const toggleDayBlocked = (dayOfWeek: number) => {
+    setTeenBeastRestrictions(prev =>
+      prev.map(r => {
+        if (r.day_of_week !== dayOfWeek) return r
+        if (r.start_time === '' && r.end_time === '') {
+          return { ...r, start_time: '15:30', end_time: '18:30' }
+        }
+        return { ...r, start_time: '', end_time: '' }
+      })
+    )
   }
 
   const handleSaveReminderSettings = async () => {
@@ -154,7 +204,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setEditMode('settings')}
+              onClick={() => { setEditMode('settings'); fetchTeenBeastSettings() }}
               className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg transition-all flex items-center gap-2"
               title="הגדרות כלליות"
             >
@@ -567,7 +617,60 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Save Button */}
+              {/* TeenBEAST Hours */}
+              <div className="p-4 bg-dark-hover border border-dark-border rounded-lg">
+                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-orange-400" />
+                  שעות TeenBEAST
+                </h4>
+                <div className="space-y-3">
+                  {['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'].map((dayName, dayIndex) => {
+                    const restriction = teenBeastRestrictions.find(r => r.day_of_week === dayIndex)
+                    const isBlocked = !restriction?.start_time && !restriction?.end_time
+
+                    return (
+                      <div key={dayIndex} className="flex items-center gap-3 p-3 bg-dark-card rounded-lg">
+                        <span className="text-gray-300 w-16 text-sm font-medium">{dayName}</span>
+                        <button
+                          onClick={() => toggleDayBlocked(dayIndex)}
+                          className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                            isBlocked
+                              ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
+                              : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                          }`}
+                        >
+                          {isBlocked ? 'חסום' : 'פתוח'}
+                        </button>
+                        {!isBlocked && (
+                          <>
+                            <input
+                              type="time"
+                              value={restriction?.start_time || ''}
+                              onChange={(e) => updateRestriction(dayIndex, 'start_time', e.target.value)}
+                              className="bg-dark-bg border border-dark-border rounded-lg px-2 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            />
+                            <span className="text-gray-500">-</span>
+                            <input
+                              type="time"
+                              value={restriction?.end_time || ''}
+                              onChange={(e) => updateRestriction(dayIndex, 'end_time', e.target.value)}
+                              className="bg-dark-bg border border-dark-border rounded-lg px-2 py-1 text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            />
+                          </>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+                <button
+                  onClick={handleSaveTeenBeastRestrictions}
+                  className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-lg transition-all font-semibold"
+                >
+                  שמור שעות TeenBEAST
+                </button>
+              </div>
+
+              {/* Save Reminder Settings Button */}
               <div className="flex gap-3">
                 <button
                   onClick={() => setEditMode(null)}
@@ -579,7 +682,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
                   onClick={handleSaveReminderSettings}
                   className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-lg transition-all font-semibold"
                 >
-                  שמור הגדרות
+                  שמור הגדרות תזכורות
                 </button>
               </div>
             </div>

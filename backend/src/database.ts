@@ -631,6 +631,59 @@ export const updateReminderSettings = (settings: Partial<Omit<ReminderSettings, 
   return stmt.run(...values);
 };
 
+// ===== ROLE TIME RESTRICTIONS =====
+
+export interface RoleTimeRestriction {
+  role: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+}
+
+const TEEN_BEAST_DEFAULTS: Omit<RoleTimeRestriction, 'role'>[] = [
+  { day_of_week: 0, start_time: '15:30', end_time: '18:30' },
+  { day_of_week: 1, start_time: '15:30', end_time: '18:30' },
+  { day_of_week: 2, start_time: '15:30', end_time: '17:30' },
+  { day_of_week: 3, start_time: '15:30', end_time: '18:30' },
+  { day_of_week: 4, start_time: '15:30', end_time: '18:30' },
+  { day_of_week: 5, start_time: '12:00', end_time: '14:00' },
+  { day_of_week: 6, start_time: '', end_time: '' },
+];
+
+export const getRoleTimeRestrictions = (role: string): RoleTimeRestriction[] => {
+  const stmt = db.prepare('SELECT role, day_of_week, start_time, end_time FROM role_time_restrictions WHERE role = ? ORDER BY day_of_week');
+  let rows = stmt.all(role) as RoleTimeRestriction[];
+
+  if (rows.length === 0 && role === 'teenbeast') {
+    const insert = db.prepare(
+      'INSERT OR IGNORE INTO role_time_restrictions (role, day_of_week, start_time, end_time) VALUES (?, ?, ?, ?)'
+    );
+    const tx = db.transaction(() => {
+      for (const d of TEEN_BEAST_DEFAULTS) {
+        insert.run(role, d.day_of_week, d.start_time, d.end_time);
+      }
+    });
+    tx();
+    rows = stmt.all(role) as RoleTimeRestriction[];
+  }
+
+  return rows;
+};
+
+export const upsertRoleTimeRestrictions = (role: string, restrictions: Omit<RoleTimeRestriction, 'role'>[]) => {
+  const stmt = db.prepare(
+    `INSERT INTO role_time_restrictions (role, day_of_week, start_time, end_time, updated_at)
+     VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+     ON CONFLICT(role, day_of_week) DO UPDATE SET start_time = excluded.start_time, end_time = excluded.end_time, updated_at = CURRENT_TIMESTAMP`
+  );
+  const tx = db.transaction(() => {
+    for (const r of restrictions) {
+      stmt.run(role, r.day_of_week, r.start_time, r.end_time);
+    }
+  });
+  tx();
+};
+
 export default db;
 
 
