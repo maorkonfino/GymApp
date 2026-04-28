@@ -388,10 +388,10 @@ const NutritionTracking: React.FC = () => {
         result.push({
           date: weekKey,
           morningWeight: calculateAverage('morningWeight'),
-          calories: calculateAverage('calories'),
-          protein: calculateAverage('protein'),
-          fat: calculateAverage('fat'),
-          carbs: calculateAverage('carbs'),
+          calories: '',
+          protein: '',
+          fat: '',
+          carbs: '',
           steps: calculateAverage('steps'),
           notes: `ממוצע שבועי`,
           isAverage: true,
@@ -555,99 +555,6 @@ const NutritionTracking: React.FC = () => {
 
       {activeTab === 'tracking' ? (
         <>
-          {/* Goals Table - All Users */}
-          <div className="bg-dark-card border border-dark-border rounded-xl p-6">
-            <div 
-              className="flex items-center justify-between mb-4 cursor-pointer hover:bg-dark-hover/30 -m-2 p-2 rounded-lg transition-colors"
-              onClick={() => setGoalsCollapsed(!goalsCollapsed)}
-            >
-              <div className="flex items-center gap-3">
-                <Apple className="w-6 h-6 text-green-400" />
-                <h3 className="text-xl font-bold text-green-400">יעדי תזונה</h3>
-              </div>
-              <div className="flex items-center gap-2">
-                {!goalsCollapsed && isAdmin && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setEditingGoals(!editingGoals)
-                    }}
-                    className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg text-sm transition-all"
-                  >
-                    {editingGoals ? 'שמור יעדים' : 'ערוך יעדים'}
-                  </button>
-                )}
-                <button className="text-green-400 hover:text-green-300 transition-colors">
-                  {goalsCollapsed ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
-                </button>
-              </div>
-            </div>
-
-            {!goalsCollapsed && (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-dark-border">
-                      <th className="text-right p-3 text-gray-400 font-medium">מדד</th>
-                      <th className="text-center p-3 text-gray-400 font-medium">יום רגיל</th>
-                      <th className="text-center p-3 text-gray-400 font-medium">יום העמסה</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-dark-border/30">
-                      <td className="p-3 text-white font-medium">קלוריות</td>
-                      <td className="p-3 text-center">
-                        <div className="text-green-400 font-bold text-lg">
-                          {goals.regularDay.calories}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1">מחושב אוטומטית</div>
-                      </td>
-                      <td className="p-3 text-center">
-                        <div className="text-green-400 font-bold text-lg">
-                          {goals.loadingDay.calories}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1">מחושב אוטומטית</div>
-                      </td>
-                    </tr>
-                    {(['protein', 'fat', 'carbs'] as const).map((nutrient) => (
-                      <tr key={nutrient} className="border-b border-dark-border/30">
-                        <td className="p-3 text-white">
-                          {nutrient === 'protein' ? 'חלבון' : 
-                           nutrient === 'fat' ? 'שומן' : 
-                           'פחמימה'}
-                        </td>
-                        <td className="p-3 text-center">
-                          {isAdmin && editingGoals ? (
-                            <input
-                              type="number"
-                              value={goals.regularDay[nutrient]}
-                              onChange={(e) => updateGoals('regularDay', nutrient, parseFloat(e.target.value) || 0)}
-                              className="w-24 bg-dark-hover border border-dark-border rounded px-3 py-2 text-white text-center focus:outline-none focus:ring-1 focus:ring-green-500"
-                            />
-                          ) : (
-                            <div className="text-white font-semibold">{goals.regularDay[nutrient]}</div>
-                          )}
-                        </td>
-                        <td className="p-3 text-center">
-                          {isAdmin && editingGoals ? (
-                            <input
-                              type="number"
-                              value={goals.loadingDay[nutrient]}
-                              onChange={(e) => updateGoals('loadingDay', nutrient, parseFloat(e.target.value) || 0)}
-                              className="w-24 bg-dark-hover border border-dark-border rounded px-3 py-2 text-white text-center focus:outline-none focus:ring-1 focus:ring-green-500"
-                            />
-                          ) : (
-                            <div className="text-white font-semibold">{goals.loadingDay[nutrient]}</div>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-
           {/* Daily Tracking Table */}
           <div className="bg-dark-card border border-dark-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
@@ -673,12 +580,7 @@ const NutritionTracking: React.FC = () => {
                   <tr className="border-b border-dark-border bg-dark-card">
                     <th className="text-right p-0.5 text-gray-400 font-medium sticky right-0 bg-dark-card z-30 shadow-[2px_0_5px_rgba(0,0,0,0.3)] w-[45px] sm:w-[60px]">תאריך</th>
                     <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">משקל</th>
-                    <th className="text-center p-0.5 text-gray-400 font-medium w-12 sm:w-16">קלוריות</th>
-                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">חלבון</th>
-                    <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">שומן</th>
-                    <th className="text-center p-0.5 text-gray-400 font-medium w-12 sm:w-16">פחמימות</th>
                     <th className="text-center p-0.5 text-gray-400 font-medium w-10 sm:w-12">צעדים</th>
-                    <th className="text-right p-0.5 text-gray-400 font-medium w-10 sm:w-12">הערות</th>
                     <th className="w-6 sm:w-8"></th>
                   </tr>
                 </thead>
@@ -734,7 +636,7 @@ const NutritionTracking: React.FC = () => {
                             <div className="text-gray-600 text-[7px]">-</div>
                           )}
                         </td>
-                        {(['morningWeight', 'calories', 'protein', 'fat', 'carbs', 'steps'] as const).map((field) => (
+                        {(['morningWeight', 'steps'] as const).map((field) => (
                           <td key={field} className="p-0.5 text-center">
                             {isAverage ? (
                               <div className="text-cyan-300 font-bold text-[8px] sm:text-[10px]">
@@ -753,21 +655,6 @@ const NutritionTracking: React.FC = () => {
                             )}
                           </td>
                         ))}
-                        <td className="p-0.5">
-                          {isAverage ? (
-                            <div className="text-gray-600 text-[7px]">-</div>
-                          ) : actualIndex >= 0 ? (
-                            <button
-                              onClick={() => openNotesModal(actualIndex)}
-                              className="w-9 sm:w-11 bg-dark-hover hover:bg-dark-border border border-dark-border rounded px-0.5 py-0.5 text-white text-[7px] sm:text-[9px] text-center transition-colors focus:outline-none focus:ring-1 focus:ring-green-500 truncate"
-                              title={entry.notes || 'לחץ לעריכת הערות'}
-                            >
-                              {entry.notes ? '📝' : '+'}
-                            </button>
-                          ) : (
-                            <div className="text-gray-600 text-[7px]">-</div>
-                          )}
-                        </td>
                         <td className="p-0.5 text-center">
                           {!isAverage && actualIndex >= 0 && (
                             <button
