@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { X, Trash2, LineChart, ChevronDown, ChevronUp, Plus } from 'lucide-react'
+import { X, Apple, Trash2, LineChart, ChevronDown, ChevronUp, Plus } from 'lucide-react'
 import { User } from '../types'
 import { format, startOfWeek } from 'date-fns'
 import { he } from 'date-fns/locale'
+import api from '../api'
 import WeightGraph from './WeightGraph'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
@@ -10,6 +11,21 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 interface AdminNutritionEditorProps {
   user: User
   onClose: () => void
+}
+
+interface NutritionGoals {
+  regularDay: {
+    protein: number
+    fat: number
+    carbs: number
+    calories: number
+  }
+  loadingDay: {
+    protein: number
+    fat: number
+    carbs: number
+    calories: number
+  }
 }
 
 interface DailyEntry {
@@ -25,8 +41,12 @@ interface DailyEntry {
 
 const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClose }) => {
   const [activeTab, setActiveTab] = useState<'tracking' | 'graph'>('tracking')
+  const [goals, setGoals] = useState<NutritionGoals>({
+    regularDay: { protein: 0, fat: 0, carbs: 0, calories: 0 },
+    loadingDay: { protein: 0, fat: 0, carbs: 0, calories: 0 },
+  })
   const [entries, setEntries] = useState<DailyEntry[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loadingGoals, setLoadingGoals] = useState(true)
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
 
@@ -34,14 +54,31 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
     const saved = localStorage.getItem(`admin-nutrition-collapsed-weeks-${user.id}`)
     return saved ? new Set(JSON.parse(saved)) : new Set()
   })
+  const [goalsCollapsed, setGoalsCollapsed] = useState(() => {
+    const saved = localStorage.getItem(`admin-nutrition-goals-collapsed-${user.id}`)
+    return saved === 'true'
+  })
 
   useEffect(() => {
+    loadGoals()
     loadEntries()
   }, [user])
 
   useEffect(() => {
     localStorage.setItem(`admin-nutrition-collapsed-weeks-${user.id}`, JSON.stringify(Array.from(collapsedWeeks)))
   }, [collapsedWeeks, user.id])
+
+  useEffect(() => {
+    localStorage.setItem(`admin-nutrition-goals-collapsed-${user.id}`, goalsCollapsed.toString())
+  }, [goalsCollapsed, user.id])
+
+  const toggleGoalsCollapse = () => {
+    setGoalsCollapsed(prev => !prev)
+  }
+
+  const calculateCalories = (protein: number, fat: number, carbs: number): number => {
+    return Math.round((protein * 4) + (fat * 9) + (carbs * 4))
+  }
 
   const toggleWeekCollapse = (weekKey: string) => {
     setCollapsedWeeks(prev => {
@@ -55,8 +92,42 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
     })
   }
 
+  const loadGoals = async () => {
+    setLoadingGoals(true)
+    try {
+      const response = await api.get(`/nutrition-goals/user/${user.id}`)
+      if (response.data && response.data.length > 0) {
+        const data = response.data[0]
+        const regularProtein = data.regular_day_protein || 0
+        const regularFat = data.regular_day_fat || 0
+        const regularCarbs = data.regular_day_carbs || 0
+        const loadingProtein = data.loading_day_protein || 0
+        const loadingFat = data.loading_day_fat || 0
+        const loadingCarbs = data.loading_day_carbs || 0
+
+        setGoals({
+          regularDay: {
+            protein: regularProtein,
+            fat: regularFat,
+            carbs: regularCarbs,
+            calories: calculateCalories(regularProtein, regularFat, regularCarbs)
+          },
+          loadingDay: {
+            protein: loadingProtein,
+            fat: loadingFat,
+            carbs: loadingCarbs,
+            calories: calculateCalories(loadingProtein, loadingFat, loadingCarbs)
+          }
+        })
+      }
+    } catch (error) {
+      console.error('Error loading nutrition goals:', error)
+    } finally {
+      setLoadingGoals(false)
+    }
+  }
+
   const loadEntries = async () => {
-    setLoading(true)
     try {
       const response = await fetch(`${API_URL}/daily-tracking/${user.email}`)
       const data = await response.json()
@@ -80,8 +151,6 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
       setEntries(formattedEntries)
     } catch (error) {
       console.error('Error loading daily tracking:', error)
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -148,6 +217,43 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
       }
     }, 1000)
     
+    setSaveTimeout(timeout)
+  }
+
+  const updateGoals = (dayType: 'regularDay' | 'loadingDay', field: 'protein' | 'fat' | 'carbs', value: number) => {
+    setGoals(prev => {
+      const newGoals = { ...prev }
+      newGoals[dayType][field] = value
+      newGoals[dayType].calories = calculateCalories(
+        newGoals[dayType].protein,
+        newGoals[dayType].fat,
+        newGoals[dayType].carbs
+      )
+      return newGoals
+    })
+
+    if (saveTimeout) clearTimeout(saveTimeout)
+
+    setIsSaving(true)
+    const timeout = setTimeout(async () => {
+      try {
+        await api.post('/nutrition-goals', {
+          userId: user.id,
+          normalProtein: goals.regularDay.protein,
+          normalFat: goals.regularDay.fat,
+          normalCarbs: goals.regularDay.carbs,
+          loadingProtein: goals.loadingDay.protein,
+          loadingFat: goals.loadingDay.fat,
+          loadingCarbs: goals.loadingDay.carbs,
+          updated_by: user.email
+        })
+      } catch (error) {
+        console.error('Error saving goals:', error)
+      } finally {
+        setIsSaving(false)
+      }
+    }, 1000)
+
     setSaveTimeout(timeout)
   }
 
@@ -218,7 +324,7 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
     return result
   }
 
-  if (loading) {
+  if (loadingGoals) {
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div className="bg-dark-card rounded-xl p-8 max-w-6xl w-full max-h-[90vh] overflow-y-auto border border-dark-border shadow-2xl">
@@ -252,6 +358,78 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
           >
             <X className="w-6 h-6" />
           </button>
+        </div>
+
+        {/* Nutrition Goals Table */}
+        <div className="bg-dark-hover border border-dark-border rounded-xl p-6 shadow-xl mb-6">
+          <div
+            className="flex items-center justify-between mb-4 cursor-pointer hover:bg-dark-card/30 -m-2 p-2 rounded-lg transition-colors"
+            onClick={toggleGoalsCollapse}
+          >
+            <div className="flex items-center gap-3">
+              <Apple className="w-8 h-8 text-green-400" />
+              <h3 className="text-2xl font-bold text-white">יעדי תזונה</h3>
+            </div>
+            <button className="text-green-400 hover:text-green-300 transition-colors">
+              {goalsCollapsed ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
+            </button>
+          </div>
+
+          {!goalsCollapsed && (
+            <div className="overflow-x-auto">
+              <table className="w-full text-[7px] sm:text-sm">
+                <thead>
+                  <tr className="border-b border-dark-border">
+                    <th className="text-right p-1 sm:p-3 text-gray-400 font-medium">מדד</th>
+                    <th className="text-center p-1 sm:p-3 text-gray-400 font-medium">יום רגיל</th>
+                    <th className="text-center p-1 sm:p-3 text-gray-400 font-medium">יום העמסה</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-dark-border/30">
+                    <td className="p-1 sm:p-3 text-white font-medium">קלוריות</td>
+                    <td className="p-1 sm:p-3 text-center">
+                      <div className="text-green-400 font-bold text-[8px] sm:text-base">
+                        {goals.regularDay.calories}
+                      </div>
+                      <div className="text-[6px] sm:text-xs text-gray-500 mt-1">מחושב אוטומטית</div>
+                    </td>
+                    <td className="p-1 sm:p-3 text-center">
+                      <div className="text-green-400 font-bold text-[8px] sm:text-base">
+                        {goals.loadingDay.calories}
+                      </div>
+                      <div className="text-[6px] sm:text-xs text-gray-500 mt-1">מחושב אוטומטית</div>
+                    </td>
+                  </tr>
+                  {(['protein', 'fat', 'carbs'] as const).map((nutrient) => (
+                    <tr key={nutrient} className="border-b border-dark-border/30">
+                      <td className="p-1 sm:p-3 text-white">
+                        {nutrient === 'protein' ? 'חלבון' :
+                         nutrient === 'fat' ? 'שומן' :
+                         'פחמימה'}
+                      </td>
+                      <td className="p-1 sm:p-3 text-center">
+                        <input
+                          type="number"
+                          value={goals.regularDay[nutrient]}
+                          onChange={(e) => updateGoals('regularDay', nutrient, parseFloat(e.target.value) || 0)}
+                          className="w-16 sm:w-24 bg-dark-card border border-dark-border rounded px-1 sm:px-3 py-1 sm:py-2 text-white text-center text-[7px] sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                        />
+                      </td>
+                      <td className="p-1 sm:p-3 text-center">
+                        <input
+                          type="number"
+                          value={goals.loadingDay[nutrient]}
+                          onChange={(e) => updateGoals('loadingDay', nutrient, parseFloat(e.target.value) || 0)}
+                          className="w-16 sm:w-24 bg-dark-card border border-dark-border rounded px-1 sm:px-3 py-1 sm:py-2 text-white text-center text-[7px] sm:text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* Daily Tracking Table */}
