@@ -58,11 +58,6 @@ const NutritionTracking: React.FC = () => {
         return
       }
 
-      if (isAdmin) {
-        setHasNutritionPlan(true)
-        return
-      }
-
       try {
         const response = await fetch(`${API_URL}/nutrition-goals/${user.email}`)
         const data = await response.json()
@@ -87,11 +82,11 @@ const NutritionTracking: React.FC = () => {
             loadingDay: { protein: lp, fat: lf, carbs: lc, calories: calculateCalories(lp, lf, lc) }
           })
         } else {
-          setHasNutritionPlan(false)
+          setHasNutritionPlan(isAdmin ? true : false)
         }
       } catch (error) {
         console.error('Error checking nutrition plan:', error)
-        setHasNutritionPlan(false)
+        setHasNutritionPlan(isAdmin ? true : false)
       }
     }
 
