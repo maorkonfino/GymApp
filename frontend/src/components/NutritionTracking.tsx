@@ -7,6 +7,21 @@ import WeightGraph from './WeightGraph'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
+interface NutritionGoals {
+  regularDay: {
+    protein: number
+    fat: number
+    carbs: number
+    calories: number
+  }
+  loadingDay: {
+    protein: number
+    fat: number
+    carbs: number
+    calories: number
+  }
+}
+
 interface DailyEntry {
   date: string
   morningWeight: string
@@ -21,9 +36,21 @@ interface DailyEntry {
 const NutritionTracking: React.FC = () => {
   const { user, isAdmin } = useAuth()
   const [activeTab, setActiveTab] = useState<'tracking' | 'graph'>('tracking')
-  const [hasNutritionPlan, setHasNutritionPlan] = useState<boolean | null>(null) // null = loading, true = has plan, false = no plan
+  const [hasNutritionPlan, setHasNutritionPlan] = useState<boolean | null>(null)
+  const [goals, setGoals] = useState<NutritionGoals | null>(null)
+  const [goalsCollapsed, setGoalsCollapsed] = useState(() => {
+    const saved = localStorage.getItem('nutrition-goals-collapsed')
+    return saved === 'true'
+  })
 
-  // Check if user has a nutrition plan
+  const calculateCalories = (protein: number, fat: number, carbs: number): number => {
+    return Math.round((protein * 4) + (fat * 9) + (carbs * 4))
+  }
+
+  useEffect(() => {
+    localStorage.setItem('nutrition-goals-collapsed', goalsCollapsed.toString())
+  }, [goalsCollapsed])
+
   useEffect(() => {
     const checkNutritionPlan = async () => {
       if (!user) {
@@ -32,24 +59,33 @@ const NutritionTracking: React.FC = () => {
       }
 
       if (isAdmin) {
-        setHasNutritionPlan(true) // Admin always has access
+        setHasNutritionPlan(true)
         return
       }
 
       try {
         const response = await fetch(`${API_URL}/nutrition-goals/${user.email}`)
         const data = await response.json()
-        
-        // Check if there's actual nutrition goals (at least one value > 0)
+
         if (data && (
-          data.regular_day_protein > 0 || 
-          data.regular_day_fat > 0 || 
+          data.regular_day_protein > 0 ||
+          data.regular_day_fat > 0 ||
           data.regular_day_carbs > 0 ||
           data.loading_day_protein > 0 ||
           data.loading_day_fat > 0 ||
           data.loading_day_carbs > 0
         )) {
           setHasNutritionPlan(true)
+          const rp = data.regular_day_protein || 0
+          const rf = data.regular_day_fat || 0
+          const rc = data.regular_day_carbs || 0
+          const lp = data.loading_day_protein || 0
+          const lf = data.loading_day_fat || 0
+          const lc = data.loading_day_carbs || 0
+          setGoals({
+            regularDay: { protein: rp, fat: rf, carbs: rc, calories: calculateCalories(rp, rf, rc) },
+            loadingDay: { protein: lp, fat: lf, carbs: lc, calories: calculateCalories(lp, lf, lc) }
+          })
         } else {
           setHasNutritionPlan(false)
         }
@@ -443,6 +479,74 @@ const NutritionTracking: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Nutrition Goals */}
+      {goals && (
+        <div className="bg-dark-card border border-dark-border rounded-xl p-6">
+          <div
+            className="flex items-center justify-between cursor-pointer hover:bg-dark-hover/30 -m-2 p-2 rounded-lg transition-colors"
+            onClick={() => setGoalsCollapsed(prev => !prev)}
+          >
+            <div className="flex items-center gap-3">
+              <Apple className="w-8 h-8 text-green-400" />
+              <h3 className="text-2xl font-bold text-white">יעדי תזונה</h3>
+            </div>
+            <button className="text-green-400 hover:text-green-300 transition-colors">
+              {goalsCollapsed ? <ChevronDown className="w-6 h-6" /> : <ChevronUp className="w-6 h-6" />}
+            </button>
+          </div>
+
+          {!goalsCollapsed && (
+            <div className="overflow-x-auto mt-4">
+              <table className="w-full text-[7px] sm:text-sm">
+                <thead>
+                  <tr className="border-b border-dark-border">
+                    <th className="text-right p-1 sm:p-3 text-gray-400 font-medium">מדד</th>
+                    <th className="text-center p-1 sm:p-3 text-gray-400 font-medium">יום רגיל</th>
+                    <th className="text-center p-1 sm:p-3 text-gray-400 font-medium">יום העמסה</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-dark-border/30">
+                    <td className="p-1 sm:p-3 text-white font-medium">קלוריות</td>
+                    <td className="p-1 sm:p-3 text-center">
+                      <div className="text-green-400 font-bold text-[8px] sm:text-base">
+                        {goals.regularDay.calories}
+                      </div>
+                      <div className="text-[6px] sm:text-xs text-gray-500 mt-1">מחושב אוטומטית</div>
+                    </td>
+                    <td className="p-1 sm:p-3 text-center">
+                      <div className="text-green-400 font-bold text-[8px] sm:text-base">
+                        {goals.loadingDay.calories}
+                      </div>
+                      <div className="text-[6px] sm:text-xs text-gray-500 mt-1">מחושב אוטומטית</div>
+                    </td>
+                  </tr>
+                  {(['protein', 'fat', 'carbs'] as const).map((nutrient) => (
+                    <tr key={nutrient} className="border-b border-dark-border/30">
+                      <td className="p-1 sm:p-3 text-white">
+                        {nutrient === 'protein' ? 'חלבון (ג׳)' :
+                         nutrient === 'fat' ? 'שומן (ג׳)' :
+                         'פחמימה (ג׳)'}
+                      </td>
+                      <td className="p-1 sm:p-3 text-center">
+                        <div className="text-white font-bold text-[8px] sm:text-base">
+                          {goals.regularDay[nutrient]}
+                        </div>
+                      </td>
+                      <td className="p-1 sm:p-3 text-center">
+                        <div className="text-white font-bold text-[8px] sm:text-base">
+                          {goals.loadingDay[nutrient]}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
 
       {activeTab === 'tracking' ? (
         <>
