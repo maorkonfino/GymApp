@@ -4,7 +4,7 @@ import { User } from '../types'
 import api from '../api'
 import AdminWorkoutEditor from './AdminWorkoutEditor'
 import AdminNutritionEditor from './AdminNutritionEditor'
-import { fetchTeenBeastRestrictions } from '../utils/timeRestrictions'
+
 
 interface ManageUsersProps {
   isOpen: boolean
