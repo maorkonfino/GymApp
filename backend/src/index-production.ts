@@ -1203,6 +1203,29 @@ app.put('/api/reminder-settings', async (req: Request, res: Response) => {
   }
 });
 
+// Get role time restrictions
+app.get('/api/role-time-restrictions/:role', async (req: Request, res: Response) => {
+  try {
+    const restrictions = await db.getRoleTimeRestrictions(req.params.role);
+    res.json(restrictions);
+  } catch (error) {
+    console.error('Error fetching role time restrictions:', error);
+    res.status(500).json({ error: 'Failed to fetch role time restrictions' });
+  }
+});
+
+// Update role time restrictions
+app.put('/api/role-time-restrictions/:role', async (req: Request, res: Response) => {
+  try {
+    const { restrictions } = req.body;
+    await db.upsertRoleTimeRestrictions(req.params.role, restrictions);
+    res.json({ message: 'Role time restrictions updated successfully' });
+  } catch (error) {
+    console.error('Error updating role time restrictions:', error);
+    res.status(500).json({ error: 'Failed to update role time restrictions' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);

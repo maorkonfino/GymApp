@@ -737,5 +737,54 @@ export const updateReminderSettings = async (settings: Partial<Omit<ReminderSett
   await pool.query(query, values);
 };
 
+// ===== ROLE TIME RESTRICTIONS =====
+
+export interface RoleTimeRestriction {
+  role: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+}
+
+const TEEN_BEAST_DEFAULTS: Omit<RoleTimeRestriction, 'role'>[] = [
+  { day_of_week: 0, start_time: '15:30', end_time: '18:30' },
+  { day_of_week: 1, start_time: '15:30', end_time: '18:30' },
+  { day_of_week: 2, start_time: '15:30', end_time: '17:30' },
+  { day_of_week: 3, start_time: '15:30', end_time: '18:30' },
+  { day_of_week: 4, start_time: '15:30', end_time: '18:30' },
+  { day_of_week: 5, start_time: '12:00', end_time: '14:00' },
+  { day_of_week: 6, start_time: '', end_time: '' },
+];
+
+export const getRoleTimeRestrictions = async (role: string): Promise<RoleTimeRestriction[]> => {
+  const query = 'SELECT role, day_of_week, start_time, end_time FROM role_time_restrictions WHERE role = $1 ORDER BY day_of_week';
+  let result = await pool.query(query, [role]);
+
+  if (result.rows.length === 0 && role === 'teenbeast') {
+    const insertQuery = `
+      INSERT INTO role_time_restrictions (role, day_of_week, start_time, end_time)
+      VALUES ($1, $2, $3, $4)
+      ON CONFLICT (role, day_of_week) DO NOTHING
+    `;
+    for (const d of TEEN_BEAST_DEFAULTS) {
+      await pool.query(insertQuery, [role, d.day_of_week, d.start_time, d.end_time]);
+    }
+    result = await pool.query(query, [role]);
+  }
+
+  return result.rows;
+};
+
+export const upsertRoleTimeRestrictions = async (role: string, restrictions: Omit<RoleTimeRestriction, 'role'>[]): Promise<void> => {
+  const query = `
+    INSERT INTO role_time_restrictions (role, day_of_week, start_time, end_time, updated_at)
+    VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)
+    ON CONFLICT (role, day_of_week) DO UPDATE SET start_time = EXCLUDED.start_time, end_time = EXCLUDED.end_time, updated_at = CURRENT_TIMESTAMP
+  `;
+  for (const r of restrictions) {
+    await pool.query(query, [role, r.day_of_week, r.start_time, r.end_time]);
+  }
+};
+
 export default pool;
 
