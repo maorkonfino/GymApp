@@ -47,6 +47,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
     if (isOpen) {
       fetchUsers()
       fetchReminderSettings()
+      fetchTeenBeastSettings()
     }
   }, [isOpen])
 
@@ -85,7 +86,7 @@ const ManageUsers: React.FC<ManageUsersProps> = ({ isOpen, onClose }) => {
   const handleSaveTeenBeastRestrictions = async () => {
     try {
       await api.put('/role-time-restrictions/teenbeast', { restrictions: teenBeastRestrictions })
-      await fetchTeenBeastRestrictions()
+      await fetchTeenBeastSettings()
       alert('שעות TeenBEAST עודכנו בהצלחה!')
     } catch (error) {
       console.error('Error saving TeenBeast restrictions:', error)
