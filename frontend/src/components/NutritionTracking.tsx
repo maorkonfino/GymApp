@@ -267,7 +267,7 @@ const NutritionTracking: React.FC = () => {
     } catch (error) {
       console.error('Error saving daily tracking:', error)
     } finally {
-      setTimeout(() => setIsSaving(false), 1000)
+      setIsSaving(false)
     }
   }, [user])
 
@@ -292,20 +292,21 @@ const NutritionTracking: React.FC = () => {
   }
 
   const updateEntry = useCallback((index: number, field: keyof DailyEntry, value: string) => {
-    if (index < 0 || index >= entries.length) return
+    setEntries(prev => {
+      if (index < 0 || index >= prev.length) return prev
+      const newEntries = [...prev]
+      newEntries[index] = { ...newEntries[index], [field]: value }
 
-    const newEntries = [...entries]
-    newEntries[index] = { ...newEntries[index], [field]: value }
-    setEntries(newEntries)
+      pendingChanges.current.set(newEntries[index].date, newEntries[index])
 
-    const changedEntry = newEntries[index]
-    pendingChanges.current.set(changedEntry.date, changedEntry)
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+      saveTimerRef.current = setTimeout(() => {
+        flushRef.current()
+      }, 800)
 
-    if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
-    saveTimerRef.current = setTimeout(() => {
-      flushRef.current()
-    }, 800)
-  }, [entries])
+      return newEntries
+    })
+  }, [])
 
 
   // Get week number for a date (Sunday = start of week)
