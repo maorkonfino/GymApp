@@ -699,20 +699,17 @@ app.post('/api/daily-tracking', (req: Request, res: Response) => {
 
     // Support both single entry and array of entries
     if (Array.isArray(entries)) {
-      // Save multiple entries
-      entries.forEach((entry: any) => {
-        db.saveDailyTracking({
-          user_email: userEmail,
-          date: entry.date,
-          morning_weight: entry.morning_weight,
-          total_calories: entry.calories,
-          protein: entry.protein,
-          fat: entry.fat,
-          carbs: entry.carbs,
-          steps: entry.steps,
-          notes: entry.notes
-        });
-      });
+      db.saveDailyTrackingBatch(entries.map((entry: any) => ({
+        user_email: userEmail,
+        date: entry.date,
+        morning_weight: entry.morning_weight,
+        total_calories: entry.calories,
+        protein: entry.protein,
+        fat: entry.fat,
+        carbs: entry.carbs,
+        steps: entry.steps,
+        notes: entry.notes
+      })));
     } else {
       // Support old format for backward compatibility
       const {

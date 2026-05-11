@@ -365,31 +365,34 @@ export const getDailyTrackingByDate = (userEmail: string, date: string): DailyTr
   return stmt.get(userEmail, date) as DailyTracking | undefined;
 };
 
+const upsertDailyTrackingStmt = db.prepare(`
+  INSERT INTO daily_tracking (user_email, date, morning_weight, total_calories, protein, fat, carbs, steps, notes)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  ON CONFLICT(user_email, date) DO UPDATE SET
+    morning_weight = excluded.morning_weight,
+    total_calories = excluded.total_calories,
+    protein = excluded.protein,
+    fat = excluded.fat,
+    carbs = excluded.carbs,
+    steps = excluded.steps,
+    notes = excluded.notes
+`);
+
 export const saveDailyTracking = (tracking: Omit<DailyTracking, 'id' | 'created_at'>) => {
-  const existing = getDailyTrackingByDate(tracking.user_email, tracking.date);
-  
-  if (existing) {
-    const stmt = db.prepare(`
-      UPDATE daily_tracking 
-      SET morning_weight = ?, total_calories = ?, protein = ?, fat = ?, carbs = ?, steps = ?, notes = ?
-      WHERE user_email = ? AND date = ?
-    `);
-    return stmt.run(
-      tracking.morning_weight, tracking.total_calories, tracking.protein, 
-      tracking.fat, tracking.carbs, tracking.steps, tracking.notes,
-      tracking.user_email, tracking.date
-    );
-  } else {
-    const stmt = db.prepare(`
-      INSERT INTO daily_tracking (user_email, date, morning_weight, total_calories, protein, fat, carbs, steps, notes)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    return stmt.run(
+  return upsertDailyTrackingStmt.run(
+    tracking.user_email, tracking.date, tracking.morning_weight, tracking.total_calories,
+    tracking.protein, tracking.fat, tracking.carbs, tracking.steps, tracking.notes
+  );
+};
+
+export const saveDailyTrackingBatch = db.transaction((trackings: Omit<DailyTracking, 'id' | 'created_at'>[]) => {
+  for (const tracking of trackings) {
+    upsertDailyTrackingStmt.run(
       tracking.user_email, tracking.date, tracking.morning_weight, tracking.total_calories,
       tracking.protein, tracking.fat, tracking.carbs, tracking.steps, tracking.notes
     );
   }
-};
+});
 
 export const deleteDailyTracking = (userEmail: string, date: string) => {
   const stmt = db.prepare('DELETE FROM daily_tracking WHERE user_email = ? AND date = ?');

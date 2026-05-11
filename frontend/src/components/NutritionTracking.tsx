@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { Apple, Trash2, LineChart, ChevronDown, ChevronUp } from 'lucide-react'
 import { format } from 'date-fns'
@@ -94,9 +94,9 @@ const NutritionTracking: React.FC = () => {
   }, [user, isAdmin])
 
   const [entries, setEntries] = useState<DailyEntry[]>([])
-  const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
-  const isInitialLoad = useRef(true)
+  const pendingChanges = useRef<Map<string, DailyEntry>>(new Map())
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null)
   const [deletedDates, setDeletedDates] = useState<Set<string>>(() => {
     if (!user) return new Set()
     const saved = localStorage.getItem(`deleted-tracking-dates-${user.email}`)
@@ -234,6 +234,46 @@ const NutritionTracking: React.FC = () => {
 
 
 
+  const flushPendingChanges = useCallback(async () => {
+    if (!user || pendingChanges.current.size === 0) return
+
+    const changesToSave = Array.from(pendingChanges.current.values()).filter(entry =>
+      entry.morningWeight || entry.calories || entry.protein ||
+      entry.fat || entry.carbs || entry.steps || entry.notes
+    )
+    pendingChanges.current.clear()
+
+    if (changesToSave.length === 0) return
+
+    setIsSaving(true)
+    try {
+      await fetch(`${API_URL}/daily-tracking`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userEmail: user.email,
+          entries: changesToSave.map(entry => ({
+            date: entry.date,
+            morning_weight: parseFloat(entry.morningWeight) || null,
+            calories: parseFloat(entry.calories) || null,
+            protein: parseFloat(entry.protein) || null,
+            fat: parseFloat(entry.fat) || null,
+            carbs: parseFloat(entry.carbs) || null,
+            steps: parseInt(entry.steps) || null,
+            notes: entry.notes
+          }))
+        })
+      })
+    } catch (error) {
+      console.error('Error saving daily tracking:', error)
+    } finally {
+      setTimeout(() => setIsSaving(false), 1000)
+    }
+  }, [user])
+
+  const flushRef = useRef(flushPendingChanges)
+  flushRef.current = flushPendingChanges
+
   const removeRow = (index: number) => {
     if (index < 0 || index >= entries.length) return
 
@@ -251,16 +291,21 @@ const NutritionTracking: React.FC = () => {
     }
   }
 
-  const updateEntry = (index: number, field: keyof DailyEntry, value: string) => {
+  const updateEntry = useCallback((index: number, field: keyof DailyEntry, value: string) => {
     if (index < 0 || index >= entries.length) return
-    
+
     const newEntries = [...entries]
-    newEntries[index][field] = value
-    
-    // Sort by date after updating
-    newEntries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    newEntries[index] = { ...newEntries[index], [field]: value }
     setEntries(newEntries)
-  }
+
+    const changedEntry = newEntries[index]
+    pendingChanges.current.set(changedEntry.date, changedEntry)
+
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
+    saveTimerRef.current = setTimeout(() => {
+      flushRef.current()
+    }, 800)
+  }, [entries])
 
 
   // Get week number for a date (Sunday = start of week)
@@ -289,17 +334,21 @@ const NutritionTracking: React.FC = () => {
     })
   }
 
+  const todayStr = useMemo(() => format(new Date(), 'yyyy-MM-dd'), [])
+
+  const dateToIndex = useMemo(() => {
+    const map = new Map<string, number>()
+    entries.forEach((e, i) => map.set(e.date, i))
+    return map
+  }, [entries])
+
   // Group entries by week and calculate weekly averages
-  const getEntriesWithAverages = () => {
+  const entriesWithAverages = useMemo(() => {
     if (!entries || entries.length === 0) return []
 
     try {
-      const today = format(new Date(), 'yyyy-MM-dd')
-      
-      // Filter out future dates
-      const pastAndTodayEntries = entries.filter(entry => entry.date <= today)
-      
-      // Group entries by week
+      const pastAndTodayEntries = entries.filter(entry => entry.date <= todayStr)
+
       const weeks: { [key: string]: DailyEntry[] } = {}
       pastAndTodayEntries.forEach(entry => {
         if (!entry || !entry.date) return
@@ -310,18 +359,16 @@ const NutritionTracking: React.FC = () => {
         weeks[weekKey].push(entry)
       })
 
-      // Create result array with entries and weekly averages
       const result: (DailyEntry & { isAverage?: boolean; weekKey?: string; isToday?: boolean })[] = []
-      
+
       Object.keys(weeks).sort((a, b) => new Date(b).getTime() - new Date(a).getTime()).forEach(weekKey => {
         const weekEntries = weeks[weekKey].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        
-        // Calculate weekly averages for all fields
+
         const calculateAverage = (field: keyof DailyEntry) => {
           const validValues = weekEntries
             .filter(e => e && e[field] && parseFloat(e[field] as string) > 0)
             .map(e => parseFloat(e[field] as string))
-          
+
           return validValues.length > 0
             ? (validValues.reduce((a, b) => a + b, 0) / validValues.length).toFixed(1)
             : ''
@@ -329,7 +376,6 @@ const NutritionTracking: React.FC = () => {
 
         const isCollapsed = collapsedWeeks.has(weekKey)
 
-        // Add average row at the top of the week
         result.push({
           date: weekKey,
           morningWeight: calculateAverage('morningWeight'),
@@ -343,11 +389,10 @@ const NutritionTracking: React.FC = () => {
           weekKey: weekKey
         })
 
-        // Add week entries BELOW the average (if not collapsed)
         if (!isCollapsed) {
           const entriesWithToday = weekEntries.map(entry => ({
             ...entry,
-            isToday: entry.date === today
+            isToday: entry.date === todayStr
           }))
           result.push(...entriesWithToday)
         }
@@ -358,72 +403,13 @@ const NutritionTracking: React.FC = () => {
       console.error('Error in getEntriesWithAverages:', error)
       return entries || []
     }
-  }
+  }, [entries, collapsedWeeks, todayStr])
 
-  const saveData = async (entriesToSave: DailyEntry[]) => {
-    if (!user) return
-
-    const nonEmptyEntries = entriesToSave.filter(entry =>
-      entry.morningWeight || entry.calories || entry.protein ||
-      entry.fat || entry.carbs || entry.steps || entry.notes
-    )
-
-    if (nonEmptyEntries.length === 0) return
-
-    setIsSaving(true)
-    try {
-      await fetch(`${API_URL}/daily-tracking`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userEmail: user.email,
-          entries: nonEmptyEntries.map(entry => ({
-            date: entry.date,
-            morning_weight: parseFloat(entry.morningWeight) || null,
-            calories: parseFloat(entry.calories) || null,
-            protein: parseFloat(entry.protein) || null,
-            fat: parseFloat(entry.fat) || null,
-            carbs: parseFloat(entry.carbs) || null,
-            steps: parseInt(entry.steps) || null,
-            notes: entry.notes
-          }))
-        })
-      })
-    } catch (error) {
-      console.error('Error saving daily tracking:', error)
-    } finally {
-      setTimeout(() => setIsSaving(false), 1000)
-    }
-  }
-
-
-  // Auto-save when entries change (with debounce) - skip initial load
   useEffect(() => {
-    if (!user || entries.length === 0) return
-
-    if (isInitialLoad.current) {
-      isInitialLoad.current = false
-      return
-    }
-
-    if (saveTimeout) {
-      clearTimeout(saveTimeout)
-    }
-
-    const timeout = setTimeout(() => {
-      saveData(entries)
-    }, 800)
-
-    setSaveTimeout(timeout)
-
     return () => {
-      if (timeout) {
-        clearTimeout(timeout)
-      }
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
     }
-  }, [entries])
+  }, [])
 
   // Loading state
   if (hasNutritionPlan === null) {
@@ -605,12 +591,11 @@ const NutritionTracking: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {getEntriesWithAverages().map((entry, displayIndex) => {
+                  {entriesWithAverages.map((entry, displayIndex) => {
                     const isAverage = 'isAverage' in entry && entry.isAverage
                     const isToday = 'isToday' in entry && entry.isToday
-                    const today = format(new Date(), 'yyyy-MM-dd')
-                    const isPast = !isAverage && entry.date < today
-                    const actualIndex = isAverage ? -1 : entries.findIndex(e => e.date === entry.date)
+                    const isPast = !isAverage && entry.date < todayStr
+                    const actualIndex = isAverage ? -1 : (dateToIndex.get(entry.date) ?? -1)
                     
                     return (
                       <tr 
