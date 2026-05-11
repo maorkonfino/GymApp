@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { Apple, Trash2, LineChart, ChevronDown, ChevronUp } from 'lucide-react'
 import { format } from 'date-fns'
@@ -96,8 +96,13 @@ const NutritionTracking: React.FC = () => {
   const [entries, setEntries] = useState<DailyEntry[]>([])
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const isInitialLoad = useRef(true)
+  const [deletedDates, setDeletedDates] = useState<Set<string>>(() => {
+    if (!user) return new Set()
+    const saved = localStorage.getItem(`deleted-tracking-dates-${user.email}`)
+    return saved ? new Set(JSON.parse(saved)) : new Set()
+  })
   const [collapsedWeeks, setCollapsedWeeks] = useState<Set<string>>(() => {
-    // Load collapsed weeks from localStorage
     const saved = localStorage.getItem('nutrition-collapsed-weeks')
     return saved ? new Set(JSON.parse(saved)) : new Set()
   })
@@ -153,10 +158,9 @@ const NutritionTracking: React.FC = () => {
           
           const dateStr = format(date, 'yyyy-MM-dd')
           
-          // Check if this date already exists
           const exists = formattedEntries.some((entry: DailyEntry) => entry.date === dateStr)
-          
-          if (!exists) {
+
+          if (!exists && !deletedDates.has(dateStr)) {
             formattedEntries.push({
               date: dateStr,
               morningWeight: '',
@@ -218,14 +222,33 @@ const NutritionTracking: React.FC = () => {
     localStorage.setItem('nutrition-collapsed-weeks', JSON.stringify(Array.from(collapsedWeeks)))
   }, [collapsedWeeks])
 
+  // Save deleted dates to localStorage (clean up dates older than 30 days)
+  useEffect(() => {
+    if (!user) return
+    const thirtyDaysAgo = new Date()
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+    const cutoff = format(thirtyDaysAgo, 'yyyy-MM-dd')
+    const cleaned = new Set(Array.from(deletedDates).filter(d => d >= cutoff))
+    localStorage.setItem(`deleted-tracking-dates-${user.email}`, JSON.stringify(Array.from(cleaned)))
+  }, [deletedDates, user])
+
 
 
   const removeRow = (index: number) => {
     if (index < 0 || index >= entries.length) return
-    
+
+    const entry = entries[index]
     const newEntries = [...entries]
     newEntries.splice(index, 1)
     setEntries(newEntries)
+
+    setDeletedDates(prev => new Set(prev).add(entry.date))
+
+    if (user) {
+      fetch(`${API_URL}/daily-tracking/${user.email}/${entry.date}`, {
+        method: 'DELETE'
+      }).catch(error => console.error('Error deleting entry:', error))
+    }
   }
 
   const updateEntry = (index: number, field: keyof DailyEntry, value: string) => {
@@ -340,6 +363,13 @@ const NutritionTracking: React.FC = () => {
   const saveData = async (entriesToSave: DailyEntry[]) => {
     if (!user) return
 
+    const nonEmptyEntries = entriesToSave.filter(entry =>
+      entry.morningWeight || entry.calories || entry.protein ||
+      entry.fat || entry.carbs || entry.steps || entry.notes
+    )
+
+    if (nonEmptyEntries.length === 0) return
+
     setIsSaving(true)
     try {
       await fetch(`${API_URL}/daily-tracking`, {
@@ -349,7 +379,7 @@ const NutritionTracking: React.FC = () => {
         },
         body: JSON.stringify({
           userEmail: user.email,
-          entries: entriesToSave.map(entry => ({
+          entries: nonEmptyEntries.map(entry => ({
             date: entry.date,
             morning_weight: parseFloat(entry.morningWeight) || null,
             calories: parseFloat(entry.calories) || null,
@@ -361,8 +391,6 @@ const NutritionTracking: React.FC = () => {
           }))
         })
       })
-      
-      console.log('✅ נתונים נשמרו אוטומטית')
     } catch (error) {
       console.error('Error saving daily tracking:', error)
     } finally {
@@ -371,23 +399,25 @@ const NutritionTracking: React.FC = () => {
   }
 
 
-  // Auto-save when entries change (with debounce)
+  // Auto-save when entries change (with debounce) - skip initial load
   useEffect(() => {
     if (!user || entries.length === 0) return
 
-    // Clear previous timeout
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false
+      return
+    }
+
     if (saveTimeout) {
       clearTimeout(saveTimeout)
     }
 
-    // Set new timeout for auto-save (2 seconds after last change)
     const timeout = setTimeout(() => {
       saveData(entries)
-    }, 2000)
+    }, 800)
 
     setSaveTimeout(timeout)
 
-    // Cleanup
     return () => {
       if (timeout) {
         clearTimeout(timeout)

@@ -170,10 +170,14 @@ const AdminNutritionEditor: React.FC<AdminNutritionEditorProps> = ({ user, onClo
 
   const removeRow = (index: number) => {
     const entry = entries[index]
-    
+
+    if (saveTimeout) {
+      clearTimeout(saveTimeout)
+      setSaveTimeout(null)
+    }
+
     setEntries(entries.filter((_, i) => i !== index))
-    
-    // Delete from server if it exists
+
     fetch(`${API_URL}/daily-tracking/${user.email}/${entry.date}`, {
       method: 'DELETE'
     }).catch(error => console.error('Error deleting entry:', error))
