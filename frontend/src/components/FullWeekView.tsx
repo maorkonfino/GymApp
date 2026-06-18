@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { format, addDays } from 'date-fns'
 import { he } from 'date-fns/locale'
 import { Registration } from '../types'
@@ -499,8 +500,8 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
     return (
       <>
         {content}
-        {/* Modal for showing all registrations */}
-        {showAllModal && (
+        {/* Modal for showing all registrations - rendered via portal to escape overflow:hidden/auto on iOS */}
+        {showAllModal && createPortal(
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
             <div className="bg-dark-card border border-dark-border rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
               <div className="p-4 border-b border-dark-border flex items-center justify-between">
@@ -563,10 +564,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
               </div>
             </div>
           </div>
-        )}
+        , document.body)}
 
-        {/* Modal for showing all user's workouts - EMBEDDED MODE */}
-        {showMyWorkoutsModal && (
+        {/* Modal for showing all user's workouts - EMBEDDED MODE - portal to escape overflow on iOS */}
+        {showMyWorkoutsModal && createPortal(
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
             <div className="bg-dark-card border border-dark-border rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
               <div className="p-4 border-b border-dark-border flex items-center justify-between">
@@ -832,10 +833,10 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
               </div>
             </div>
           </div>
-        )}
+        , document.body)}
 
-        {/* Modal for showing all workouts for a specific day - EMBEDDED MODE */}
-        {showDayWorkoutsModal && (
+        {/* Modal for showing all workouts for a specific day - EMBEDDED MODE - portal to escape overflow on iOS */}
+        {showDayWorkoutsModal && createPortal(
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
             <div className="bg-dark-card border border-dark-border rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
               <div className="p-4 border-b border-dark-border flex items-center justify-between">
@@ -906,7 +907,7 @@ const FullWeekView: React.FC<FullWeekViewProps> = ({
               </div>
             </div>
           </div>
-        )}
+        , document.body)}
       </>
     )
   }
